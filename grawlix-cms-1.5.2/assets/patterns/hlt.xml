@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page version="1.1">
+	<options>
+		<layout>list</layout>
+		<function>{function}</function>
+		<pattern>default</pattern>
+		<option>heading</option>
+		<option>link</option>
+		<option>text</option>
+	</options>
+	<content>
+		<item>
+			<heading><![CDATA[{heading1}]]></heading>
+			<link><![CDATA[{link1}]]></link>
+			<text><![CDATA[{text1}]]></text>
+		</item>
+		<item>
+			<heading><![CDATA[{heading2}]]></heading>
+			<link><![CDATA[{link2}]]></link>
+			<text><![CDATA[{text2}]]></text>
+		</item>
+		<item>
+			<heading><![CDATA[{heading3}]]></heading>
+			<link><![CDATA[{link3}]]></link>
+			<text><![CDATA[{text3}]]></text>
+		</item>
+	</content>
+</page>

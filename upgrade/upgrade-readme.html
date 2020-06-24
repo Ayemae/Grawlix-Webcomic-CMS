@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Welcome to the Grawlix CMS v1.5</title>
+  <meta name="description" content="Introduction to the Grawlix CMS, installation and usage guide" />
+  <meta name="author" content="The Grawlix CMS Team" />
+	<style type="text/css" rel="stylesheet">
+body {
+	background: #eee;
+	font-size: 14pt;
+	line-height: 20pt;
+	font-family: sans-serif;
+	color: #333;
+}
+main {
+	max-width: 36rem;
+	margin: 0 auto;
+	padding: 2rem;
+}
+article {
+	margin-left: 1rem;
+}
+h1 {
+	margin: 3rem 0 0 -1rem;
+	color: #240F5A;
+	border-top: 3px solid #fff;
+	padding-top: 1rem;
+}
+h1.title {
+	font-size: 3rem;
+	font-weight: normal;
+	line-height: 3.5rem;
+	border-top: none;
+}
+h2,h3,h4 {
+	margin: 2rem 0 0 0;
+	color: #543F8A;
+}
+a {
+	color: #44f;
+}
+ul,ol {
+	padding-left: 0.25rem;
+}
+code {
+	background: #ddd;
+	font-size: 1rem;
+}
+.path {
+	font-family: monospace;
+	background: #fff;
+	font-size: 1rem;
+	padding: 0.1rem;
+}
+li {
+	margin-bottom: 1rem;
+}
+	</style>
+</head>
+<body>
+<!-- March 2018 -->
+<main>
+<article>
+<h1 class="title">Welcome to v1.5</h1>
+
+<p>Versions 1.3 and 1.4 made major improvements to static pages — and upgrading from v1.2 means more than copying a few files.</p>
+
+<h2>What’s different</h2>
+
+<p>Version 1.3 and later let you rearrange content blocks in static pages and edit blocks’ layout HTML/CSS.</p>
+
+<h2>What to do</h2>
+
+<p>Upgrading isn’t as hard as it looks. Mostly you’ll upload files and copy/paste a bit of CSS.</p>
+
+<p>First, <strong>back up your site’s files and, if possible, your site’s MySQL database.</strong> Just in case. And then:</p>
+
+<ol>
+<li>Upload the new <span class="path">_system</span> and <span class="path">_admin</span> folders into your website, replacing the originals.</li>
+<li>Upload the “<span class="path">pattern</span>” files into your theme’s folder.</li>
+<li>Copy the CSS code from “<span class="path">add-to-theme.css</span>” into your theme’s “<span class="path">theme.css</span>” file.</li>
+<li>Log in to your admin panel.</li>
+<li>An info message will provide an “update” link. Click it once.</li>
+<li>Let the script do its thing.</li>
+<li>Delete the file named <span class="path">_upgrade-to-1.3.php</span> in your <span class="path">_admin</span> folder.</li>
+<li>Celebrate success.</li>
+</ol>
+
+<h2>New feature: Patterns</h2>
+
+<p><strong>Pattern files</strong> are code snippets that give you control over static pages’ HTML and CSS. Want a wide text area with narrow images? You got it. Want larger headings or colorful text? Can do.</p>
+
+<p>Like mad libs, each pattern is a file with blanks that are labeled with <code>{curly brackets}</code>. Content blocks fill in the blanks automatically with content you enter in the admin panel. The options in v1.3 and later are:</p>
+
+<ul>
+	<li><code>{id}</code></li>
+	<li><code>{title}</code></li>
+	<li><code>{image}</code></li>
+	<li><code>{content}</code></li>
+	<li><code>{link}</code></li>
+</ul>
+
+<p>Patterns’ names reflect what they do — out of the box. You can edit any of them, so “image-right” doesn’t <em>have</em> to do what it implies. It’s just a label.</p>
+
+<p>Do you have to edit the HTML/CSS? No. Out of the box it’s fine. But you can, and that’s the point.</p>
+
+<h2>Getting geeky</h2>
+
+<p>Here’s the stuff you don’t need to worry about. But if you’re curious …</p>
+
+<p>Version 1.0 – 1.2 formatted static pages’ content in XML, and stored that XML in MySQL. Version 1.3 and later store content in a new MySQL table without XML. It’s easier for PHP to read and lets us rearrange content with relative ease. The field that used to hold XML now holds pattern-layout information.</p>
+
+<p>Versions 1.4 and newer are smart enough to keep displaying pages that haven’t been converted from XML to MySQL — but the admin panel will insist that you upgrade before you can work with static pages again. </p>
+
+<p>Happy publishing!</p>
+
+</body>
+</html>

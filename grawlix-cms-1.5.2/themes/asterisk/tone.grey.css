@@ -1,0 +1,168 @@
+/* !-------- Reset --- */
+html,body {
+	font-size: 12pt;
+	font-family: sans-serif;
+	background: #000 url(images/grey/sketch-bg.jpg) center top no-repeat;
+	background-attachment: fixed;
+	color: #fff;
+}
+a {
+	text-decoration: none;
+	color: #39f;
+	transition: color 0.5s ease;
+}
+a:hover {
+	color: #fff;
+}
+
+.page {
+	background: rgba(0,0,0,0.5);
+/* 	max-width: 1000px; */
+}
+
+/* !-------- Header --- */
+.page__header h2 {
+	text-transform: uppercase;
+	letter-spacing: 0.15rem;
+	font-size: 3rem;
+	margin-top: 1rem;
+	flex: 1;
+	text-align: center;
+}
+.page__header h2 a {
+	color: #fff;
+	text-shadow: 0px 1px 10px black;
+}
+
+
+/* !-------- Menu --- */
+
+.header__menu {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	margin: 1rem 0;
+}
+.header__menu ul {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	text-align: center;
+}
+.header__menu li {
+	list-style-type: none;
+}
+.header__menu a {
+	display: block;
+	padding: 0.4rem;
+}
+
+
+/* !-------- Comic navigation --- */
+
+.content__nav-1 {
+	display: none;
+}
+.content__nav-2 {
+	display: flex;
+}
+.content__nav-2 a {
+	display: block;
+	padding: 1rem 1rem 0 0;
+}
+
+/* !-------- The comic image(s) and info --- */
+
+.page__comic h1 {
+	visibility: hidden;
+	font-size: 1px;
+}
+.publication-date {
+	margin-top: 1rem;
+	float: right;
+}
+
+
+/* !-------- Share buttons --- */
+.secondary__share {
+	display: none;
+}
+
+
+/* !-------- Blog post --- */
+
+.secondary__blog {
+	margin: 2rem auto;
+	width: 70%;
+	color: #ddd;
+}
+.secondary__blog h3 {
+	margin-bottom: 1rem;
+	font-size: 2.5rem;
+}
+.secondary__blog strong {
+	color: #fff;
+}
+.secondary__blog em {
+	color: #fff;
+}
+.secondary__blog p {
+	margin-bottom: 1rem;
+}
+.byline {
+	font-style: italic;
+}
+
+
+
+
+/* !-------- Transcript --- */
+
+
+/* Hide from sighted readers, but keep available for search engines and screen readers. */
+.secondary__transcript {
+	position: absolute;
+	margin-left: -10000px;
+}
+
+
+/* !-------- Follow buttons --- */
+
+@media screen and (min-width:901px) {
+
+	.secondary__follow {
+		text-align: center;
+		margin-top: 2rem;
+		width: 20%;
+	}
+}
+
+.secondary__follow div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	text-align: center;
+	width: 100%;
+	font-size: 2rem;
+	margin: 1rem 0;
+}
+.secondary__follow a {
+	padding: 0 1rem;
+}
+
+div.share-icons {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+.social-icon {
+	width: 30px;
+	height: 30px;
+	padding: 5px !important;
+}
+
+.page__footer {
+	padding: 1rem;
+}

@@ -1,0 +1,42 @@
+body {
+  color: #293349;
+  font-family: georgia, times, serif;
+  font-size: 16pt;
+  line-height: 20pt;
+  background-color: #91A890;
+}
+
+a {
+	color: #fd9;
+}
+a:hover {
+	color: #335;
+}
+figure img {
+	border: 1px solid #293349;
+}
+
+h3 {
+	color: #091329 !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .container, main { max-width: 600px; }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 900px) {
+  .container, main { max-width: 800px; }
+}
+
+@media only screen and (min-width: 901px) {
+  .container, main { max-width: 900px; }
+}
+
+.backnext-nav {
+	text-align: center;
+	background: #819880;
+}
+.backnext-nav a {
+	color: #fff;
+	padding: 10px;
+}

@@ -1,0 +1,50 @@
+/* Static pages have different “patterns,” or
+ * configurations of HTML. This section controls
+ * how each pattern is laid out.
+ */
+
+.pattern-image-top {
+	display: flex;
+	flex-direction: column;
+}
+.pattern-image-top h3 {
+}
+.pattern-image-top .content {
+}
+
+.pattern-image-left {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 1rem;
+}
+.pattern-image-left figure {
+	max-width: 35%;
+}
+.pattern-image-left .content {
+	max-width: 60%;
+	margin-left: 1rem;
+}
+
+.pattern-image-right {
+	display: flex;
+	margin-bottom: 2rem;
+}
+.pattern-image-right h3 {
+	margin-right: 1rem;
+}
+.pattern-image-right .content {
+	width: 80%;
+}
+
+.pattern-no-image {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 1rem;
+}
+.pattern-no-image figure {
+	width: 35%;
+}
+.pattern-no-image .content {
+	width: 60%;
+	margin-left: 1rem;
+}

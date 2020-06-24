@@ -1,0 +1,489 @@
+/* Grawlix | Stick figure - v1.2 | getgrawlix.com */
+
+
+
+
+
+/* ! ------ 1. INTRO */
+
+/* LET’S GO!
+ * Here’s the deal: Coding is hard. It’s tedious.
+ * It’s infuriating. It’s one letter out of place
+ * place and your whole project goes out the
+ * proverbial window.
+ *
+ * Our goal is to help you publish comics on the web.
+ * So we documented this theme to help you get started 
+ * in a hurry. You want to change something? It’s
+ * probably here.
+ */
+
+/* USEFUL LINKS
+ * When in doubt, ask for help at www.getgrawlix.com/forum.
+ * Learn about CSS at http://htmldog.com/guides/css/
+ * and http://www.w3schools.com/css/.
+ * Get updates at twitter.com/grawlixcomix/.
+ * Support us and get insider info at patreon.com/grawlixocmix/.
+ */
+
+/* HEY CSS PURISTS:
+ * We used px, not ems or rems, because our users think
+ * in pixels, not typographic units. Normally we’d go
+ * for content-first measurements like rems or ems,
+ * but in this case pixels make more sense. Adjust
+ * the code below as you see fit.
+ */
+
+
+/* Get the Foundation layout grid. “Classic” archives 
+ * (those for the CMS version 1.3 and before) use this 
+ * grid code.
+ */
+@import url('foundation.min.css');
+
+
+
+
+
+
+/* ! ------ 2. GENERAL */
+
+/* Site-wide parameters. When in doubt, readers’
+ * browsers defer to this. Learn about background
+ * properties at
+ * https://css-tricks.com/almanac/properties/b/background/
+*/
+
+body {
+  color: black;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Verdana, sans-serif;
+  font-size: 10pt;
+  line-height: 20pt;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+
+/* ! ------ 3. IMAGES */
+
+/* We recommend you leave this alone unless you understand RWD.
+ * Learn more at https://css-tricks.com/almanac/properties/m/max-width/
+ */
+
+a img { border: none; }
+img { max-width: 100%; }
+figure { margin: 0; }
+
+
+
+
+
+
+/* ! ------ 4. COMIC _SITE_ WIDTH */
+
+/* This controls the overall size of your comic site.
+ * Remember that your comic image — the graphic
+ * you upload — might be smaller than this container.
+ * More info: https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries
+ * Examples: http://mediaqueri.es
+ */
+
+/* “Media queries” let us adjust our web designs based
+ * on how wide a reader’s screen is. For example,
+ * if your comic is 1200 pixels wide but the reader’s
+ * monitor is only 1024 — say, a wide tablet — then
+ * media queries say “only display the comic for wide
+ * tablets.”
+ */
+
+/* SMARTPHONES: For readers with screens 480 pixels wide or less */
+@media only screen and (max-width: 480px) {
+  .container, main { max-width: 480px; }
+}
+
+/* TABLETS: Screens between 481 and 768 pixels wide */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .container, main { max-width: 600px; }
+}
+
+/* MEDIUM MONITORS: Screens between 769 and 960 pixels wide */
+@media only screen and (min-width: 769px) and (max-width: 960px) {
+  .container, main { max-width: 960px; }
+}
+
+/* LARGE MONITORS: Screens 961 pixels and larger */
+@media only screen and (min-width: 961px) {
+  .container, main { max-width: 960px; }
+}
+
+/* Whatever its size, make it float in the center of the browser window. */
+.container, main {
+  margin: 20px auto;
+}
+
+
+
+
+
+
+/* ! ------ 5. COMIC _IMAGE_ WIDTH */
+
+/* These media queries determine how wide
+ * comic graphics (the art readers come to
+ * see on your site) is.
+ */
+
+/* First make sure this width is less than 
+ * the container’s width.
+ */
+
+#comic figure {
+	max-width: 100%;
+	margin: 0 auto;
+	padding: 0;
+}
+
+/* Second, here are the sizes. */
+
+/* SMARTPHONES: For readers with screens 480 pixels wide or less */
+@media only screen and (max-width: 480px) {
+  #comic figure { max-width: 480px; }
+}
+
+/* TABLETS: Screens between 481 and 768 pixels wide */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  #comic figure { max-width: 600px; }
+}
+
+/* MEDIUM MONITORS: Screens between 769 and 960 pixels wide */
+@media only screen and (min-width: 769px) and (max-width: 960px) {
+  #comic figure { max-width: 960px; }
+}
+
+/* LARGE MONITORS: Screens 961 pixels and larger */
+@media only screen and (min-width: 961px) {
+  #comic figure { max-width: 960px; }
+}
+
+/* Fun fact: This doesn’t actually shrink
+ * your comic image’s file size. Instead it
+ * crams the same pixels into a smaller space.
+ * That means it takes just as long to load 
+ * at any screen size.
+ */
+
+
+
+
+
+
+/* ! ------ 6. BLOG POST */
+
+/* Content in the news-of-the-day message.
+ */
+
+#blog-post {
+	clear: both; /* Ensures this goes on its own row. */
+}
+
+#blog-post p {
+	color: #333;
+}
+
+#blog-post h3 {
+	color: #222;
+}
+
+#blog-post .meta {
+	color: #555;
+}
+
+#transcript {
+}
+
+
+
+
+
+
+/* ! ------ 7. MENU */
+
+/* Include site-wide navigation (a.k.a.
+ * the menu) and back/next links.
+ */
+
+.button-group {
+	/* Set groups of buttons into horizontal rows. */
+	display: flex;
+	flex-direction: row;
+
+	/* This centers items within the menu. You can also use flex-end (right) and center instead of flex-start. */
+	justify-content: flex-start;
+}
+
+.button-group li {
+  display: block;
+}
+.button-group li a {
+  padding: 10px;
+}
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+
+
+
+
+
+/* ! ------ 8. STATIC PAGES */
+
+
+/* ! --- 8a. Grids and lists */
+
+/* These control the overall layout of the archive 
+ * markers and pages within those markers.
+ */
+
+.static-layout-list {
+	display: flex;
+	flex-direction: column;
+}
+.static-layout-grid [class^='pattern'] {
+	max-width: 100%;
+}
+
+.static-layout-grid {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+.static-layout-grid [class^='pattern'] {
+	width: 49%;
+	margin-bottom: 1rem;
+}
+
+/* ! --- 8b. Patterns */
+
+/* Static page “pattern” files provide HTML for 
+ * their blocks of content. This theme ships with 
+ * a few, including “pattern-image-left”, which 
+ * puts images to the left of text by default. 
+ * Change the matching CSS to fit your needs here, 
+ * or if you make your own patterns, add their CSS 
+ * to the list below.
+ * See http://getgrawlix.com/docs/1/static-patterns
+ */
+
+@media screen and (min-width: 481px) {
+
+	/* Works with pattern.image-top.php */
+	.pattern-image-top {
+		display: flex;
+		flex-direction: column;
+	}
+	.pattern-image-top h3 {
+	}
+	.pattern-image-top .content {
+	}
+
+	/* Works with pattern.image-left.php */
+	.pattern-image-left {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 2rem;
+	}
+	.pattern-image-left figure {
+		max-width: 35%;
+	}
+	.pattern-image-left .content {
+		max-width: 60%;
+		margin-left: 1rem;
+	}
+
+	/* Works with pattern.image-right.php */
+	.pattern-image-right {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 2rem;
+	}
+	.pattern-image-right h3 {
+		margin-right: 1rem;
+	}
+	.pattern-image-right .content {
+		width: 80%;
+	}
+
+	/* Works with pattern.no-image.php */
+	.pattern-no-image {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 1rem;
+	}
+	.pattern-no-image figure {
+		width: 35%;
+	}
+	.pattern-no-image .content {
+		width: 60%;
+		margin-left: 1rem;
+	}
+}
+
+
+
+
+
+
+/* ! ------ 9. ARCHIVES */
+
+/* Version 1.4 of the Grawlix CMS introduced a 
+ * new HTML structure for archives. It’s more
+ * of a hierarchy than the old way and allows 
+ * for marker images.
+ */
+
+
+
+/* ! --- 9a. Archive layout */
+
+/* Everything in this structure is inside an 
+ * unordered list (UL). This bit removes the 
+ * default bullet points.
+ */
+.archive-content ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+/* Various types of layouts. */
+.archive-layout--list {
+	display: flex;
+	flex-direction: column;
+}
+.archive-layout--grid {
+	display: flex;
+	flex-wrap: wrap;
+}
+.archive-layout--inline {
+}
+
+
+
+/* ! --- 9b. Columns */
+
+/* If you want a grid-based archive layout (v1.4), 
+ * how many columns do you want? Uncomment the 
+ * appropriate sets below to divide the grid into 
+ * two, three, four, or five markers across.
+ */
+
+/* Create a two-up layout grid. */
+/*
+.archive-layout--grid .archive-marker {
+	width: 45%;
+	margin-right: 5%;
+}
+*/
+
+/* Create a three-up layout grid. */
+.archive-layout--grid .archive-marker {
+	width: 30%;
+	margin-right: 3%;
+}
+
+/* Create a four-up layout grid. */
+/*
+.archive-layout--grid .archive-marker {
+	width: 24%;
+	margin-right: 1%;
+}
+*/
+
+/* Create a five-up layout grid. */
+/*
+.archive-layout--grid .archive-marker {
+	width: 19%;
+	margin-right: 1%;
+}
+*/
+
+
+/* ! --- 9c. Archive levels */
+
+/* Styles for various “ranks” of markers, such as 
+ * volume, chapter, scene, etc. 
+ */
+.archive-level-1 {
+	font-size: 1rem;
+}
+.archive-level-2 {
+	font-size: 0.8rem;
+}
+.archive-level-3 {
+	font-size: 0.6rem;
+}
+
+/* ! --- 9d. Archive details */
+
+/* Add a little space between markers. */
+.archive-marker {
+	margin-bottom: 2rem;
+}
+
+/* Markers’ images typically need a little space too. */
+.archive-marker header img {
+	margin-bottom: 0.5rem;
+}
+
+/* Page items also need some breathing room. */
+.archive-page {
+	padding: 1.5%;
+	width: 30%;
+}
+
+/* Make publication dates look a little less important — and less distracting. */
+.archive-page time {
+	font-size: 0.75em;
+	display: block;
+}
+
+
+
+
+
+
+/* ! --- 10. Share/follow */
+
+.share-icons img {
+	max-width: 32px;
+}
+
+
+
+/* ! --- 11. Utility */
+
+/* Breaks are old-fashioned, but reliable
+ * across every major browser.
+ */
+.clearfix {
+	clear: both;
+}
+.clearfix:before,.clearfix:after{
+	content:" ";
+	display:table;
+}
+
+
+
+
+/* What else would you like to see?
+ * Share your thoughts about this theme
+ * with the community at:
+ * http://www.getgrawlix.com/forum/categories/feedback
+ */

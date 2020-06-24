@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
+    <title>hit.header_right</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="hit.header_right" sketch:type="MSArtboardGroup">
+            <rect id="Rectangle-1" fill="#EEEEEE" sketch:type="MSShapeGroup" x="0" y="0" width="200" height="200"></rect>
+            <text id="Heading" sketch:type="MSTextLayer" font-family="CCLegendaryLegerdemain" font-size="18" font-weight="normal" fill="#3B3B3B">
+                <tspan x="107" y="31">Heading</tspan>
+            </text>
+            <text id="Some-things-in-life-" sketch:type="MSTextLayer" font-family="Verdana" font-size="9" font-weight="normal" fill="#000000">
+                <tspan x="108" y="60">Some things in </tspan>
+                <tspan x="108" y="71">life are bad / </tspan>
+                <tspan x="108" y="82">They can really </tspan>
+                <tspan x="108" y="93">make you mad / </tspan>
+                <tspan x="108" y="104">Other things just </tspan>
+                <tspan x="108" y="115">make you swear </tspan>
+                <tspan x="108" y="126">and curse / </tspan>
+                <tspan x="108" y="137">When you're </tspan>
+                <tspan x="108" y="148">chewing on life's </tspan>
+                <tspan x="108" y="159">gristle / Don't </tspan>
+                <tspan x="108" y="170">grumble, give a </tspan>
+                <tspan x="108" y="181">whistle / And </tspan>
+                <tspan x="108" y="192">this'll help things </tspan>
+                <tspan x="108" y="203">turn out for the </tspan>
+                <tspan x="108" y="214">best... / </tspan>
+                <tspan x="108" y="225">And... / ...alway</tspan>
+                <tspan x="108" y="236">s look on the </tspan>
+                <tspan x="108" y="247">bright side / of </tspan>
+                <tspan x="108" y="258">life... / </tspan>
+                <tspan x="108" y="269">(Whistle) / </tspan>
+                <tspan x="108" y="280">Always look on </tspan>
+                <tspan x="108" y="291">the light side / </tspan>
+                <tspan x="108" y="302">of life... / </tspan>
+                <tspan x="108" y="313">(Whistle) / If life </tspan>
+                <tspan x="108" y="324">seems jolly </tspan>
+                <tspan x="108" y="335">rotten / There's </tspan>
+                <tspan x="108" y="346">something </tspan>
+                <tspan x="108" y="357">you've </tspan>
+                <tspan x="108" y="368">forgotten / And </tspan>
+                <tspan x="108" y="379">that's to laugh </tspan>
+                <tspan x="108" y="390">and smile and </tspan>
+                <tspan x="108" y="401">dance and sing / </tspan>
+                <tspan x="108" y="412">When you're </tspan>
+                <tspan x="108" y="423">feeling in the </tspan>
+                <tspan x="108" y="434">dumps / Don't </tspan>
+                <tspan x="108" y="445">be silly </tspan>
+                <tspan x="108" y="456">chumps / Just </tspan>
+                <tspan x="108" y="467">purse your lips </tspan>
+                <tspan x="108" y="478">and whistle / - </tspan>
+                <tspan x="108" y="489">that's the </tspan>
+                <tspan x="108" y="500">thing. / </tspan>
+                <tspan x="108" y="511">And...always </tspan>
+                <tspan x="108" y="522">look on the </tspan>
+                <tspan x="108" y="533">bright / side of </tspan>
+                <tspan x="108" y="544">life... / (Whistle)</tspan>
+            </text>
+            <g id="Rectangle-3" sketch:type="MSLayerGroup" transform="translate(20.000000, 20.000000)" fill="#6E1EAB">
+                <rect sketch:type="MSShapeGroup" x="0" y="0" width="70" height="69"></rect>
+            </g>
+            <rect id="Rectangle-42" fill="#EDEDED" sketch:type="MSShapeGroup" x="0" y="181" width="200" height="20"></rect>
+        </g>
+    </g>
+</svg>

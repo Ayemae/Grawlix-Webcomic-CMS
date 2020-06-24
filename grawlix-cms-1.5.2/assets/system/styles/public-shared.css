@@ -1,0 +1,239 @@
+/** Responsive grid for static pages. */
+
+/*
+#static.grlx ul {
+	margin:0;
+	list-style:none
+}
+#static.grlx section {
+	width:100%;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:0;
+	margin-bottom:0;
+	max-width:62.5rem;
+	padding-bottom:1.875rem;
+}
+#static.grlx section:before,
+#static.grlx section:after {
+	content:" ";
+	display:table
+}
+#static.grlx section:after {
+	clear:both
+}
+#static.grlx header {
+	padding-bottom:0
+}
+#static.grlx figure {
+	margin:0;
+	padding-bottom:1.25rem
+}
+@media only screen and (max-width: 40em) {
+	section > header,
+	section > figure,
+	section > div {
+	padding-left:0;
+	padding-right:0;
+	width:100%;
+	float:left
+}
+
+}
+@media only screen and (min-width: 40.063em) {
+	.two-up {
+	display:block;
+	padding:0;
+	margin:0 -0.625rem
+}
+.two-up:before,
+.two-up:after {
+	content:" ";
+	display:table
+}
+.two-up:after {
+	clear:both
+}
+.two-up > li {
+	display:block;
+	height:auto;
+	float:left;
+	padding:0 0.625rem 1.25rem
+}
+.two-up > li {
+	width:45%;
+	padding:0 0.625rem 1.25rem;
+	list-style:none
+}
+.two-up > li:nth-of-type(1n) {
+	clear:none
+}
+.two-up > li:nth-of-type(2n+1) {
+	clear:both
+}
+.two-up > li:nth-child(odd) {
+	padding-left:0;
+	padding-right:0
+}
+.two-up > li:nth-child(even) {
+	padding-left:0;
+	padding-right:0
+}
+.three-up {
+	display:block;
+	padding:0;
+	margin:0 -0.625rem
+}
+.three-up:before,
+.three-up:after {
+	content:" ";
+	display:table
+}
+.three-up:after {
+	clear:both
+}
+.three-up > li {
+	display:block;
+	height:auto;
+	float:left;
+	padding:0 0.625rem 1.25rem
+}
+.three-up > li {
+	width:33.33333%;
+	padding:0 0.625rem 1.25rem;
+	list-style:none
+}
+.three-up > li:nth-of-type(1n) {
+	clear:none
+}
+.three-up > li:nth-of-type(3n+1) {
+	clear:both
+}
+.three-up > li:nth-child(3n+1) {
+	padding-left:0;
+	padding-right:0
+}
+.three-up > li:nth-child(3n+3) {
+	padding-left:0;
+	padding-right:0
+}
+.alongside > header {
+	padding-left:0;
+	padding-right:0;
+	width:25%;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.alongside > div {
+	padding-left:0;
+	padding-right:0;
+	width:75%;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.alongside.transpose > header {
+	position:relative;
+	padding-left:0;
+	padding-right:0;
+	left:75%;
+	right:auto;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.alongside.transpose > div {
+	position:relative;
+	padding-left:0;
+	padding-right:0;
+	right:25%;
+	left:auto;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.samewidth > header,
+.samewidth > div {
+	padding-left:0;
+	padding-right:0;
+	width:45%;
+	float:left;
+	padding-left:0;
+	padding-right:0;
+}
+.samewidth > figure {
+	padding-left:0;
+	padding-right:0;
+	width:45%;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.samewidth.transpose > header,
+.samewidth.transpose > div {
+	position:relative;
+	padding-left:0;
+	padding-right:0;
+	left:50%;
+	right:auto;
+	padding-left:0;
+	padding-right:0
+}
+.samewidth.transpose > figure {
+	position:relative;
+	padding-left:0;
+	padding-right:0;
+	right:45%;
+	left:auto;
+	float:left;
+}
+.fullheader > header {
+	padding-left:0;
+	padding-right:0;
+	width:100%;
+	float:left
+}
+.fullheader > div {
+	padding-left:0;
+	padding-right:0;
+	width:45%;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.fullheader > figure {
+	padding-left:0;
+	padding-right:0;
+	width:45%;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.fullheader.transpose > div {
+	position:relative;
+	padding-left:0;
+	padding-right:0;
+	left:45%;
+	right:auto;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+.fullheader.transpose > figure {
+	position:relative;
+	padding-left:0;
+	padding-right:0;
+	right:45%;
+	left:auto;
+	float:left;
+	padding-left:0;
+	padding-right:0
+}
+
+}
+*/
+
+
+
+

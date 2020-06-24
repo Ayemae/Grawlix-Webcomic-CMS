@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.4 (17249) - http://www.bohemiancoding.com/sketch -->
+    <title>it.image_right</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="it.image_right" sketch:type="MSArtboardGroup">
+            <rect id="Rectangle-1" fill="#EEEEEE" sketch:type="MSShapeGroup" x="0" y="0" width="200" height="200"></rect>
+            <g id="Rectangle-3" sketch:type="MSLayerGroup" transform="translate(110.000000, 20.000000)" fill="#6E1EAB">
+                <rect sketch:type="MSShapeGroup" x="0" y="0" width="70" height="69"></rect>
+            </g>
+            <rect id="Rectangle-42" fill="#EDEDED" sketch:type="MSShapeGroup" x="-2" y="180" width="200" height="20"></rect>
+            <text id="Some-things-in-life--Copy" sketch:type="MSTextLayer" font-family="Arial" font-size="9" font-weight="normal" fill="#000000">
+                <tspan x="20" y="28">Some things in life </tspan>
+                <tspan x="20" y="38.2944336">are bad / They can </tspan>
+                <tspan x="20" y="48.5888672">really make you </tspan>
+                <tspan x="20" y="58.8833008">mad / Other things </tspan>
+                <tspan x="20" y="69.1777344">just make you </tspan>
+                <tspan x="20" y="79.472168">swear and curse / </tspan>
+                <tspan x="20" y="89.7666016">When you’re </tspan>
+                <tspan x="20" y="100.061035">chewing on life’s </tspan>
+                <tspan x="20" y="110.355469">gristle / Don’t </tspan>
+                <tspan x="20" y="120.649902">grumble, give a </tspan>
+                <tspan x="20" y="130.944336">whistle / And this’ll </tspan>
+                <tspan x="20" y="141.23877">help things turn out </tspan>
+                <tspan x="20" y="151.533203">for the best …</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

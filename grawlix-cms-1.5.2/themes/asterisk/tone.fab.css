@@ -1,0 +1,271 @@
+/* !-------- Reset --- */
+html,body {
+	background: #280679 url(images/fab/background.png);
+	color: #fee;
+	font-family: sans-serif;
+	font-size: 14pt;
+}
+a {
+	color: #f96;
+	text-decoration: none;
+}
+a:hover {
+	color: #fff;
+}
+
+
+.page__content header {
+	margin: 2rem auto 1rem auto;
+	text-align: center;
+}
+
+.page {
+	background: #20075b;
+	padding: 30px;
+}
+.page__header {
+	justify-content: space-between;
+	align-items: center;
+}
+.page__header h2 {
+	flex: 2;
+}
+.page__header nav {
+	flex: 1;
+}
+.page__header h2 a {
+	display: block;
+	width: 530px; /* Make this match your banner image’s width. */
+	height: 95px; /* Make this match your banner image’s height. */
+	background: url(images/fab/banner.png) center center no-repeat; /* This is the banner image. */
+	background-size: 530px 95px; /* Handy tip: If you’re building retina graphics, make your banner image _twice_ as large as the space it will occupy, then use this line to shrink it into space. */
+	font-size: 1px; /* This hides the site’s name (in text) while still making it SEO-friendly. */
+	color: #20075b;
+	padding: 0;
+	margin: 0;
+}
+.header__menu ul {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.header__menu li {
+	list-style-type: none;
+}
+.header__menu a {
+	display: block;
+	padding: 0.25rem;
+}
+li.active a {
+	color: #fff;
+}
+
+/* If your links are graphics, then you need to specify their images and dimensions here. */
+.menu-home {
+	background: url(images/fab/menu-home.png) center center no-repeat;
+	width: 89px;
+	height: 56px;
+}
+.menu-home span {
+	visibility: hidden;
+	font-size: 1px;
+}
+.menu-about {
+	background: url(images/fab/menu-about.png) center center no-repeat;
+	width: 99px;
+	height: 56px;
+}
+.menu-about span {
+	visibility: hidden;
+	font-size: 1px;
+}
+.menu-archives {
+	background: url(images/fab/menu-archives.png) center center no-repeat;
+	width: 140px;
+	height: 56px;
+}
+.menu-archives span {
+	visibility: hidden;
+	font-size: 1px;
+}
+.menu-support {
+	background: url(images/fab/menu-support.png) center center no-repeat;
+	width: 133px;
+	height: 56px;
+}
+.menu-support span {
+	visibility: hidden;
+	font-size: 1px;
+}
+
+
+.content__image img {
+	border-radius: 10px;
+	box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.7);
+	margin: 0.25rem;
+}
+
+
+.content__nav-1 {
+	display: none;
+}
+.content__nav-2 {
+	margin: 1rem 0 2rem 0;
+	display: flex;
+	justify-content: center;
+}
+.content__nav-2 a {
+	height: 64px;
+	width: 64px;
+	display: block;
+}
+
+.first.navlink {
+	background: url(images/fab/nav-first.png) center top no-repeat;
+}
+.first.navlink:hover {
+	background-position: center bottom;
+}
+.first.navlink span {
+	visibility: hidden;
+}
+.prev.navlink {
+	background: url(images/fab/nav-back.png) center top no-repeat;
+}
+.prev.navlink:hover {
+	background-position: center bottom;
+}
+.prev.navlink span {
+	visibility: hidden;
+}
+.random.navlink {
+	background: url(images/fab/nav-random.png) center top no-repeat;
+}
+.random.navlink:hover {
+	background-position: center bottom;
+}
+.random.navlink span {
+	visibility: hidden;
+}
+.next.navlink {
+	background: url(images/fab/nav-next.png) center top no-repeat;
+}
+.next.navlink:hover {
+	background-position: center bottom;
+}
+.next.navlink span {
+	visibility: hidden;
+}
+.latest.navlink {
+	background: url(images/fab/nav-latest.png) center top no-repeat;
+}
+.latest.navlink:hover {
+	background-position: center bottom;
+}
+.latest.navlink span {
+	visibility: hidden;
+}
+
+
+
+
+.page__comic article {
+	text-align: center;
+}
+.page__comic h1 {
+	visibility: hidden;
+	font-size: 1px;
+}
+
+.secondary__blog {
+	flex: 3;
+	margin: 1rem;
+}
+.byline {
+	display: none;
+}
+.publication-date {
+	display: none;
+}
+.secondary__blog p {
+	line-height: 1.4rem;
+	margin-bottom: 1rem;
+}
+
+
+/* !-------- Social and follow --- */
+
+.secondary__share {
+	flex: 1;
+	margin: 1rem 0;
+	text-align: center;
+}
+.secondary__share a {
+	padding: 0.5rem;
+	display: block;
+}
+
+.secondary__follow {
+	flex: 1;
+	text-align: center;
+	margin: 1rem 0;
+}
+.secondary__follow a {
+	padding: 0.5rem;
+	display: block;
+}
+.share-icons {
+	display: flex;
+	flex-wrap: wrap;
+}
+.social-icon {
+	width: 24px;
+	height: 24px;
+}
+
+/* Hide from sighted readers, but keep available for search engines and screen readers. */
+.secondary__transcript {
+	position: absolute;
+	margin-left: -10000px;
+}
+
+footer {
+	margin: 2rem;
+}
+
+
+/* !-------- Archive --- */
+
+li.item.page {
+	padding: 0.5rem;
+	align-items: flex-start;
+}
+
+.small-block-grid-2 {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.blog__post {
+	background: rgba(255,255,255,0.2);
+padding: 7px;
+border-radius: 5px;
+margin-bottom: 5px;
+}
+.RotatorScript {
+	display: inline-block;
+	text-align: center;
+	width: 100%;
+	margin: 0 auto;
+	padding: 0px;
+}
+@media only screen and (min-width: 481px) and (max-width: 600px) {
+	.RotatorScript img {max-height: 50px;}
+}
+@media only screen and (min-width: 401px) and (max-width: 480px) {
+	.RotatorScript img {max-height: 40px;} 
+}
+
+@media only screen and (max-width: 400px) {
+	.RotatorScript img {max-height: 35px;}
+}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Overview of the Indotherm theme</title>
+  <meta name="description" content="Learn to customize the Grawlix CMS Indotherm theme to suit your needs" />
+  <meta name="author" content="The Grawlix CMS Team" />
+	<style type="text/css" rel="stylesheet">
+body {
+	background: #f4f4f4;
+	font-size: 16px;
+	line-height: 28px;
+	font-family: sans-serif;
+	color: #333;
+}
+main {
+	max-width: 36rem;
+	margin: 0 auto;
+	padding: 2rem;
+}
+article {
+	margin-left: 1rem;
+}
+
+h1 {
+	color: #000;
+	padding-top: 1rem;
+	font-size: 3rem;
+	line-height: 3.5rem;
+	margin-top: 0;
+}
+h1 span {
+	font-weight: normal;
+	color: #555;
+}
+h2 {
+	margin: 4rem 0 0 0;
+	color: #000;
+}
+h3,h4 {
+	margin: 3rem 0 0 0;
+	color: #555;
+}
+a {
+	color: #0c7fbd;
+	text-decoration: none;
+	border-bottom: 1px solid #66c5f7;
+}
+ul,ol {
+	padding-left: 0.25rem;
+}
+li {
+	margin-bottom: 1rem;
+}
+strong {
+	color: #000;
+}
+code {
+	background: #fff;
+	font-size: 1rem;
+	padding: 0.2rem;
+	border: 1px solid #def;
+}
+
+.path {
+	background: #fff;
+	padding: 0.15rem 0.2rem;
+	border-radius: 6px;
+	font-style: italic;
+	font-family: georgia, serif;
+	border: 1px solid #fed;
+}
+.geekspeak {
+	font-style: italic;
+}
+	</style>
+</head>
+<body>
+<main>
+<article>
+
+<h1>Indotherm: <span>a full theme with all the trimmings</span></h1>
+
+<p>Indotherm is a set of files that control the look of sites based on the Grawlix CMS. Collectively called a “theme,” these files demonstrate what how you can make a webcomic look.</p>
+
+<h2 id="toc">In this file</h2>
+
+<ul>
+	<li><a href="#intended-audience">Intended audience</a> — who should use this theme</li>
+	<li><a href="#installing">Installing</a> — how to get a theme running in the Grawlix CMS</li>
+	<li><a href="#customization">Customizing</a> — the most common changes</li>
+	<li><a href="#php">Bits of PHP</a> — includes and stuff from the admin panel</li>
+	<li><a href="#scripts">The theme files</a> — and their jobs</li>
+	<li><a href="#going-forward">Going further</a> — support links and contact details</li>
+</ul>
+
+<h2 id="intended-audience">Who should use this theme</h2>
+
+<p>Indotherm is a fully-developed theme, complete with a built-in grid, icons, CSS reset, and typography. It uses several thousand lines of CSS to cover many, many possible browser configurations and reader scenarios. If you’re not comfortable with HTML and CSS, or want an easier introduction to theming with the Grawlix CMS, check out the <a href="http://www.getgrawlix.com/themes">Stick Figure and Asterisk themes</a> instead of Indotherm.</p>
+
+<h2 id="installing">Installing</h2>
+
+<ol>
+	<li><strong>FTP:</strong> Upload the “indotherm” folder to the <span class="path">/themes</span> folder in your Grawlix-based webcomic site.</li>
+	<li><strong>Install:</strong> Go to the “themes” section of your admin panel and click the Indotherm thumbnail to install it.</li>
+	<li><strong>Activate:</strong> Click the theme again. It should report that several tones are ready to go.</li>
+	<li><strong>Select:</strong> Back in the themes panel, choose the theme and tone from the drop-down list.</li>
+</ol>
+
+
+<h2 id="customization">Customizing this theme</h2>
+
+<p>Many artists want to change a few things like:</p>
+
+<ul>
+<li>The site’s banner</li>
+<li>The site’s background</li>
+<li>Link and text colors</li>
+<li>Site width</li>
+</ul>
+
+<h3>The site banner</h3>
+
+<ol>
+<li>Upload your banner image to <span class="path">/themes/indotherm/images</span>.</li>
+<li>Open the file <span class="path">snippet.header.php</span>.</li>
+<li>Replace the image <code>src</code> on line 32 with the path to your image. Don’t forget to use a sensible <code>alt</code> attribute.</li>
+</ol>
+
+<h3>The site’s background</h3>
+
+<p>There are two ways to change a site’s background color and image. Start by changing the parameters on line 210 in theme.css. Then open the tone files (e.g. “tone.whiteout.css”) to make more specific changes — see <a href="#themes-and-tones">themes and tones</a> below.</p>
+
+<h2>Text and link colors</h2>
+
+<p>They’re in <span class="path">theme.css</span> on lines 211 and 435, respectively. Tone files may override these colors, however — see <a href="#themes-and-tones">themes and tones</a> below.</p>
+
+<h3>Site width</h3>
+
+<p>Not everyone has the same screen as you, or views your site with their browser open as wide as possible. Comics that are, say, 1200 pixels wide must shrink to fit screens that display less than 1200 pixels across. So two factors influence your site’s layout: <strong>your comic image’s size</strong> and the <strong>reader’s browser size.</strong></p>
+
+<p>Found on line 3055 (for the comic image) and line 2798 (for the site), Indotherm’s <em>media queries</em> control page and image widths on differently-sized browsers. In plain English they say, “if the screen is up to <em>X</em> pixels wide, then make the element no more than <em>Y</em> pixels wide.”</p>
+
+<h2 id="themes-and-tones">Themes and tones</h2>
+
+<p>Indotherm’s <span class="path">theme.css</span> file controls the site’s general look: its layout, typography and broad colors. Tone files, whose names begin with “tone” and end with “css”, modify that look. For example, the <span class="path">theme.css</span> file might say “make links blue,” but a tone file says, “no, make them orange.”</p>
+
+<p>The <span class="path">theme.css</span> file applies to your whole site. Tone files, though, you can apply to individual chapters or static pages. That means you could, say, make your FAQ and Cast pages greyscale, but your comic in full color. Or if your story changes from winter to summer in two chapters, each can have its own motif.</p>
+
+<p>Assign themes and tones to your site in “Themes” of your admin panel.</p>
+
+<h2 id="php">PHP functions</h2>
+
+<h3>Snippet()</h3>
+
+<p>Snippets are PHP files that (surprise) begin with “snippet” and end with “php”. The snippet function grabs such a file and sticks it into place. For example, <code>snippet('footer')</code> adds the file “snippet.footer.php”. <a href="http://www.getgrawlix.com/docs/1/snippets">Check out the docs</a> for details.</p>
+
+<h3>Show()</h3>
+
+<p>“Show” functions grab bits of data from the admin panel. For example, <code>show('artist_name')</code> inserts the name you provide in Settings of your admin panel. <a href="http://www.getgrawlix.com/docs/1/show">See the docs</a> for more info.</p>
+
+<h2 id="scripts">PHP scripts</h2>
+
+<p>So, what’s in the box? Every Grawlix theme comes with an assortment of PHP scripts that generate web pages that the reader ultimately sees. Each script is <em>part</em> of a whole page. </p>
+
+<h3>Page.archive</h3>
+
+<p>Displays links to your comic pages, in order. Control its appearance (what the links’ text is) in the admin panel.</p>
+
+<h3>Page.comic</h3>
+
+<p>Displays comic images — the “comic pages” themselves — as well as blog post snippet, transcript snippet, sharing snippet, etc.</p>
+
+<h3>Page.static</h3>
+
+<p>Displays content for non-comic pages like the FAQ and “About” page.</p>
+
+<h3>Snippet.archive-nav</h3>
+
+<p>Comic navigation links that includes one to the archives page.</p>
+
+<h3>Snippet.comic-nav</h3>
+
+<p>The first/previous/next/latest links in your list of comic pages. </p>
+
+<h3>Snippet.comic-nav-random</h3>
+
+<p>Navigation links … but includes a link to a certain comic page. Which page? Who knows? It’s different every time, giving readers a surprise at every page load.</p>
+
+<h3>Snippet.comments</h3>
+
+<p>Contains code that enables readers to leave their thoughts on your comic pages — Disqus, etc. Tinker with this only if you get updated code from your commenting service of choice.</p>
+
+<h3>Snippet.follow</h3>
+
+<p>Contains links to other places on the ’net people can find you, like RSS, Facebook, Pinterest and Twitter. Best left alone unless you know a little PHP.</p>
+
+<h3>Snippet.footer</h3>
+
+<p>The end of every web page on your site. This snippet includes the copyright statement and publish frequency, both of which you change in the admin panel or custom-write by simply replacing all the code in line 5.</p>
+
+<h3>Snippet.header</h3>
+
+<p>Begins each web page with info about the HTML, favicons, and — by default — site banner, title and site-wide navigation menu. </p>
+
+<h3>Snippet.share</h3>
+
+<p>This complicated-looking script gives readers the chance to tell other people about your comic pages via social media. You can control which appears in the site via your admin panel’s sharing options.</p>
+
+<h3>Snippet.transcript</h3>
+
+<p>Shows a comic page’s written dialog, events, setting, etc. to the reader.</p>
+
+<h3>Pattern.(something).php</h3>
+
+<p>Pattern files are bits of HTML that displays a static page block. Most static pages are made of discrete “bits” — like individual characters in a cast page. Patterns control how that information is structured.</p>
+
+<h2 id="going-forward">Going further</h2>
+
+<p>So that’s how you get started with Indotherm, a full theme for the Grawlix CMS. If you need more info, here you go:</p>
+
+<ul>
+	<li><strong><a href="http://www.getgrawlix.com/docs">Read the docs</a></strong>: Learn more about specific topics in the Grawlix CMS.</li>
+	<li><strong><a href="http://www.getgrawlix.com/forum">Ask questions</a></strong>: Seek solutions or share your know-how in the forum.</li>
+	<li><strong><a href="https://gumroad.com/l/SACCb">Fear no code</a></strong>: Expunge your apprehension of HTML and CSS with our guide to coding for webcomic artists.</li>
+	<li><strong><a href="http://patreon.com/grawlixcomix">Support us</a></strong>: Help us make a better product — and get insider info and supporter-only features.</li>
+	<li><strong><a href="http://twitter.com/grawlixcomix/">@grawlixcomix</a></strong>: Follow us on Twitter.</li>
+<li><strong><a href="mailto:grawlixcomix@gmail.com">Give feedback</a></strong>: Something else on your mind? Got a question or comment? Let us know.</li>
+</ul>
+
+<p>Happy publishing!<br/>
+— the Grawlix team</p>
+</article>
+</main>
+
+</body>
+</html>

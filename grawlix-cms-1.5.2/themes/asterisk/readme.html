@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Overview of the Asterisk theme</title>
+  <meta name="description" content="Learn to customize the Grawlix CMS Asterisk theme to suit your needs." />
+  <meta name="author" content="The Grawlix CMS Team" />
+	<style type="text/css" rel="stylesheet">
+body {
+	background: #f4f4f4;
+	font-size: 16px;
+	line-height: 28px;
+	font-family: sans-serif;
+	color: #333;
+}
+main {
+	max-width: 36rem;
+	margin: 0 auto;
+	padding: 2rem;
+}
+article {
+	margin-left: 1rem;
+}
+
+h1 {
+	color: #000;
+	padding-top: 1rem;
+	font-size: 3rem;
+	line-height: 3.5rem;
+	margin-top: 0;
+}
+h1 span {
+	font-weight: normal;
+	color: #555;
+}
+h2 {
+	margin: 4rem 0 0 0;
+	color: #000;
+}
+h3,h4 {
+	margin: 3rem 0 0 0;
+	color: #555;
+}
+a {
+	color: #0c7fbd;
+	text-decoration: none;
+	border-bottom: 1px solid #66c5f7;
+}
+ul,ol {
+	padding-left: 0.25rem;
+}
+li {
+	margin-bottom: 1rem;
+}
+strong {
+	color: #000;
+}
+code {
+	background: #fff;
+	font-size: 1rem;
+	padding: 0.2rem;
+	border: 1px solid #def;
+}
+
+.path {
+	background: #fff;
+	padding: 0.15rem 0.2rem;
+	border-radius: 6px;
+	font-style: italic;
+	font-family: georgia, serif;
+	border: 1px solid #fed;
+}
+.geekspeak {
+	font-style: italic;
+}
+	</style>
+</head>
+<body>
+<main>
+<article>
+
+<h1>Asterisk: <span>Advanced layout for modern webcomics</span></h1>
+
+<p>Asterisk is a theme for the Grawlix CMS. It’s a collection of code and graphics you can use to quickly build a webcomic site design.</p>
+
+<p>In addition to having tons of notes and instructions for you, Asterisk uses Flexbox to handle its layout. <em>Flexbox</em> is a relatively new CSS technique that makes arranging items much easier than with old-school floats &amp; clears. If your readers use <a href="http://caniuse.com/#search=flexbox">modern web browsers</a>, then Asterisk is great. But if you think your readers are old-fashioned, then you might want to use <a href="http://www.getgrawlix.com/themes">Indotherm or Stick Figure</a>.
+
+	<h2 id="toc">In this file</h2>
+
+	<ul>
+	<li><a href="#intended-audience">Intended audience</a> — who should use this theme</li>
+	<li><a href="#theme-contents">What’s included</a> — files that come with this theme</li>
+	<li><a href="#terminology">Terminology</a> — important words and what they mean</li>
+	<li><a href="#installing">Installing</a> — how to get a theme running in the Grawlix CMS</li>
+	<li><a href="#customizing">Customizing</a> — making the theme your own</li>
+	<li><a href="#going-forward">More info</a> — support links and contact details</li>
+	</ul>
+
+<h2 id="intended-audience">Who should use this theme</h2>
+
+<p>We wrote Asterisk with forward-thinking webcomic artists in mind. If you’re looking for sophisticated, easy-to-apply layout, Asterisk is for you. You’ll need to change your mindset away from old CSS floats and clears, but it’s worth the effort in the long run.</p>
+
+<h2 id="theme-contents">What’s in the box</h2>
+
+<p>Asterisk is organized into three “page” PHP scripts, a dozen snippet files, five pattern files, and five CSS files. Among the CSS files are four “tones” which give the site different looks, although they use the same layout provided by the <span class="path">theme.css</span> file. There are also 20 graphics, and you’ve already found the readme.</p>
+
+<p>All of this is up for grabs. You can edit it to fit your needs, or just study the code as a model for your own theme.</p>
+
+<h2 id="terminology">What’s what</h2>
+
+<ul>
+	<li>A <strong>theme</strong> is a collection of files that gives a webcomic site its unique look.</li>
+	<li>The <strong>themes folder</strong> is a special directory in the Grawlix CMS that contains themes. It resides at the top level of your webcomic site.</li>
+	<li><strong>Theme.css</strong> is a CSS file that defines the site’s general layout.</li>
+	<li>A <strong>tone</strong> is a CSS file that modifies <span class="path">theme.css</span>, usually by adding colors, typography, and graphics.</li>
+	<li><strong>Selector:</strong> part of a CSS block that indicates what the block will affect. For example, <code>.page__secondary { color: blue; }</code> will make text blue inside of HTML that is classified as “page__secondary”.</li>
+	<li><strong>Page.(something).php</strong>: Scripts that control the three different kinds of pages in a webcomic site: comic, static, and archive. Page scripts are the backbone of a theme. They use snippets to build out entire web pages.</li>
+	<li><strong>Snippet.(something).php</strong>: One reusable piece of a larger web page. For example, <span class="path">snippet.menu-main.php</span> contains just the site’s menu.</li>
+	<li><strong>Pattern.(something).php</strong>: HTML that displays a static page block. Most static pages are made of discrete “bits” — like individual characters in a cast page. Patterns control how that information is structured.</li>
+</ul>
+
+<h2 id="installing">Installing</h2>
+
+<ol>
+	<li><strong>FTP:</strong> Upload the “asterisk” folder to the <span class="path">/themes</span> folder in your Grawlix-based webcomic site.</li>
+	<li><strong>Install:</strong> Go to the “themes” section of your admin panel and click the Asterisk thumbnail to install it.</li>
+	<li><strong>Activate:</strong> Click the theme again. It should report that several tones are ready to go.</li>
+	<li><strong>Select:</strong> Back in the themes panel, choose the theme and tone from the drop-down list.</li>
+</ol>
+
+<h2 id="customizing">Customizing</h2>
+
+<p>HTML mixed in PHP can intimidate anyone learning the basics, so we wanted to lower the learning curve. You can change most of the site’s look and feel with just CSS and images. Check out the files <span class="path">theme.css</span> and <span class="path">tone.zero-annotated.css</span> to get oriented.</p>
+
+<h3>Change the banner</h3>
+
+<ol>
+	<li>Upload your banner graphic to the folder <span class="path">/theme/asterisk/images/custom</span>.</li>
+	<li>Depending on which tone you’ve selected in the admin panel, look in the files <span class="path">tone.mars.css</span> or <span class="path">tone.fab.css</span> (lines 76 and 31, respectively) for the selector <code>.page__header h1 a</code>. For its banner, the tone <span class="path">tone.grey.css</span> uses text instead of an image.</li>
+	<li>Change the background path and filename to your graphic. For example, if you named your banner <span class="path">my-banner.png</span>, then change the code to <code>background: url(images/custom/my-banner.png);</code>.
+</ol>
+
+<aside class="geekspeak"><strong>Tech note:</strong> There’s nothing magical about the <span class="path">/themes/asterisk/images/custom</span> folder. It’s there to help keep files organized, but you can put your graphics anywhere you feel is appropriate.</aside>
+
+<h3>Change the background</h3>
+
+<ol>
+	<li>Upload your background graphic to the folder <span class="path">/themes/asterisk/images/custom</span>.</li>
+	<li>Depending on which tone you’ve selected in the admin panel, look in <span class="path">tone.mars.css</span> or <span class="path">tone.verdant.css</span> (line 20 in both) for the selector <code>html,body</code>. </li>
+	<li>Change the background path and filename of that CSS block to your graphic. For example, if you named your banner <span class="path">my-background.jpg</span>, then change the code to <code>background: url(images/custom/my-background.png);</code>.
+</ol>
+
+<h3>Change the page width</h3>
+
+<p>Several items in CSS control the page width, but the main width property is in the <code>.page__comic</code> selector, around line 123 of <span class="path">theme.css</span>. Also look for <code>.page__secondary</code> in the tone files.</p>
+
+
+<h3>Change Mars’ navigation graphics</h3>
+
+<p>To show how tones can work, the Mars tone replaces its text back/next links with graphics. You can change them like this:</p>
+
+<ol>
+	<li>Upload your navigation graphics to <span class="path">/themes/asterisk/images/custom</span>.</li>
+	<li>Look around line 134 of <span class="path">tone.mars.css</span> for the <code>.navlink</code> selector. Change its <code>width</code> and <code>height</code> properties to fit your graphics’ dimensions. (If your graphics are different sizes, then delete the width and height lines in the <code>.navlink</code> block.)</li>
+	<li>Look for the <code>.first</code>, <code>.prev</code>, <code>.next</code>, and <code>.last</code> selectors in <span class="path">tone.mars.css</span> (around lines 146–157). Change the paths of each background to the appropriate graphic. For example, if you named your “first” graphic <span class="path">beginning.gif</span>, then the <code>.first</code> background property should read <code>background: url(images/custom/beginning.gif);</code>.
+	<li>If your back/next graphics are different sizes, then enter their <code>width</code> and <code>height</code> properties in the appropriate block, like <code>.first</code> and <code>.next</code>.</li>
+</ol>
+
+
+
+<h2 id="going-forward">More info</h2>
+
+<ul>
+	<li><strong><a href="http://www.getgrawlix.com/docs">Read the docs</a></strong>: Learn more about specific topics in the Grawlix CMS.</li>
+	<li><strong><a href="http://www.getgrawlix.com/forum">Ask questions</a></strong>: Seek solutions or share your know-how in the forum.</li>
+	<li><strong><a href="https://gumroad.com/l/SACCb">Fear no code</a></strong>: Expunge your apprehension of HTML and CSS with our guide to coding for webcomic artists.</li>
+	<li><strong><a href="http://patreon.com/grawlixcomix">Support us</a></strong>: Help us make a better product — and get insider info and supporter-only features.</li>
+	<li><strong><a href="http://twitter.com/grawlixcomix/">@grawlixcomix</a></strong>: Follow us on Twitter.</li>
+	<li><strong><a href="mailto:grawlixcomix@gmail.com">Give feedback</a></strong>: Something else on your mind? Got a question or comment? Let us know.</li>
+</ul>
+
+<p>Happy theming!<br/>
+— the Grawlix team</p>
+
+</article>
+</main>
+
+</body>
+</html>

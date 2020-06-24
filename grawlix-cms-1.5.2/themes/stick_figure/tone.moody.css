@@ -1,0 +1,33 @@
+body {
+	background: #123;
+	color: #DDD;
+}
+a {
+	color: #5AE;
+}
+
+
+#blog-post h3 {
+	color: #7AC;
+}
+#blog-post p {
+	color: #69B;
+}
+#blog-post .meta {
+	color: #58A;
+}
+
+
+#transcript h3 {
+	color: #58A;
+}
+#transcript p {
+	color: #479;
+}
+
+#follow h3 {
+	color: #58A;
+}
+#follow p {
+	color: #479;
+}

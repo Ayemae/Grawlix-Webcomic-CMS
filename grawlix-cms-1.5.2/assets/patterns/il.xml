@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page version="1.1">
+	<options>
+		<layout>list</layout>
+		<function>{function}</function>
+		<pattern>default</pattern>
+		<option>image</option>
+		<option>link</option>
+	</options>
+	<content>
+		<item>
+			<image><![CDATA[]]></image>
+			<link><![CDATA[{link}]]></link>
+		</item>
+		<item>
+			<image><![CDATA[]]></image>
+			<link><![CDATA[{link}]]></link>
+		</item>
+		<item>
+			<image><![CDATA[]]></image>
+			<link><![CDATA[{link}]]></link>
+		</item>
+	</content>
+</page>

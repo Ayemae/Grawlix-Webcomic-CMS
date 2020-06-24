@@ -1,0 +1,85 @@
+/*! Background */
+body {
+  color: #fff;
+  background-color: #422e76;
+  background-image: url("images/halftone-top.svg");
+  background-repeat: repeat-x;
+  background-position: left top;
+  background-size: contain;
+}
+
+/*! Follow links */
+.follow a {
+  color: #ed8134;
+  text-decoration: none;
+}
+.follow a:hover, .follow a:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+/*! Main container */
+.wrap {
+  color: #222;
+  background-color: #fff;
+}
+
+/*! Links */
+a {
+  color: #7855c1;
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: #bbaae0;
+  text-decoration: none;
+}
+
+/*! Menu colors */
+#menu {
+  color: #bbb;
+}
+#menu a {
+  color: #7855c1;
+  text-decoration: none;
+}
+#menu a:hover, #menu a:focus {
+  color: #bbaae0;
+  text-decoration: none;
+}
+
+/*! Mobile menu widget */
+#menu-widget {
+  color: #bbb;
+  background-color: #7855c1;
+}
+#menu-widget a {
+  color: #bbb;
+  text-decoration: none;
+}
+#menu-widget a:hover, #menu-widget a:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+/*! Comic & archive nav buttons */
+a.navlink {
+  color: #ed8134 !important;
+  text-decoration: none !important;
+}
+a.navlink:hover, a.navlink:focus {
+  color: #f6c09a !important;
+  text-decoration: none !important;
+}
+
+/*! Footer colors */
+#site-foot {
+  color: #bbb;
+}
+#site-foot a {
+  color: #ed8134;
+  text-decoration: none;
+}
+#site-foot a:hover, #site-foot a:focus {
+  color: #fff;
+  text-decoration: none;
+}

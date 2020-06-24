@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
+    <title>ht.default</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="ht.default" sketch:type="MSArtboardGroup">
+            <rect id="Rectangle-2" fill="#EEEEEE" sketch:type="MSShapeGroup" x="0" y="0" width="200" height="200"></rect>
+            <text id="Heading" sketch:type="MSTextLayer" font-family="CCLegendaryLegerdemain" font-size="24" font-weight="normal" fill="#3B3B3B">
+                <tspan x="18" y="38">Heading</tspan>
+            </text>
+            <text id="Some-things-in-life-" sketch:type="MSTextLayer" font-family="Verdana" font-size="9" font-weight="normal" fill="#000000">
+                <tspan x="20" y="67">Some things in life are bad / They </tspan>
+                <tspan x="20" y="78">can really make you mad / Other </tspan>
+                <tspan x="20" y="89">things just make you swear and </tspan>
+                <tspan x="20" y="100">curse / When you're chewing on </tspan>
+                <tspan x="20" y="111">life's gristle / Don't grumble, give </tspan>
+                <tspan x="20" y="122">a whistle / And this'll help things </tspan>
+                <tspan x="20" y="133">turn out for the best... / </tspan>
+                <tspan x="20" y="144">And... / ...always look on the </tspan>
+                <tspan x="20" y="155">bright side / of life... / (Whistle) / </tspan>
+                <tspan x="20" y="166">Always look on the light side / of </tspan>
+                <tspan x="20" y="177">life... / (Whistle) / If life seems </tspan>
+                <tspan x="20" y="188">jolly rotten / There's something </tspan>
+                <tspan x="20" y="199">you've forgotten / And that's to </tspan>
+                <tspan x="20" y="210">laugh and smile and dance and </tspan>
+                <tspan x="20" y="221">sing / When you're feeling in the </tspan>
+                <tspan x="20" y="232">dumps / Don't be silly chumps / </tspan>
+                <tspan x="20" y="243">Just purse your lips and whistle / - </tspan>
+                <tspan x="20" y="254">that's the thing. / And...always </tspan>
+                <tspan x="20" y="265">look on the bright / side of life... / </tspan>
+                <tspan x="20" y="276">(Whistle)</tspan>
+            </text>
+            <rect id="Rectangle-42" fill="#EDEDED" sketch:type="MSShapeGroup" x="0" y="180" width="200" height="20"></rect>
+        </g>
+    </g>
+</svg>

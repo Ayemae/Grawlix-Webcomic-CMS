@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="1.0">
+	<archive>
+		<behavior>
+			<option>
+				<name>single</name>
+				<title>Single page</title>
+				<description>Show everything on one screen, pages organized by chapters.</description>
+			</option>
+			<option>
+				<name>multi</name>
+				<title>Multiple pages</title>
+				<description>Show a list of chapters. Readers tap each chapter to see its pages.</description>
+			</option>
+		</behavior>
+		<chapter>
+			<layout>list</layout>
+			<layout>grid</layout>
+			<option>title</option>
+			<option>number</option>
+			<option>description</option>
+		</chapter>
+		<page>
+			<layout>list</layout>
+			<layout>grid</layout>
+			<layout>inline</layout>
+			<option>title</option>
+			<option>number</option>
+			<option>date</option>
+		</page>
+	</archive>
+	<rss>
+		<option>title</option>
+		<option>number</option>
+	</rss>
+</book>

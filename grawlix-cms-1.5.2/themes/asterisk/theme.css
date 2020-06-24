@@ -1,0 +1,423 @@
+/* !-------- Reset --- */
+
+html,body {
+	font-size: 16pt;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+img {
+	max-width: 100%;
+}
+
+
+/* !-------- Layout setup --- */
+
+
+
+.page {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 20px;
+	margin: auto;
+ 	max-width: 1000px; /* Change the container width here. */
+}
+
+.page__header {
+	display: flex;
+	width: 100%;
+	margin-bottom: 1rem;
+}
+.page__footer {
+	width: 100%;
+}
+
+.comic-images {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+/* Small screens */
+
+@media screen and (max-width: 900px) {
+	.page__secondary {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		margin: 0;
+		max-width: 100%;
+		padding: 0;
+	}
+}
+
+/* Wide screens */
+
+@media screen and (min-width: 901px) {
+	.page__content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		width: 100%;
+	}
+	.page__content img {
+		display: block;
+	}
+	.page__secondary {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		width: 100%;
+	}
+}
+
+
+/* !-------- Main section’s columns --- */
+
+@media screen and (max-width: 900px) {
+	.page__header {
+		flex-direction: column-reverse;
+	}
+
+	/* This h2 is the site title. */
+	.page__header h2 {
+		max-width: 100%;
+	}
+	.page__content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		max-width: 100%;
+	}
+}
+
+
+
+/* !-------- Arrangement --- */
+
+/* What’s this? Change the order in which sections
+ * appear by changing the numbers below. For example,
+ * if you want the blog to come before the share icons,
+ * then change its order to 1, and share’s order to 2.
+ */
+
+/* MAJOR SECTIONS */
+/* These are the broad regions inside of the
+ * overall page container. */
+
+.page__header {
+	order: 1;
+}
+.page__content {
+	order: 2;
+}
+.page__secondary {
+	order: 3;
+}
+.page__footer {
+	order: 4;
+}
+
+/* SUPPLEMENTAL SECTIONS */
+/* These are the items inside of page__secondary. */
+
+.secondary__share {
+	order: 1;
+}
+.secondary__blog {
+	order: 2;
+}
+.secondary__transcript {
+	order: 3;
+}
+.secondary__follow {
+	order: 4;
+}
+
+
+
+/* !-------- Archive --- */
+
+/* ----- “Classic” v1.0–1.3 structure */
+
+/* Archives in the Grawlix CMS used HTML that wasn’t, 
+ * strictly speaking, a hierarchy. For example, 
+ * H3 marker elements were at the same level as the 
+ * pages they represented. They also used some 
+ * non-semantic class names like “no-bullet”.
+ * 
+ * Switch between “classic” and “v1.4+” structures 
+ * in the admin panel.
+ */
+.no-bullet {
+	list-style-type: none;
+	padding-right: 0.5rem;
+}
+.archive-content > ul {
+	width: 100%;
+}
+
+/* Groups of markers */
+ul.small-block-grid-1 {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+/* marker headings */
+.archive-content h3 {
+}
+
+/* Marker title */
+ul.small-block-grid-1 > li {
+	width: 25%;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Pages container */
+ul.small-block-grid-1 ul  {
+}
+
+/* Individual pages */
+ul.small-block-grid-1 ul li {
+	border: none;
+	padding: 0.25rem;
+}
+
+
+
+/* ----- Version 1.4+ archive structure */
+
+/* Version 1.4 of the Grawlix CMS introduced 
+ * a new HTML structure for archives. It’s more
+ * of a hierarchy than the old way (see above) 
+ * and allows for marker images.
+ */
+
+/* Everything in this structure is inside an 
+ * unordered list (UL). This bit removes the 
+ * default bullet points.
+ */
+.archive-content ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Various types of layouts. */
+.archive-layout--list {
+	display: flex;
+	flex-direction: column;
+}
+.archive-layout--grid {
+	display: flex;
+	flex-wrap: wrap;
+}
+.archive-layout--inline {
+}
+
+
+/* If you want a grid-based layout, how many 
+ * columns do you want? Uncomment the appropriate 
+ * sets below to divide the grid into two, three, 
+ * four, or five markers across.
+ */
+
+/* Create a two-up layout grid. */
+/*
+.archive-layout--grid .archive-marker {
+	width: 45%;
+	margin-right: 5%;
+}
+*/
+
+/* Create a three-up layout grid. */
+.archive-layout--grid .archive-marker {
+	width: 30%;
+	margin-right: 3%;
+}
+
+/* Create a four-up layout grid. */
+/*
+.archive-layout--grid .archive-marker {
+	width: 24%;
+	margin-right: 1%;
+}
+*/
+
+/* Create a five-up layout grid. */
+/*
+.archive-layout--grid .archive-marker {
+	width: 19%;
+	margin-right: 1%;
+}
+*/
+
+
+/* Styles for various “ranks” of markers, such as volume, chapter, scene, etc */
+.archive-level-1 {
+	font-size: 1rem;
+}
+.archive-level-2 {
+	font-size: 0.75rem;
+}
+.archive-level-3 {
+	font-size: 0.5rem;
+}
+
+/* Add a little space between chapters/scenes/etc. */
+.archive-marker {
+	margin-bottom: 2rem;
+}
+
+/* Markers’ images typically need a little space too. */
+.archive-marker header img {
+	margin-bottom: 0.5rem;
+}
+
+/* Page items also often need some breathing room. */
+.archive-page {
+	padding: 0.25rem 0;
+}
+
+/* Make publication dates look a little less important — and distracting. */
+.archive-page time {
+	font-size: 0.75em;
+	display: block;
+}
+
+
+
+
+/* !-------- Static content --- */
+
+/* Static pages have two configuration options:
+ * layout, which determines how each content block
+ * appears in relation to its neighbors, and
+ * pattern, which determines the stuff inside of
+ * each content block.
+ */
+
+/* Overall page layout: straight list vs. two-up grid */
+.static-layout-list {
+	 display: flex;
+	 flex-direction: column;
+}
+.static-layout-grid {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+.static-layout-grid [class^='pattern'] {
+	width: 49%;
+	margin-bottom: 1rem;
+}
+
+/* Static pages have different “patterns,” or
+ * configurations of HTML. This section controls
+ * how each pattern is laid out.
+ */
+
+.pattern-image-top {
+	display: flex;
+	flex-direction: column;
+}
+.pattern-image-top h3 {
+}
+.pattern-image-top .content {
+}
+
+.pattern-image-left {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 1rem;
+}
+.pattern-image-left figure {
+	max-width: 35%;
+}
+.pattern-image-left .content {
+	max-width: 60%;
+	margin-left: 1rem;
+}
+
+.pattern-image-right {
+	display: flex;
+	margin-bottom: 2rem;
+}
+.pattern-image-right h3 {
+	margin-right: 1rem;
+}
+.pattern-image-right .content {
+	width: 80%;
+}
+
+.pattern-no-image {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1rem;
+}
+.pattern-no-image .content {
+	width: 100%;
+}
+
+
+/*
+
+Comic page structure, for reference
+
+page
+|
++-page__header
+| |
+| +-h2
+| +-header__menu
+|
++-page__content
+| |
+| +-article
+| | |
+| | +-h1
+| | +-content__nav-1
+| | +-comic-images
+| | +-publication-date
+| | +-comic-images
+| | +-content__nav-2
+|
++-page__secondary
+| |
+| +-secondary__share
+| +-secondary__blog
+| +-secondary__transcript
+|
++-page__footer
+
+
+
+
+
+V1.4 archive structure, for reference
+
+archive-layout--x
+|
++-archive-marker
+| |
+| +-header
+| | |
+| | +-img
+| | |
+| | +-h3
+| |
+| +-archive-layout--x
+| | |
+| | +-archive-page
+| | | |
+| | | +-a
+| | | | |
+| | | | +-img
+
+*/
