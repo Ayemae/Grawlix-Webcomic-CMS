@@ -159,7 +159,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			$pImage = $this->db->subQuery('pImg');
 			$pImage->join('image_reference ir','im.image_reference_id = ir.id','INNER');
 			$pImage->where('im.rel_type','page');
-			$pImage->where('im.sort_order',1);
+			$pImage->where('im.sort_order',1); 
 			$pImage->get('image_match im',null,'rel_id,url,description');
 			$this->db->join($pImage,'pImg.rel_id = bp.id','LEFT');
 		}
@@ -537,7 +537,9 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		}
 		// Thumbnail
 		if ( in_array('image', $this->meta['pages']) && $info['page_img'] ) {
-			$image = '<a class="thumb" href="'.$url.'"><img src="'.$this->milieu['directory'].$info['page_img'].'" alt="'.$info['page_img_alt'].'" /></a>';
+			$imagePath = $this->milieu['directory'].$info['page_img'];
+			$thumbPath = substr($imagePath, 0, strrpos($imagePath, '/')).'/thumb.jpg';
+			$image = '<a class="thumb" href="'.$url.'"><img src="'.$thumbPath.'" alt="'.$info['page_img_alt'].'" /></a>';
 		}
 		// Page number
 		if ( in_array('number', $this->meta['pages']) && $num ) {

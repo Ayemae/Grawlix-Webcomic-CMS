@@ -429,8 +429,8 @@ $view->group_instruction('Content block arrangement. “Patterns” are how each
 $layout_output = $view->format_group().'<hr/>';
 
 $view->group_h2('Content blocks');
-$view->group_contents($block_output);
 $view->group_instruction('Stuff the readers see. Each block represents a “chunk” of information that may include a title, an image, a paragraph or two, HTML, and a link to another website.');
+$view->group_contents($block_output);
 $content_output = $view->format_group();
 
 

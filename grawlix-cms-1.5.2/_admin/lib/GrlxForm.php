@@ -465,20 +465,23 @@ class GrlxForm {
 		return $output;
 	}
 
-	public function checkbox_switch($int=1) {
-		$id = $this->id;
-		if ( $this->title ) {
-			$title = ' title="'.$this->title.'"';
+	public function checkbox_switch($int=1, $prefix='') {
+        $id = $this->id;
+        if ( $this->title ) {
+            $title = ' title="'.$this->title.'"';
+        }
+        if ( $int == 1 ) {
+            $checked = ' checked';
 		}
-		if ( $int == 1 ) {
-			$checked = ' checked';
+		if ($prefix) {
+			$prefix = $prefix.'-';
 		}
-		$output  = '<div class="toggle"'.$title.'>';
-		$output .= '<input id="'.$id.'" type="checkbox"'.$checked.'>';
-		$output .= '<label for="'.$id.'"></label>';
-		$output .= '</div>';
-		return $output;
-	}
+        $output  = '<div class="toggle"'.$title.'>';
+        $output .= '<input id="'.$prefix.$id.'" type="checkbox"'.$checked.'>';
+        $output .= '<label for="'.$prefix.$id.'"></label>';
+        $output .= '</div>';
+        return $output;
+}
 
 	public function build_tone_select($current=null) {
 		global $db_ops;

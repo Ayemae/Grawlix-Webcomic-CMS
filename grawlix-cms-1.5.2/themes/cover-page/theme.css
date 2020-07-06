@@ -1,0 +1,64 @@
+/* Baseline Defaults */
+* {box-sizing: border-box}
+html {font-size: 18px;}
+
+/* Common Element Defaults */
+a {
+	color: white;
+}
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+p {
+	margin: 15px 10px;
+}
+
+
+body {
+	color: #dbd6ee;
+	font-family: "Baskerville", serif;
+	background-color: #2c165c;
+	background-image: url('images/bg.jpg');
+	background-size: cover;
+	position: relative;
+	align-items: center;
+	line-height: 1.3em;
+}
+
+.container {
+	margin: 10px 40px;
+	width: 40%;
+	min-width: 300px;
+	max-width: 530px;
+}
+
+.text-container {
+	background-color: rgba(15, 5, 36, 0.75);
+    padding: 20px;
+	border-radius: 10px;
+}
+
+.btns-box {
+    font-family: "Baskerville", "Palatino", serif;
+    width: auto;
+    border: solid 3px #7d8fa4;
+    background-color: #0b0e17;
+    padding: 1px 2px;
+	margin-bottom: 12px;
+	display: flex;
+	margin-top: 20px;
+}
+.btns-box a.btn {
+	color: #a2b4ce;
+	text-align: center;
+    font-size: 1.2em;
+    flex-grow: 1;
+    font-style: italic;
+    border: double 7px;
+    border-color: #7d8fa4;
+    background-color: #0b0e17;
+    padding: 5px;
+    margin: 3px 1px;
+}

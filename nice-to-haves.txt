@@ -1,0 +1,54 @@
+GRAWLIX NICE-TO-HAVES
+
+archive displays thumbnails, not full images
+
+run-able function to make thumbnails of all pages (on book? on marker?)
+- When changing the thumbnail size in Settings, give the option to re-generate all thumbnails.
+
+permalink route with db ID rather than sort order (or some other more permanent identifier than sort order)
+
+allow getting the DB ID in $page
+
+pass the DB ID to Disqus (will require option update)
+
+marker and submarker names to $page class
+
+multiple books (prepared, needs debugging)
+
+allow editing themes within the Grawlix UI
+
+expand the mass scheduler to accommodate more than "every N whatevers"
+
+GUI multi-page uploader
+- add scheduler to multi-page uploader
+
+make missing patterns fall back to some default pattern, the same as it does for snippets
+
+image uploader for 'blog'
+
+
+—
+
+
+LIKELY REQUIRES DATABASE CHANGES
+
+option to set the first page as the default page, rather than just a custom page or the latest page
+
+option to automatically make thumbnails of uploaded pages
+- add a "generate thumbnail" checkbox on +New Page (no DB change required for this)
+- allow setting the default for this checkbox on the Settings page? This would require a DB change. Or maybe we can store its last known value in LocalStorage, without needing a DB change. However, this would be more error-prone as LocalStorage can get cleared out by the user, and some users may use several devices.
+
+GUI support for menu dropdowns
+
+marker for 'pages' not included in comic flow (i.e., hiatus pages)
+
+option to hide submarker title in archive
+
+multiple users
+
+More language-agnostic
+
+Change 'update day' field(?), allow longer strings or parse display on site front-end
+
+css variable editor
+

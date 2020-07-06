@@ -1,0 +1,51 @@
+# Uncomment the below values and set them to “1” to display PHP debugging info on most web hosts.
+# php_value display_errors 0
+# php_value display_startup_errors 0
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  
+  # Uncomment the next line if you get server errors when installing or running your site. Some hosts require it.
+  RewriteBase /rumplestiltskin/
+  # If you're installing Grawlix in a subdirectory, you may need to uncomment that line and change / to your directory, e.g. /grawlix/
+  
+  # Workaround for RSS feeds not working right
+  # RewriteRule ^(.*)rss$ rss.php?$1
+
+  # Allow common web files.
+  RewriteCond %{REQUEST_FILENAME} !^.*\.css$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.js$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.php$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.xml$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.html$
+
+  # Allow image files.
+  RewriteCond %{REQUEST_FILENAME} !^.*\.jpg$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.jpeg$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.gif$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.png$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.svg$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.ico$
+
+  # Allow media files.
+  RewriteCond %{REQUEST_FILENAME} !^.*\.swf$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.mov$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.wmv$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.mp3$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.pdf$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.zip$
+
+  # Allow font files.
+  RewriteCond %{REQUEST_FILENAME} !^.*\.eot$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.otf$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.woff$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.ttf$
+  
+  #Allow files for autoSSL to issue certificates
+  RewriteCond %{REQUEST_FILENAME} !^.*\.txt$
+  RewriteCond %{REQUEST_FILENAME} !^.*\.tmp$
+
+  # Every other URL request goes through index.php.
+  RewriteRule ^(.*)$ index.php?$1
+
+</IfModule>

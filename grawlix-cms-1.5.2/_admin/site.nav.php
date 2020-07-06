@@ -166,6 +166,8 @@ if ( $nav_item ) {
 		}
 //		$action_output = $edit_link->icon_link();
 
+		// $is_subitem = $form->checkbox_switch($item['in_menu'],'submenu');
+
 		if ( isset($dupes) && in_array($item['url'], $dupes) ) {
 			$item['url'] = '<span class="fixme">'.$item['url'].'</span>';
 		}
@@ -187,6 +189,11 @@ if ( $nav_item ) {
 		{
 			$url = $item['url'];
 		}
+		//indicate link is external
+		if ( $item['rel_type'] == 'external' ) {
+			$url = $url.'<i class="ext-url-icon fas fa-external-link"></i>';
+		}
+		
 
 		if (strlen($title) > 24)
 		{
@@ -197,7 +204,8 @@ if ( $nav_item ) {
 			$item['clickable_title'],
 			$title,
 			$url,
-//			$item['rel_type'],
+//			$item['rel_type']
+			// $is_subitem,
 			$vis_output,
 			$edit_link->icon_link() // $action_output
 		);
@@ -238,6 +246,12 @@ $heading_list[] = array(
 	'class' => null
 );
 */
+
+// $heading_list[] = array(
+// 	'value' => 'Subitem',
+// 	'class' => null
+// );
+
 $heading_list[] = array(
 	'value' => 'Visible',
 	'class' => null

@@ -214,7 +214,7 @@ for ( $i=date('Y')-20; $i<date('Y')+2; $i++ ) {
 // Build select elements for each date part.
 
 $sl-> setName('pub_year');
-$sl-> setCurrent(($_POST && $pub_year > 0)? $pub_year : date('Y'));
+$sl-> setCurrent(date('Y'));
 $sl-> setList($year_list);
 $sl-> setValueID('id');
 $sl-> setValueTitle('title');
@@ -222,7 +222,7 @@ $sl-> setStyle('width:6rem');
 $year_select_output = $sl-> buildSelect();
 
 $sl-> setName('pub_month');
-$sl-> setCurrent(($_POST && $pub_month > 0)? $pub_month : date('m'));
+$sl-> setCurrent(date('m'));
 $sl-> setList($month_list);
 $sl-> setValueID('id');
 $sl-> setValueTitle('title');
@@ -230,7 +230,7 @@ $sl-> setStyle('width:9rem');
 $month_select_output = $sl-> buildSelect();
 
 $sl-> setName('pub_day');
-$sl-> setCurrent(($_POST && $pub_day > 0)? $pub_day : date('d'));
+$sl-> setCurrent(date('d'));
 $sl-> setList($day_list);
 $sl-> setValueID('id');
 $sl-> setValueTitle('title');
@@ -282,7 +282,7 @@ $meta_output .= '<label>Publication date</label>'."\n";
 $meta_output .= $day_select_output;
 $meta_output .= $month_select_output;
 $meta_output .= $year_select_output;
-$meta_output .= '&nbsp;Time: <input type="text" name="pub_time" style="width:6rem;display:inline" value="'.(($_POST && strlen($pub_time) > 0)? $pub_time : date('H:i:s')).'"/>'."\n";
+$meta_output .= '&nbsp;Time: <input type="text" name="pub_time" style="width:6rem;display:inline" value="'.date('H:i:s').'"/>'."\n";
 
 
 
