@@ -21,6 +21,7 @@ if ( is_null($milieu_list) )
 if ( $milieu_list['timezone'] && $milieu_list['timezone'] != '')
 {
 	date_default_timezone_set($milieu_list['timezone']);
+	$_db->setTimezone($milieu_list['timezone']);
 }
 
 

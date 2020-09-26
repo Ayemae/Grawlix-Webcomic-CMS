@@ -27,6 +27,11 @@ make missing patterns fall back to some default pattern, the same as it does for
 image uploader for 'blog'
 
 
+A way to import page information(titles, publication dates, associated blog posts) from WP exports. 
+
+
+In Book View, indicate a page set to publish in the future
+
 —
 
 
@@ -52,3 +57,6 @@ Change 'update day' field(?), allow longer strings or parse display on site fron
 
 css variable editor
 
+change menu text input from varchar(32) to varchar(64)
+
+allow images in main menu

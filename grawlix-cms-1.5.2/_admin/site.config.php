@@ -79,8 +79,8 @@ $timezone_master_list['America/Argentina/Buenos_Aires'] = array(
 	'title' => 'UTC−03:00: Buenos Aires, Montevideo, São Paulo'
 );
 
-$timezone_master_list['America/Canada/Newfoundland'] = array(
-	'id' => 'America/Canada/Newfoundland',
+$timezone_master_list['America/St_Johns'] = array(
+	'id' => 'America/St_Johns',
 	'title' => 'UTC−03:30: St. John’s'
 );
 
@@ -144,9 +144,9 @@ $timezone_master_list['Australia/Adelaide'] = array(
 	'title' => 'UTC+09:30, Adelaide'
 );
 
-$timezone_master_list['Australia/Canberra'] = array(
-	'id' => 'Australia/Canberra',
-	'title' => 'UTC+10:00: Canberra, Vladivostok, Port Moresby'
+$timezone_master_list['Australia/Melbourne'] = array(
+	'id' => 'Australia/Melbourne',
+	'title' => 'UTC+10:00: Melbourne, Vladivostok, Port Moresby'
 );
 
 $timezone_master_list['Pacific/Noumea'] = array(
@@ -164,8 +164,8 @@ $timezone_master_list['Pacific/Honolulu'] = array(
 	'title' => 'UTC−10:00: Papeete, Honolulu'
 );
 
-$timezone_master_list['Pacific/Samoa'] = array(
-	'id' => 'Pacific/Samoa',
+$timezone_master_list['US/Samoa'] = array(
+	'id' => 'US/Samoa',
 	'title' => 'UTC−11:00: American Samoa'
 );
 
