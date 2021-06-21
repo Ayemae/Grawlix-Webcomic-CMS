@@ -168,6 +168,7 @@ class GrlxPage2_Comic extends GrlxPage2 {
 		}
 		else {
 			// A quick page not found view for when a page outside of the published set is requested
+			$this->statusCode = 404;
 			$this->template = $this->templateFileList['static'];
 			$this->pageInfo['page_content']  = '<h2>Page '.$sortRequest.' not found!</h2>';
 			$this->pageInfo['page_content'] .= '<p>Maybe it doesn’t exist. Or maybe you’re not allowed to see it yet.</p>';
