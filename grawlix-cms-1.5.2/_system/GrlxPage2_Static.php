@@ -45,6 +45,7 @@ class GrlxPage2_Static extends GrlxPage2 {
 		}
 
 		if ( !$this->pageInfo ) {
+			header('HTTP/1.0 404 Not Found');
 			die('<h1>Oops.</h1><p>Could not get page info for "'.$request->path.'".</p>');
 		}
 

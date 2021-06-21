@@ -17,6 +17,7 @@ class GrlxPage2 {
 	protected $templateFileList;
 	protected $template;
 	protected $path;
+	protected $statusCode;
 	protected $query;
 	protected $request;
 	protected $filebase;
@@ -48,10 +49,10 @@ class GrlxPage2 {
 		global $_db;
 		$this->db = $_db;
 
-		if ( $this->httpHeader )
+		/*if ( $this->httpHeader )
 		{
 			header($this->httpHeader);
-		}
+		}*/
 	}
 
 	/**
@@ -87,6 +88,11 @@ class GrlxPage2 {
 			if (is_numeric($route->u_id))
 			{
 				$this->u_id = $route->u_id;
+			}
+			
+			if(isset($route->statusCode))
+			{
+				$this->statusCode = $route->statusCode;
 			}
 
 			// Set the book_id
@@ -286,6 +292,7 @@ class GrlxPage2 {
 		if ( isset($_COOKIE['grlx_bar']) && $_COOKIE['grlx_bar'] == true ) {
 			$this->isAdmin = true;
 		}
+		if($this->statusCode == 404) header('HTTP/1.0 404 Not Found');
 		$this->getThemeToneInfo();
 		$this->buildSupportFileLinks();
 		$this->buildHeaderMeta();
