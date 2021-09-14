@@ -153,7 +153,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		if ( in_array('date',$this->meta['pages']) ) {
 			$bpCol[] = 'bp.date_publish';
 		}
-		if ( in_array('image',$this->meta['pages']) ) {
+		if ( in_array('image',$this->meta['pages']) || in_array('thumbnail',$this->meta['pages'])) {
 			$bpCol[] = 'pImg.url AS page_img';
 			$bpCol[] = 'pImg.description AS page_img_alt';
 			$pImage = $this->db->subQuery('pImg');
@@ -246,18 +246,18 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		$max = $result[0]['count'];
 		$prev = $this->chapterNum - 1;
 		if ( $prev > 0 ) {
-			$navLinks['prev']['url'] = $this->bookInfo['archive_url'].'/'.$prev;
+			$navLinks['prev']['url'] = $this->milieu['directory'].$this->bookInfo['archive_url'].'/'.$prev;
 		}
 		else {
-			$navLinks['prev']['url'] = $this->bookInfo['archive_url'];
+			$navLinks['prev']['url'] = $this->milieu['directory'].$this->bookInfo['archive_url'];
 			$navLinks['prev']['css'] = ' disabled';
 		}
 		$next = $this->chapterNum + 1;
 		if ( $next <= $max ) {
-			$navLinks['next']['url'] = $this->bookInfo['archive_url'].'/'.$next;
+			$navLinks['next']['url'] = $this->milieu['directory'].$this->bookInfo['archive_url'].'/'.$next;
 		}
 		else {
-			$navLinks['next']['url'] = $this->bookInfo['archive_url'];
+			$navLinks['next']['url'] = $this->milieu['directory'].$this->bookInfo['archive_url'];
 			$navLinks['next']['css'] = ' disabled';
 		}
 		$this->navLinks['archive'] = $navLinks;
@@ -424,7 +424,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		}
 		if ( $image || $text )
 		{
-			$link = '<li class="item chapter"><h3>'.$image.$text.'</h3>'.$desc.'</li>';
+			$link = '<li class="item chapter"><h3 class="archive-header">'.$image.$text.'</h3>'.$desc.'</li>';
 		}
 		return $link;
 	}
@@ -482,7 +482,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			}
 			if ( $image || $text )
 			{
-				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<header>'.$image."\n<h3>".$text.'</h3>'."$desc\n".'</header>'."\n";
+				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<header>'.$image."\n<h3 class='archive-header'>".$text.'</h3>'."$desc\n".'</header>'."\n";
 			}
 		}
 		return $link;
@@ -497,9 +497,17 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	 */
 	protected function formatPageItem1($num=null,$info=null) {
 		$url = $this->buildPermalink($num,'page');
-		// Thumbnail
+		// Full image
 		if ( in_array('image', $this->meta['pages']) && $info['page_img'] ) {
 			$image = '<a class="thumb" href="'.$url.'"><img src="'.$this->milieu['directory'].$info['page_img'].'" alt="'.$info['page_img_alt'].'" /></a>';
+		}
+		// Thumbnail
+		if ( in_array('thumbnail', $this->meta['pages']) && $info['page_img'] ) {
+			$imagePath = $this->milieu['directory'].$info['page_img'];
+			$pathInfo = pathinfo($imagePath);
+			$ext = $pathInfo['extension'];
+			$thumbPath = substr($imagePath, 0, strrpos($imagePath, '/')).'/thumb.'.$ext;
+			$image = '<a class="thumb" href="'.$url.'"><img src="'.$thumbPath.'" alt="'.$info['page_img_alt'].'" /></a>';
 		}
 		// Page number
 		if ( in_array('number', $this->meta['pages']) && $num ) {
@@ -535,9 +543,17 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		{
 			$url = $this->buildPermalink($num,'page');
 		}
-		// Thumbnail
+		// Full image
 		if ( in_array('image', $this->meta['pages']) && $info['page_img'] ) {
 			$image = '<a class="thumb" href="'.$url.'"><img src="'.$this->milieu['directory'].$info['page_img'].'" alt="'.$info['page_img_alt'].'" /></a>';
+		}
+		// Thumbnail
+		if ( in_array('thumbnail', $this->meta['pages']) && $info['page_img'] ) {
+			$imagePath = $this->milieu['directory'].$info['page_img'];
+			$pathInfo = pathinfo($imagePath);
+			$ext = $pathInfo['extension'];
+			$thumbPath = substr($imagePath, 0, strrpos($imagePath, '/')).'/thumb.'.$ext;
+			$image = '<a class="thumb" href="'.$url.'"><img src="'.$thumbPath.'" alt="'.$info['page_img_alt'].'" /></a>';
 		}
 		// Page number
 		if ( in_array('number', $this->meta['pages']) && $num ) {

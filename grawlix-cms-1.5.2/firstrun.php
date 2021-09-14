@@ -313,7 +313,7 @@ class GrlxFirstRun {
 				}
 				else {
 					if ( $info['name'] == 'email' ) {
-						$req = 'required pattern="email"';
+						$req = 'required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"';
 						$err = 'Not a valid address';
 					}
 					else {

@@ -159,6 +159,7 @@ if ( $xml->meta && $infoXML->archive['chapter']['option'] && $infoXML->archive['
 
 	// Yeeeah, let’s just sneak this one in there. Ahem.
 	$infoXML->archive['page']['option'][] = 'image';
+	$infoXML->archive['page']['option'][] = 'thumbnail';
 
 	$meta_output  = '<div>';
 	$meta_output .= '<h5>Markers</h5>';
@@ -200,6 +201,23 @@ if ( $xml->saveResult == 'error' ) {
 	$alert_output = $message->alert_dialog('Changes failed to save.');
 }
 
+// ! Make Thumbnails
+$action = register_variable('action');
+$make_thumbs_output = "<a class='btn secondary' href='/_admin/book.archive.php?action=gen-thumbs'>Make Archive Thumbnails</a>";
+if ($action == 'gen-thumbs') {
+	$imageList = $db->get ('image_reference',null,'url');
+	// ! How big should thumbnails be?
+	$db->where('label','thumb_max');
+	$thumb_max = $db->getOne('milieu','value');
+	$thumbs_created = make_all_thumbs($imageList, $thumb_max['value']);
+	if (!$thumbs_created) {
+		$message = new GrlxAlert;
+		$alert_output = $message->warning_dialog('All or some page thumbnails failed to generate.');
+	} else {
+		$message = new GrlxAlert;
+		$alert_output = $message->success_dialog($thumbs_created.' thumbnails were generated.');
+	}
+}
 
 /* ! Display * * * * * * * */
 
@@ -213,6 +231,7 @@ else
 {
 	$view->headline('Archive settings');
 }
+$view->action($action_output);
 $form->input_hidden('book_id');
 $form->value($book_id);
 $hidden_book_info = $form->paint();
@@ -238,7 +257,17 @@ $view->group_h2('Metadata');
 $view->group_instruction('Select the types of information to display.');
 $view->group_contents($meta_output);
 $content_output .= $view->format_group().'<hr/>';
+
+//save button
 $content_output .= $form->form_buttons();
+$content_output .= $view->format_group().'<hr/>';
+
+$view->group_h2('Create Archive Thumbnails');
+$view->group_instruction("Click this button to create, or re-create, thumbnails for your entire archive. 
+							Creating thumbnail images is required if you want to display them as your archive 'page' metadata.
+							If you archive is big, this might take a while to complete.");
+$view->group_contents($make_thumbs_output);
+$make_thumbs_form = $view->format_group().'<hr/>';
 
 $output  = $view->open_view();
 $output .= $view->view_header();
@@ -247,5 +276,6 @@ $output .= $form->open_form();
 $output .= $hidden_book_info;
 $output .= $content_output;
 $output .= $form->close_form();
+$output .= $make_thumbs_form;
 $output .= $view->close_view();
 print($output);

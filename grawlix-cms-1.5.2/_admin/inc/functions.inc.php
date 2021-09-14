@@ -1316,59 +1316,60 @@ function get_third_login($label='projectwonderful',$db){
 }
 
 
-function interpret_wonderful_xml($wonderful_xml_obj,$ad_list,$db){
-	if ( $wonderful_xml_obj->adboxes->adbox ) {
-		foreach ( $wonderful_xml_obj->adboxes->children() as $key => $val ) {
+// // Deprecated. :( 
+// function interpret_wonderful_xml($wonderful_xml_obj,$ad_list,$db){
+// 	if ( $wonderful_xml_obj->adboxes->adbox ) {
+// 		foreach ( $wonderful_xml_obj->adboxes->children() as $key => $val ) {
 
-			$found = false;
-			$attr = $val->attributes();
-			$source_rel_id = (string)$attr['adboxid'];
-			if ( $attr )
-			{
-				foreach ( $attr as $key3 => $val3 )
-				{
-					$attr_list[$key3] = (string)$val3[0];
-				}
-			}
-			// Compare the database ad list to the XML. We want
-			// to find new ads, if any.
-			if ( $wonderful_xml_obj && $ad_list ) {
-				foreach ( $ad_list as $key2 => $val2 ) {
-					if ( $val2['source_rel_id'] == $source_rel_id ) {
-						$found = true;
-					}
-				}
-			}
+// 			$found = false;
+// 			$attr = $val->attributes();
+// 			$source_rel_id = (string)$attr['adboxid'];
+// 			if ( $attr )
+// 			{
+// 				foreach ( $attr as $key3 => $val3 )
+// 				{
+// 					$attr_list[$key3] = (string)$val3[0];
+// 				}
+// 			}
+// 			// Compare the database ad list to the XML. We want
+// 			// to find new ads, if any.
+// 			if ( $wonderful_xml_obj && $ad_list ) {
+// 				foreach ( $ad_list as $key2 => $val2 ) {
+// 					if ( $val2['source_rel_id'] == $source_rel_id ) {
+// 						$found = true;
+// 					}
+// 				}
+// 			}
 
-			// What? We don’t have this ad in MySQL? Then add it.
-			if ( $found === FALSE ) {
-				$code = (string)$val->advancedcode;
-				$source_rel_id = (string)$attr->adboxid;
-				$data = array (
-					'title' => $attr_list['sitename'],
-					'source_rel_id' => $source_rel_id,
-					'source_id' => 2,
-					'large_width' => $attr_list['width'],
-					'large_height' => $attr_list['height'],
-					'code' => $code
-				);
-				$new_ad_id = $db->insert('ad_reference', $data);
-			}
+// 			// What? We don’t have this ad in MySQL? Then add it.
+// 			if ( $found === FALSE ) {
+// 				$code = (string)$val->advancedcode;
+// 				$source_rel_id = (string)$attr->adboxid;
+// 				$data = array (
+// 					'title' => $attr_list['sitename'],
+// 					'source_rel_id' => $source_rel_id,
+// 					'source_id' => 2,
+// 					'large_width' => $attr_list['width'],
+// 					'large_height' => $attr_list['height'],
+// 					'code' => $code
+// 				);
+// 				$new_ad_id = $db->insert('ad_reference', $data);
+// 			}
 
-			// Either way, add it to the ad list.
-			$wonderful_ad_list[] = array (
-				'source_rel_id' => $source_rel_id,
-				'title' => $attr['sitename'],
-				'large_width' => $attr_list['width'],
-				'large_height' => $attr_list['height'],
-				'thumbnail' => $attr['thumbnail'],
-				'source_id' => '2',
-				'code' => $code
-			);
-		}
-	}
-	return $wonderful_ad_list;
-}
+// 			// Either way, add it to the ad list.
+// 			$wonderful_ad_list[] = array (
+// 				'source_rel_id' => $source_rel_id,
+// 				'title' => $attr['sitename'],
+// 				'large_width' => $attr_list['width'],
+// 				'large_height' => $attr_list['height'],
+// 				'thumbnail' => $attr['thumbnail'],
+// 				'source_id' => '2',
+// 				'code' => $code
+// 			);
+// 		}
+// 	}
+// 	return $wonderful_ad_list;
+// }
 
 
 function get_slot_info($slot_id,$db){
@@ -1653,7 +1654,7 @@ function create_thumbnail( $source_file, $destination_file, $max_dimension)
 				break;
 			case 'jpg':
 			case 'jpeg':
-				imagejpeg( $thumbnail, $destination_file, 75 );
+				imagejpeg( $thumbnail, $destination_file, 100 );
 				break;
 			case 'png':
 				imagepng( $thumbnail, $destination_file, 6 );
@@ -1669,6 +1670,67 @@ function create_thumbnail( $source_file, $destination_file, $max_dimension)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+function make_all_thumbs($imageList, $thumb_max){
+	// ! Create thumbnails, if they don’t exist.
+	$gd_enabled = FALSE; // Until proven otherwise
+	$gd_info = gd_info();
+	if ($gd_info && $gd_info['GD Version'] != '')
+	{
+		$gd_enabled = TRUE;
+
+		// ! How big should thumbnails be?
+		if (!$thumb_max)
+		{
+			$thumb_max = 200;
+		}
+	} else {
+		return FALSE;
+	}
+
+	// Actually make the new files.
+
+	if ( $imageList)
+	{
+		$created_thumbs = FALSE;
+		$success = FALSE;
+		$thumbs_generated = 0;
+		foreach ( $imageList as $key => $val )
+		{
+			if (substr($val['url'],0,4) != 'http')
+			{
+				// Get the directory.
+				$dir = explode('/',$val['url']);
+
+				// Get the extension.
+				$filename = array_pop($dir);
+				$filename = explode('.',$filename);
+				$extension = array_pop($filename);
+
+				// Put it back together.
+				$dir = implode('/',$dir);
+
+				// Figure out the filenames with paths.
+				$thumb_filename = '..'.$milieu_list['directory']['value'].$dir.'/thumb.'.$extension;
+				$source_file = '..'.$val['url'];
+				$success = create_thumbnail( $source_file, $thumb_filename, $thumb_max);
+				if ($success === TRUE)
+				{
+					$thumbs_generated++;
+					$created_thumbs = TRUE;
+				}
+			}
+		}
+	}
+	if ($created_thumbs && $created_thumbs === TRUE )
+	{
+		//$alert_output .= $message->success_dialog('Thumbnail created.');
+		return $thumbs_generated;
+	} else {
+		//$alert_output .= $message->warning_dialog('Thumbnail not created.');
+		return FALSE;
+	}
 }
 
 function report_image_error($image_info,$error_code)
