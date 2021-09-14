@@ -203,7 +203,7 @@ if ( $xml->saveResult == 'error' ) {
 
 // ! Make Thumbnails
 $action = register_variable('action');
-$make_thumbs_output = "<a class='btn secondary' href='/_admin/book.archive.php?action=gen-thumbs'>Make Archive Thumbnails</a>";
+$make_thumbs_output = "<a class='btn secondary' href='/_admin/book.archive.php?action=gen-thumbs'>Generate Archive Thumbnails</a>";
 if ($action == 'gen-thumbs') {
 	$imageList = $db->get ('image_reference',null,'url');
 	// ! How big should thumbnails be?
@@ -262,9 +262,9 @@ $content_output .= $view->format_group().'<hr/>';
 $content_output .= $form->form_buttons();
 $content_output .= $view->format_group().'<hr/>';
 
-$view->group_h2('Create Archive Thumbnails');
-$view->group_instruction("Click this button to create, or re-create, thumbnails for your entire archive. 
-							Creating thumbnail images is required if you want to display them as your archive 'page' metadata.
+$view->group_h2('Generate Archive Thumbnails');
+$view->group_instruction("Click this button to generate, or re-generate, thumbnails for your entire archive. 
+							Generating thumbnail images is required if you want to display them as your archive 'page' metadata.
 							If you archive is big, this might take a while to complete.");
 $view->group_contents($make_thumbs_output);
 $make_thumbs_form = $view->format_group().'<hr/>';
