@@ -16,7 +16,7 @@ $sl = new GrlxSelectList;
 $max_file_size = ini_get( 'upload_max_filesize' ).'B maximum';
 
 $var_list = array(
-	'marker_id','new_title','edit_marker_type','new_image','original_image_ref_id'
+	'marker_id','new_title','new_desc','edit_marker_type','new_image','original_image_ref_id'
 );
 if ( $var_list ) {
 	foreach ( $var_list as $key => $val ) {
@@ -117,7 +117,12 @@ if ( $_FILES )
 
 // Update the marker’s title
 if ( $marker_id && $new_title ) {
+	if ($new_desc){
+	$success = $marker-> saveMarker ( $marker_id, $new_title, $edit_marker_type, $new_desc);
+	}
+	else {
 	$success = $marker-> saveMarker ( $marker_id, $new_title, $edit_marker_type );
+	}
 	$marker = new GrlxMarker($marker_id); // reset
 }
 
@@ -178,6 +183,8 @@ $edit_form_output .= '	<input type="hidden" name="original_image_ref_id" value="
 $edit_form_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 $edit_form_output .= '	<p><label for="new_title">Title</label>'."\n";
 $edit_form_output .= '	<input type="text" id="new_title" name="new_title" size="12" style="width:12rem" value="'.$marker-> markerInfo['title'].'"/></p>'."\n";
+$edit_form_output .= '	<p><label for="new_desc">Description</label>'."\n";
+$edit_form_output .= '	<input type="text" id="new_desce" name="new_desc" size="12" style="width:12rem" value="'.$marker-> markerInfo['description'].'"/></p>'."\n";
 $edit_form_output .= '	<label for="edit_marker_type">Type</label>'."\n";
 $edit_form_output .= $select_options."\n";
 //$edit_form_output .= '	<button class="btn primary save" name="submit" type="submit" value="save"><i></i>Save</button>'."\n";
@@ -185,7 +192,7 @@ $edit_form_output .= $select_options."\n";
 
 if ( $marker->thumbInfo && is_array($marker->thumbInfo) )
 {
-	$thumbnail_image = '<img src="'.$milieu_list['directory']['value'].$marker->thumbInfo['url'].'" alt="'.$marker->thumbInfo['description'].'">';
+	$thumbnail_image = '<img src="'.$marker->thumbInfo['url'].'" alt="'.$marker->thumbInfo['description'].'">';
 }
 else
 {

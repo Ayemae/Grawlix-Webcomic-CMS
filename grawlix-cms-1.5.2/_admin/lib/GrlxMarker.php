@@ -43,17 +43,26 @@ class GrlxMarker {
 			'title' => $title,
 			'marker_type_id' => $type_id
 		);
+		if ( $new_desc ) {
+			$data['description'] = $new_desc;
+		}
 		$id = $this-> db-> insert('marker', $data);
 
 		return $id;
 	}
 
-	public function saveMarker($marker_id,$new_title,$type=''){
+	public function saveMarker($marker_id,$new_title,$type='',$new_desc=''){
 		$data = array (
 			'title' => $new_title,
 		);
 		if ( $type ) {
 			$data['marker_type_id'] = $type;
+		}
+		if ( $new_desc ) {
+			$data['description'] = $new_desc;
+		}
+		else{
+			$data['description'] = null;			
 		}
 
 		$this-> db-> where('id',$marker_id);
@@ -85,8 +94,7 @@ class GrlxMarker {
 				$success = reset_page_order(1,$this-> db);
 			}
 		}
-		//return $result1[0];
-		return $success;
+		return $result1[0];
 	}
 
 	function getMarkerInfo()

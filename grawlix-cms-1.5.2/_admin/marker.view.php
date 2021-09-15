@@ -19,7 +19,7 @@ $form->send_to($_SERVER['SCRIPT_NAME']);
 
 
 $var_list = array(
-	'marker_id','book_id','new_order','new_image','original_image_ref_id','new_title','edit_marker_type'
+	'marker_id','book_id','new_order','new_image','original_image_ref_id','new_title','new_desc','edit_marker_type'
 );
 if ( $var_list ) {
 	foreach ( $var_list as $key => $val ) {
@@ -122,7 +122,7 @@ if ( $_FILES )
 
 // ! Update the marker’s title
 if ( $marker_id && $new_title ) {
-	$success = $marker-> saveMarker ( $marker_id, $new_title, $edit_marker_type );
+	$success = $marker-> saveMarker ( $marker_id, $new_title, $edit_marker_type, $new_desc);
 	$marker = new GrlxMarker($marker_id); // reset
 	if ( $success == 1)
 	{
@@ -295,8 +295,6 @@ if ( $marker-> pageList ) {
 	$content_output .= $list->format_content();
 }
 */
-//Just show a list to the marker page list instead:
-$content_output = '<p><a href="book.view.php?view_marker='.$marker_id.'" class="btn primary">View pages</a></p>';
 
 if ( $marker_type_list ) {
 	$sl-> setName('edit_marker_type');
@@ -313,6 +311,8 @@ if ( $marker_type_list ) {
 
 $metadata_output .= '	<label for="new_title">Title</label>'."\n";
 $metadata_output .= '	<input type="text" id="new_title" name="new_title" size="12" style="width:12rem" value="'.$marker-> markerInfo['title'].'"/></p>'."\n";
+$metadata_output .= '	<p><label for="new_desc">Description</label>'."\n";
+$metadata_output .= '	<input type="text" id="new_desce" name="new_desc" size="12" style="width:12rem" value="'.$marker-> markerInfo['description'].'"/></p>'."\n";
 
 $metadata_output .= '	<label for="add-marker-type">Type</label>'."\n";
 $metadata_output .= $select_options;
@@ -334,7 +334,7 @@ $new_upload_field .= '<p>Uploading more than '.$fileops-> up_get_max_file_upload
 $custom_image_output .= '<input type="hidden" name="original_image_ref_id" value="'.$marker->thumbInfo['id'].'"/>'."\n";
 if ( $marker->thumbInfo && is_array($marker->thumbInfo) )
 {
-	$thumbnail_image = '<img src="'.$milieu_list['directory']['value'].$marker->thumbInfo['url'].'" alt="'.$marker->thumbInfo['description'].'">';
+	$thumbnail_image = '<img src="'.$marker->thumbInfo['url'].'" alt="'.$marker->thumbInfo['description'].'">';
 }
 else
 {
@@ -375,17 +375,17 @@ $image_output .= $view->format_group();
 
 
 $view->group_h2('Add pages');
-$view->group_instruction('Upload images to create new pages here (NOT IMPLEMENTED).');
+$view->group_instruction('Upload images to create new pages here.');
 $view->group_contents($new_upload_field);
 $upload_output .= $view->format_group();
 
 
-
+/*
 $view->group_h2('Pages');
-$view->group_instruction('Comic pages that belong to this marker.');
+$view->group_instruction('Comic pages that belong to this marker');
 $view->group_contents($content_output);
 $page_output .= $view->format_group();
-
+*/
 
 
 $view->group_h2('Metadata');
@@ -416,7 +416,7 @@ $output .= $metadata_output.'<hr/>';
 $output .= $image_output."<hr/>\n";
 
 
-$output .= $page_output.'<hr/>';
+//$output .= $page_output.'<hr/>';
 $output .= $upload_output;
 
 
