@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="640px" height="684px" viewBox="0 0 640 684" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
+    <title>halftone-top</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="halftone-top" sketch:type="MSArtboardGroup" fill="#312558">
+            <g id="Group" sketch:type="MSLayerGroup" transform="translate(320.000000, 340.000000) rotate(-180.000000) translate(-320.000000, -340.000000) translate(-1.000000, -0.000000)">
+                <circle id="Oval-1" fill-opacity="0.180000022" sketch:type="MSShapeGroup" cx="62" cy="504" r="61"></circle>
+                <circle id="Oval-1" fill-opacity="0.140000001" sketch:type="MSShapeGroup" cx="65" cy="269" r="51"></circle>
+                <circle id="Oval-1" fill-opacity="0.100000001" sketch:type="MSShapeGroup" cx="66.5" cy="39.5" r="39.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.160000011" sketch:type="MSShapeGroup" cx="128.5" cy="389.5" r="57.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.119999997" sketch:type="MSShapeGroup" cx="128.5" cy="149.5" r="44.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.180000022" sketch:type="MSShapeGroup" cx="191" cy="504" r="61"></circle>
+                <circle id="Oval-1" fill-opacity="0.140000001" sketch:type="MSShapeGroup" cx="192" cy="269" r="51"></circle>
+                <circle id="Oval-1" fill-opacity="0.100000001" sketch:type="MSShapeGroup" cx="193" cy="40" r="39.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.160000011" sketch:type="MSShapeGroup" cx="255.5" cy="389.5" r="57.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.119999997" sketch:type="MSShapeGroup" cx="255.5" cy="149.5" r="44.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.180000022" sketch:type="MSShapeGroup" cx="320" cy="504" r="61"></circle>
+                <circle id="Oval-1" fill-opacity="0.140000001" sketch:type="MSShapeGroup" cx="319" cy="269" r="51"></circle>
+                <circle id="Oval-1" fill-opacity="0.100000001" sketch:type="MSShapeGroup" cx="320" cy="40" r="39.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.160000011" sketch:type="MSShapeGroup" cx="382.5" cy="389.5" r="57.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.119999997" sketch:type="MSShapeGroup" cx="382.5" cy="149.5" r="44.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.180000022" sketch:type="MSShapeGroup" cx="449" cy="504" r="61"></circle>
+                <circle id="Oval-1" fill-opacity="0.140000001" sketch:type="MSShapeGroup" cx="446" cy="269" r="51"></circle>
+                <circle id="Oval-1" fill-opacity="0.100000001" sketch:type="MSShapeGroup" cx="447" cy="40" r="39.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.160000011" sketch:type="MSShapeGroup" cx="509.5" cy="389.5" r="57.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.119999997" sketch:type="MSShapeGroup" cx="509.5" cy="149.5" r="44.5"></circle>
+                <circle id="Oval-1" fill-opacity="0.180000022" sketch:type="MSShapeGroup" cx="580" cy="504" r="61"></circle>
+                <circle id="Oval-1" fill-opacity="0.140000001" sketch:type="MSShapeGroup" cx="575" cy="269" r="51"></circle>
+                <circle id="Oval-1" fill-opacity="0.100000001" sketch:type="MSShapeGroup" cx="576" cy="40" r="39.5"></circle>
+                <g transform="translate(0.000000, 551.000000)" sketch:type="MSShapeGroup" fill-opacity="0.200000033">
+                    <rect id="Rectangle-3" x="1" y="65" width="640" height="64"></rect>
+                    <path d="M1,65 L1,1 L65,1 C65,36.346224 36.346224,65 1,65 Z" id="Rectangle-3" transform="translate(33.000000, 33.000000) rotate(-90.000000) translate(-33.000000, -33.000000) "></path>
+                    <path d="M577,65 L577,1 L641,1 C641,36.346224 612.346224,65 577,65 Z" id="Rectangle-3" transform="translate(609.000000, 33.000000) scale(-1, 1) rotate(-90.000000) translate(-609.000000, -33.000000) "></path>
+                    <path d="M97,-31 C132.346224,-31 161,-2.34622399 161,33 C161,68.346224 132.346224,97 97,97 L97,-31 Z" id="Oval-1" transform="translate(129.000000, 33.000000) rotate(-90.000000) translate(-129.000000, -33.000000) "></path>
+                    <path d="M225,-31 C260.346224,-31 289,-2.34622399 289,33 C289,68.346224 260.346224,97 225,97 L225,-31 Z" id="Oval-1" transform="translate(257.000000, 33.000000) rotate(-90.000000) translate(-257.000000, -33.000000) "></path>
+                    <path d="M353,-31 C388.346224,-31 417,-2.34622399 417,33 C417,68.346224 388.346224,97 353,97 L353,-31 Z" id="Oval-1" transform="translate(385.000000, 33.000000) rotate(-90.000000) translate(-385.000000, -33.000000) "></path>
+                    <path d="M481,-31 C516.346224,-31 545,-2.34622399 545,33 C545,68.346224 516.346224,97 481,97 L481,-31 Z" id="Oval-1" transform="translate(513.000000, 33.000000) rotate(-90.000000) translate(-513.000000, -33.000000) "></path>
+                </g>
+                <path d="M1,332 C33.0325155,332 59,357.743627 59,389.5 C59,421.256373 33.0325155,447 1,447 L1,332 Z" id="Oval-1" fill-opacity="0.160000011" sketch:type="MSShapeGroup"></path>
+                <path d="M1,105 C25.8528137,105 46,124.699471 46,149 C46,173.300529 25.8528137,193 1,193 L1,105 Z" id="Oval-1" fill-opacity="0.119999997" sketch:type="MSShapeGroup"></path>
+                <path d="M641,332 C608.967485,332 583,357.743627 583,389.5 C583,421.256373 608.967485,447 641,447 L641,332 Z" id="Oval-1" fill-opacity="0.160000011" sketch:type="MSShapeGroup"></path>
+                <path d="M641,105 C616.147186,105 596,124.699471 596,149 C596,173.300529 616.147186,193 641,193 L641,105 Z" id="Oval-1" fill-opacity="0.119999997" sketch:type="MSShapeGroup"></path>
+            </g>
+        </g>
+    </g>
+</svg>

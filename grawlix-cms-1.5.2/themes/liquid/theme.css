@@ -1,0 +1,411 @@
+/* Reset Browser Defaults */ 
+/* (this will make your site more consistent across different browsers) */
+@import "reset.css";
+
+:root {
+	--text-color-1: black;
+	--text-color-2: slategrey;
+	--text-color-3: white;
+	--font-1: "Open Sans";
+	--font-2: "Haettenschweiler";
+	--alignment: center;
+	--bg-color-1: #263d96;
+	--bg-color-2: #9cc8ff;
+	--bg-color-3: #4089e5;
+	--link-color-1: #4089e5;
+	--link-color-1-hover: #263d96;
+	--link-color-2: #fb8500;
+	--link-color-2-hover: #ffb703;
+	--border-color-1: black;
+	--border-color-2: slategray;
+
+	--content-width-all: 100%;
+	--content-width-center: 800px;
+	--content-width-left: 180px;
+	--content-width-right: 180px;
+	--footer-height: 35px;
+}
+
+/* Baseline Defaults */
+* {box-sizing: border-box}
+html {
+	font-size: 18px;
+	height: 100%;
+}
+
+body {
+	color: var(--text-color-1);
+	font-family: var(--font-1), Arial, Helvetica, sans-serif;
+	background-color: var(--bg-color-1);
+	background-image: url('images/layout/halftone-top.svg');
+	text-align: center;
+	background-size: cover;
+	min-height: 100%;
+	position: relative;
+	padding-bottom: var(--footer-height);
+}
+
+
+/* Headers */
+h1 {
+	font-family: var(--font-2), 'Arial Narrow Bold', sans-serif;
+	font-size: 1.8em;
+	font-weight: bold;
+}
+h2 {
+	font-family: var(--font-2), 'Arial Narrow Bold', sans-serif;
+	font-size: 1.6rem;
+	font-weight: bold;
+}
+h3 {
+	font-size: 1.4rem;
+	font-weight: bold;
+}
+h4 {
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+h1:empty,
+h2:empty,
+h3:empty,
+h4:empty {
+	display: none;
+}
+
+/* Common Element Defaults */
+a {
+	color: var(--link-color-2);
+}
+a:hover {
+	color: var(--link-color-2-hover);
+}
+img {
+	max-width: 100%;
+	height: auto;
+}
+main a {
+	color: var(--link-color-1);
+}
+main a:hover {
+	color: var(--link-color-1-hover);
+}
+
+
+
+/* ////////////////////////// */
+
+
+/* Main Site Components */
+header {
+	display: flex;
+	justify-content: center;
+}
+
+footer {
+	color: var(--bg-color-3);
+	font-size: .8em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--footer-height);
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+main {
+	width: 100%;
+	max-width: 100vw;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.content-main {
+	width: var(--content-width-center);
+	min-width: 60%;
+	max-width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.under-comic {
+	max-width:100%;
+}
+.sidebar {
+	padding: 15px;
+	background-color: var(--bg-color-3);
+}
+.sidebar:empty {
+	display: none;
+}
+
+.flex-wrapper {
+	width: 100%;
+	max-width: 85vw;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+/* /////////////////////// */
+
+
+/* Comic Index */
+.comic-stage {
+	margin: 10px auto;
+	background-color: var(--bg-color-3);
+}
+#comic {
+	position: relative;
+	left: 0px;
+	z-index: 2;
+}
+#comic img {
+	display: block;
+}
+
+#swipenav {
+	background: black;
+	position: relative;
+	align-items: center;
+	overscroll-behavior-x: contain;
+	overflow: hidden;
+}
+#swipenav-arrow-wrapper {
+	width: 100%;
+	opacity: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+	right: 0;
+}
+
+/* /////////////////////// */
+
+/* Header */
+
+a.logo-link {
+	margin-bottom: 10px;
+}
+
+a.logo-link,
+a.logo-link img {
+	display: block;
+}
+
+/* /////////////////////// */
+
+/* Site Menu */
+nav ul#menu-list {
+	margin: 0;
+	padding: 0;
+}
+#menu-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+#menu-list li {
+	display: block;
+	position: relative;
+	padding: 5px;
+}
+#menu-list li a {
+}
+ul#menu-list li ul {
+	visibility: hidden;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+/*Display any existing dropdowns on hover*/
+ul#menu-list li:hover ul {
+	visibility: visible;
+}
+/*Style 'show menu' label button and hide it by default*/
+#show-menu-btn {
+	padding: 5px 0 10px;
+	display: none;
+}
+/*Hide checkbox*/
+.site-nav input[type=checkbox]{
+	display: none;
+}
+
+/* ////////////////////////// */
+
+
+/* Comic Page Content */
+.comic-nav {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.comic-nav a.disabled {
+	visibility: hidden;
+}
+
+
+/* Under Comic Content */
+
+#blog-post {
+	text-align: left;
+	width: 100%;
+	background-color: var(--bg-color-2);
+	padding: 15px;
+}
+.blog-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	padding-bottom: 5px;
+}
+
+/* ///////////////////////// */
+/* ///////////////////////// */
+/* ///////////////////////// */
+
+/* Archive */
+header.archive-header {
+	flex-direction: column;
+}
+
+.archive-content ul {
+	list-style: none;
+	padding: 20px 10px;
+}
+
+ul.archive-layout--inline li {
+	display: inline;
+}
+
+ul.archive-layout--grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 25px;
+}
+ul.archive-layout--grid li {
+	flex: 1;
+	flex-grow: 0;
+	min-width: fit-content;
+}
+ul.archive-layout--grid li img {
+	max-width: unset;
+}
+ul.archive-layout--grid li.archive-marker {
+	min-width:48%;
+}
+
+/* ///////////////////////// */
+/* ///////////////////////// */
+/* ///////////////////////// */
+
+/* Patterns */
+
+.static-layout-list section {
+	padding-bottom: 15px;
+}
+
+.pattern-image-left,
+.pattern-image-right {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+}
+.pattern-image-top,
+.no-image {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+.pattern-half-tile {
+	width: 50%;
+	float: left;
+}
+
+/* ///////////////////////// */
+/* ///////////////////////// */
+/* ///////////////////////// */
+
+
+/* ///////////////////////// */
+/* ///////////////////////// */
+/* ///////////////////////// */
+
+
+/* Mobile Adjustments */
+
+
+@media only screen and (max-width: 750px) {
+
+
+
+/* Toggle Site Menu Display */
+	.site-nav {
+		align-items: center;
+		margin:0;
+	}
+	/*Show menu when invisible checkbox is checked*/
+	input[type=checkbox]:checked ~ #menu-list{
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+	/*Make dropdown links appear inline*/
+	#menu-list {
+		position: static;
+		display: none;
+	}
+   #menu-list li {
+		width: 100%;
+		display: block;
+	}
+	#menu#menu-list li:nth-child(even) {
+	}
+	#menu-list li:hover {
+	}
+	#menu-list li:hover ul {
+	display: block;
+	position: static;
+	}
+
+	/*Display 'show menu' link*/
+	#show-menu-btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: var(--link-color-2);
+	}
+	#show-menu-btn:hover {
+		color: var(--link-color-2-hover);
+	}
+	/* /// End Site Menu //// */
+
+	.sidebar {
+		width: 100%;
+	}
+	.flex-wrapper {
+		max-width: unset;
+	}
+	.under-comic .flex-wrapper.one{
+		flex-direction: column;
+	}
+	.under-comic .flex-wrapper.two {
+		flex-direction: column-reverse;
+	}
+}
