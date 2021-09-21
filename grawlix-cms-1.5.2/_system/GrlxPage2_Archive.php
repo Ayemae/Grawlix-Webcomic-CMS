@@ -424,7 +424,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		}
 		if ( $image || $text )
 		{
-			$link = '<li class="item chapter"><h3 class="archive-header">'.$image.$text.'</h3>'.$desc.'</li>';
+			$link = '<li class="item chapter"><div class="archive-header"><h3>'.$image.$text.'</h3>'.$desc.'</li></div>';
 		}
 		return $link;
 	}
@@ -482,7 +482,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			}
 			if ( $image || $text )
 			{
-				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<header>'.$image."\n<h3 class='archive-header'>".$text.'</h3>'."$desc\n".'</header>'."\n";
+				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<div class="archive-header">'.$image."\n<h3>".$text.'</h3>'."$desc\n".'</div>'."\n";
 			}
 		}
 		return $link;
