@@ -578,9 +578,9 @@ class GrlxPage {
 	protected function getThirdServices() {
 		if ( is_null($this->services) ) {
 			$cols = array(
-				's.label AS service',
-				'user_info AS value',
-				'f.title AS function'
+				's.label AS `service`',
+				'user_info AS `value`',
+				'f.title AS `function`'
 			);
 			$result = $this->db
 				->join('third_match m', 's.id = m.service_id', 'LEFT')
