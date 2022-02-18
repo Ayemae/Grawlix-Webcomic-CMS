@@ -53,7 +53,7 @@ elseif ( $_POST && !$new_title ) {
  * Display logic
  */
 
-$next_rank = $db-> get ('marker_type',null,'MAX(rank)+1 AS next_rank');
+$next_rank = $db-> get ('marker_type',null,'MAX(`rank`)+1 AS next_rank');
 $next_rank = $next_rank[0]['next_rank'];
 
 
