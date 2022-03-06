@@ -163,8 +163,8 @@ class GrlxFirstRun {
 	protected function connectDB() {
 		$info = $this->dbInfo;
 		@$db = new mysqli($info['db_host'],$info['db_user'],$info['db_pswd'],$info['db_name']);
-		@$db->set_charset("utf8");
 		if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
+			@$db->set_charset("utf8");
 			$this->db = $db;
 		}
 	}
