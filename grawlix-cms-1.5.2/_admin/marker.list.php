@@ -49,9 +49,9 @@ if ( $delete_id ) {
 
 function compareMarkers($a, $b) {
 	if($a['book_id'] == $b['book_id']) { //compare pages
-		return $a['startPage'] <=> $b['startPage'];
+		return $a['startPage'] - $b['startPage'];
 	} else {
-		return $a['book_id'] <=> $b['book_id'];
+		return $a['book_id'] - $b['book_id'];
 	}
 }
 

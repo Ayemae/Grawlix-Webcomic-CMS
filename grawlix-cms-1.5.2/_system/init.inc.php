@@ -3,7 +3,7 @@
 /* ! Setup * * * * * * * */
 
 // Alert us if there are any problems.
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 date_default_timezone_set('America/Los_Angeles');
 

@@ -7,7 +7,7 @@ require_once('panl.init.php');
 require_once('../_system/password.php');
 
 // Send admin to specific page
-$ref = $_GET['ref'];
+$ref = isset($_GET['ref']) ? $_GET['ref'] : null;
 $ref ? $ref : $ref = $_POST['ref'];
 $ref ? $ref : $ref = 'book.view.php';
 
