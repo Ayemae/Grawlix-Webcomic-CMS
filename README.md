@@ -1,3 +1,5 @@
+This branch contains the last version of Grawlix that can run on PHP 5.x, and is made available for those who are for some reason unable to upgrade PHP. This version of Grawlix no longer receives updates. If you are using PHP 7.0+, please use the main branch.
+
 HOW TO INSTALL
 ---
 
