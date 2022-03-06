@@ -20,7 +20,7 @@
 	--border-color-2: slategray;
 
 	--content-width-all: 100%;
-	--content-width-center: 800px;
+	--content-width-center: content-fit;
 	--content-width-left: 180px;
 	--content-width-right: 180px;
 	--footer-height: 35px;
@@ -84,10 +84,10 @@ img {
 	height: auto;
 }
 main a {
-	color: var(--link-color-1);
+	color: var(--link-color-2);
 }
 main a:hover {
-	color: var(--link-color-1-hover);
+	color: var(--link-color-2-hover);
 }
 
 

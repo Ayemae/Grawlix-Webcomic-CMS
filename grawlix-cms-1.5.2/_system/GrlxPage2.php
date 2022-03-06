@@ -243,7 +243,7 @@ class GrlxPage2 {
 		}
 		if ( $date ) {
 			$date = explode('-',$date);
-			$str = date($format,mktime(0,0,0,$date[1],$date[2],$date[0]));
+			$str = date($format,mktime(0,0,0,$date[1],(int)$date[2],$date[0]));
 			return $str;
 		}
 	}
