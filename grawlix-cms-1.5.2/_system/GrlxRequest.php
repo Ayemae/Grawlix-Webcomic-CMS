@@ -53,14 +53,14 @@ class GrlxRequest {
 	 */
 	protected function parsePath($path)
 	{
-		if ($this->subdirectory)
+		if (isset($this->subdirectory))
 		{
 			$path = str_replace($this->subdirectory, '', $path);
 		}
 		$parts = explode('/', $path);
 		array_shift($parts);
-		$slug = '/'.$parts[0];
-		$next = $parts[1];
+		$slug = '/'.$parts[0] ?? '';
+		$next = $parts[1] ?? '';
 
 		$book_paths = array(
 			ARCHIVE,
@@ -72,7 +72,7 @@ class GrlxRequest {
 		if (in_array($next, $book_paths))
 		{
 			$slug .= '/'.$next;
-			$next = $parts[2];
+			$next = $parts[2] ?? '';
 		}
 
 		// Parse the vars

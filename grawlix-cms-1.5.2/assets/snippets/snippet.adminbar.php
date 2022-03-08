@@ -1,5 +1,5 @@
 <?php
-$info = $this->grlxbar;
+$info = $this->grlxbar ?? null;
 if ( $info ) : ?>
 	<div id="special">
 		<a class="login" href="<?=$info['panel_link']?>"><?=$info['panel_text']?></a>

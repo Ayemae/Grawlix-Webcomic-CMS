@@ -8,24 +8,24 @@ class GrlxMarkerType {
 		global $db;
 		$this-> db = $db;
 
-		if ( $markerTypeID ) {
+		if ( !empty($markerTypeID) ) {
 			$this-> markerTypeID = $markerTypeID;
 			$this-> getMarkerTypeInfo();
 		}
 	}
 
 	function createMarkerType($title,$rank){
-			$data = array (
-				'`title`' => $title,
-				'`rank`' => $rank
-			);
-			$id = $this-> db-> insert('marker_type', $data);
-			return $id;
+		$data = array (
+			'title' => $title,
+			'rank' => $rank
+		);
+		$id = $this-> db-> insert('marker_type', $data);
+		return $id;
 	}
 
 	function saveMarkerType ( $marker_type_id, $new_title ){
 		$data = array (
-			'`title`' => $new_title,
+			'title' => $new_title,
 		);
 
 		$this-> db-> where('id',$marker_type_id);
@@ -34,14 +34,13 @@ class GrlxMarkerType {
 	}
 
 	function deleteMarkerType($marker_type_id){
-
 		// Get every marker that uses this type
 
 		$this-> db-> where ('marker_type_id', $marker_type_id);
 		$marker_id_list = $this-> db-> get ('marker',null,'id');
 
 		// Remove doomed markers from the comic book pages.
-		if ( $marker_id_list) {
+		if ( !empty($marker_id_list) ) {
 			$doomed_marker = new GrlxMarker();
 			foreach ( $marker_id_list as $key => $val ) {
 				$doomed_marker-> deleteMarker($val['id'],false);
@@ -49,13 +48,13 @@ class GrlxMarkerType {
 		}
 
 		$this-> db-> where('id',$marker_type_id);
-		$success1 = $this-> db-> delete('marker_type', $data);
+		$success1 = $this-> db-> delete('marker_type');
 
 		return $success1;
 	}
 
 	function getMarkerTypeInfo(){
-		if ( $this-> markerTypeID ) {
+		if ( !empty($this-> markerTypeID) ) {
 			$this-> db-> where ('`id`', $this-> markerTypeID);
 			$info = $this-> db-> get ('marker_type',null,'`id`,`title`');
 			$this-> markerTypeInfo = $info[0];
@@ -67,7 +66,7 @@ class GrlxMarkerType {
 		$this-> db-> orderBy('`rank`','ASC');
 		$result = $this-> db-> get ('marker_type',null,'`id`,`title`,`rank`');
 		$result = rekey_array($result,'id');
-		if ( $result ) {
+		if ( !empty($result) ) {
 			foreach ( $result as $key => $val ) {
 				$this-> db-> where ('marker_type_id', $val['id']);
 				$tally = $this-> db-> getOne('marker', 'COUNT(`id`) AS `tally`');
@@ -83,11 +82,11 @@ class GrlxMarkerType {
 		$this-> db-> orderBy('`rank`','ASC');
 		$result = $this-> db-> get ('marker_type',null,'`id`,`title`,`rank`');
 		$result = rekey_array($result,'id');
-		if ( $result ) {
+		if ( !empty($result) ) {
 			foreach ( $result as $key => $val ) {
 				$this-> db-> where ('marker_type_id', $val['id']);
 				$markers = $this-> db-> get('marker', null, '`id`,marker_type_id');
-				if($result['markers']) {
+				if( !empty($result['markers']) ) {
 					$result['markers'] = array_merge($result['markers'], $markers);
 				} else {
 					$result['markers'] = $markers;
@@ -103,10 +102,10 @@ class GrlxMarkerType {
 		$this-> db-> orderBy ('`title`','ASC');
 		$result = $this-> db-> get ('marker_type',null,'`rank`,`id`');
 		$i = 1;
-		if ( $result ) {
+		if ( !empty($result) ) {
 			foreach ( $result as $key => $val ) {
 				$data = array (
-					'`rank`' => $i
+					'rank' => $i
 				);
 				$this-> db->where('`id`',$val['id']);
 				$id = $this-> db->update('marker_type', $data);

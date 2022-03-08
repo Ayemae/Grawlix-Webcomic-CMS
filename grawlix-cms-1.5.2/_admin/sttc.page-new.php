@@ -72,22 +72,21 @@ $page_type_list[10] = array(
 
 /* ! Updates */
 
-if ( $_GET['id'] ) {
+if ( !empty($_GET['id']) ) {
 	$new_page_type_id = $_GET['id'];
 
-		// Create the page
-		$data = array (
-			'title' => $page_type_list[$new_page_type_id]['title'],
-			'options' => 'image-left',
-			'layout' => 'list',
-			'date_created' => $db->now(),
-			'date_modified' => $db->now()
-		);
-		$static_id = $db->insert('static_page', $data);
+	// Create the page
+	$data = array (
+		'title' => $page_type_list[$new_page_type_id]['title'],
+		'options' => 'image-left',
+		'layout' => 'list',
+		'date_created' => $db->now(),
+		'date_modified' => $db->now()
+	);
+	$static_id = $db->insert('static_page', $data);
 
-		// Add a menu reference.
-		if ( $static_id ) {
-
+	// Add a menu reference.
+	if ( $static_id ) {
 			// What’s the last order?
 			$result = $db-> get ('path',null,'MAX(sort_order) AS max');
 			$sort_order = $result[0]['max'] + 1;
@@ -102,27 +101,26 @@ if ( $_GET['id'] ) {
 	      $new_url .= date('-h-i-s');
 	    }
 
-			// OK, add it to the menu.
-			$data = array (
-				'title' => $page_type_list[$new_page_type_id]['title'],
-				'url' => $new_url,
-				'rel_id' => $static_id,
-				'rel_type' => 'static',
-				'in_menu' => 1,
-				'edit_path' => 1,
-				'sort_order' => $sort_order
-			);
-			$db->insert('path', $data);
-		}
+		// OK, add it to the menu.
+		$data = array (
+			'title' => $page_type_list[$new_page_type_id]['title'],
+			'url' => $new_url,
+			'rel_id' => $static_id,
+			'rel_type' => 'static',
+			'in_menu' => 1,
+			'edit_path' => 1,
+			'sort_order' => $sort_order
+		);
+		$db->insert('path', $data);
+	}
 
 
 
-		// Let’s add some custom default data.
-		if ( $static_id && $static_id != '' ) {
-			switch ( $new_page_type_id ) {
-
-				// About the artist
-				case 1:
+	// Let’s add some custom default data.
+	if ( $static_id && $static_id != '' ) {
+		switch ( $new_page_type_id ) {
+			// About the artist
+			case 1:
 				$data = array (
 					'page_id' => $static_id,
 					'title' => 'About the artist',
@@ -134,8 +132,8 @@ if ( $_GET['id'] ) {
 				$new_block_id = $db->insert('static_content', $data);
 				break;
 
-				// About the comic
-				case 2:
+			// About the comic
+			case 2:
 				$data = array (
 					'page_id' => $static_id,
 					'title' => 'About the comic',
@@ -371,23 +369,20 @@ if ( $_GET['id'] ) {
 	}
 
 	// Send freeform pages straight to the block editor.
-	if (
-		$new_page_type_id == 6
+	if ( $new_page_type_id == 6
 		|| $new_page_type_id == 7
 		|| $new_page_type_id == 1
 		|| $new_page_type_id == 2
-	)
-	{
+	) {
 		header('location:sttc.block-edit.php?msg=created&block_id='.$new_block_id);
 	}
-	else
-	{
+	else {
 		header('location:sttc.page-edit.php?msg=created&page_id='.$static_id);
 	}
 	die();
 }
 
-function display_new_block($info,$id){
+function display_new_block($info,$id) {
 	$output = <<<EOL
 <section>
 	<strong>{$info['title']}</strong><br/>
@@ -407,11 +402,10 @@ EOL;
 $view->page_title('New static page');
 $view->tooltype('chap');
 $view->headline('New static page');
-$view->action($action_output);
+//$view->action($action_output);
 
 $output  = $view->open_view();
 $output .= $view->view_header();
-$output .= $alert_output;
 print($output);
 
 
@@ -455,12 +449,12 @@ print($output);
 					</div>
 				</div>
 <?php endif; ?>
-<?php if ( $_POST['static-type'] ) : ?>
+<?php if ( !empty($_POST['static-type']) ) : ?>
 <?php endif; ?>
 				</form>
 			</div>
 
 <?php
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());

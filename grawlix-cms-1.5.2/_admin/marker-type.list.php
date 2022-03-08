@@ -29,17 +29,17 @@ if ( $var_list ) {
 
 
 
-
+$alert_output = '';
 
 /*****
  * Updates
  */
-
-if ( $_GET && $delete_id ) {
+$success = false;
+if ( !empty($_GET) && !empty($delete_id) ) {
 	$success = $marker_type-> deleteMarkerType($delete_id);
 	$marker_type-> resetMarkerTypes();
 }
-if ( $success && $delete_id ) {
+if ( $success && !empty($delete_id) ) {
 	$alert_output = $message-> alert_dialog('Marker type deleted.');
 }
 
@@ -122,7 +122,7 @@ $create_output = $link-> button_primary('new');
 $view->group_h2('Organization');
 $view->group_instruction('Markers denote the beginnings of sections, like chapters, scenes and supplemental pages. Tap to edit each type.');
 $view->group_contents($list_output);
-$content_output .= $view->format_group().'<hr />';
+$content_output = $view->format_group().'<hr />';
 
 $view->group_h2('Create');
 $view->group_instruction('Make a new marker type.');
@@ -130,7 +130,8 @@ $view->group_contents($create_output);
 $content_output .= $view->format_group();
 
 
-$view->page_title('Marker types: '.$book-> info['title']);
+//$view->page_title('Marker types: '.$book-> info['title']); //we're not fetching the book data so we can't use it
+$view->page_title('Marker types');
 $view->tooltype('chapter');
 $view->headline('Marker types');
 

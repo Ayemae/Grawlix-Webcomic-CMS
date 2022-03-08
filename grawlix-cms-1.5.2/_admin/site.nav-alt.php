@@ -18,16 +18,15 @@ $list = new GrlxList;
 
 $view-> yah = 7;
 
+$current_alert_output = '';
+
 /*****
  * Updates
  */
 
 // Act on an edit from the reveal modal
-if ( $_POST ) {
+if ( !empty($_POST) && !empty($_POST['title']) ) {
 	foreach($_POST['title'] as $key=>$val){
-		
-
-
 		$data = array(
 			'title' => $_POST['title'][$key],
 			'url' => $_POST['url'][$key],
@@ -108,13 +107,13 @@ if ( $path_items ) {
 	}
 }
 
+$dupe_alert_output = '';
 if ( isset($dupes) ) {
 	$dupe_alert_output = $message->alert_dialog('Duplicates detected! You should create unique path names to avoid problems.');
 }
 
-
-if ( $nav_item )
-{
+$output_2 = '';
+if ( $nav_item ) {
 	$output_2 = '<table>'."\n";
 	$output_2 .= '<tr>'."\n";
 	$output_2 .= '<th>Clickable text</th><th>Path</th><th>In menu</th><th>Order</th>'."\n";
@@ -134,8 +133,7 @@ if ( $nav_item )
 
 
 // Build output
-if ( $nav_item ) /*
-{
+/*if ( $nav_item ) {
 
 	$list->row_class('menu');
 	$list->sort_by('menu');
@@ -189,12 +187,12 @@ $link->url('sttc.page-new.php');
 $link->tap('New page');
 $action_output = $link->text_link('static');
 
-$link->url('site.nav-edit.ajax.php');
+/*$link->url('site.nav-edit.ajax.php');
 $link->reveal(true);
 $link->query('edit_id=new');
 $link->title = 'External links go to other websites — like those you enjoy reading soooo much you just have to share it with your readers.';
 $link->tap('New external link');
-$action_output .= $link->button_secondary('new');
+$action_output .= $link->button_secondary('new');*/
 $view->action($action_output);
 
 /*
@@ -218,7 +216,7 @@ $heading_list[] = array(
 
 //$list->headings($heading_list);
 //$list->content($list_items);
-$display_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
+$display_output  = '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 $display_output .= $output_2;
 $display_output .= '<input type="submit" />';
 
@@ -231,7 +229,6 @@ $display_output .= '<input type="submit" />';
 
 $output  = $view->open_view();
 $output .= $view->view_header();
-$output .= $alert_output;
 $output .= $modal->modal_container();
 $output .= $current_alert_output;
 $output .= $dupe_alert_output;
@@ -239,6 +236,6 @@ $output .= '<form action="site.nav-alt.php" method="post">'.$display_output.'</f
 print($output);
 
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 $output = $view->close_view();
 print($output);

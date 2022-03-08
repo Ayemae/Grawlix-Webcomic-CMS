@@ -259,11 +259,11 @@ class GrlxPage2_Comic extends GrlxPage2 {
 	 */
 	protected function getImageURL($which=0)
 	{
-		if ( $this->imageInfo)
+		if ( isset($this->imageInfo) )
 		{
-			$this->milieu['firstImageURL'] = $this->imageInfo[$which]['url'];
+			return $this->milieu['firstImageURL'] = $this->imageInfo[$which]['url'];
 		}
-		return $output;
+		return '';
 	}
 
 	/**

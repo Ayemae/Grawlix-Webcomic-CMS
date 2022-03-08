@@ -100,29 +100,30 @@ class GrlxPage2_Static extends GrlxPage2 {
 	protected function assembleBlocks($content_blocks=array())
 	{
 
-// Which theme (folder) are we using?
-	if ($this->milieu['tone_id'] && $this->milieu['tone_id'] > 0)
-	{
-		$cols = array(
-			't.theme_id',
-			't.id AS tone_id',
-			't.options',
-			'l.author',
-			'directory'
-		);
-		$theme_info = $this->db
-			->join('theme_list l','t.theme_id = l.id','INNER')
-			->where('t.id',$this->milieu['tone_id'])
-			->getOne('theme_tone t',$cols);
-	}
+	// Which theme (folder) are we using?
+		if ($this->milieu['tone_id'] && $this->milieu['tone_id'] > 0)
+		{
+			$cols = array(
+				't.theme_id',
+				't.id AS tone_id',
+				't.options',
+				'l.author',
+				'directory'
+			);
+			$theme_info = $this->db
+				->join('theme_list l','t.theme_id = l.id','INNER')
+				->where('t.id',$this->milieu['tone_id'])
+				->getOne('theme_tone t',$cols);
+		}
 
-	$pattern_filename = DIR_THEMES.'/'.$theme_info['directory'].'/pattern.'.$this->pageInfo['pattern'].'.php';
-	if (is_file($pattern_filename))
-	{
-		$pattern_code_original = file_get_contents($pattern_filename);
-	}
+		$pattern_filename = DIR_THEMES.'/'.$theme_info['directory'].'/pattern.'.$this->pageInfo['pattern'].'.php';
+		if (is_file($pattern_filename))
+		{
+			$pattern_code_original = file_get_contents($pattern_filename);
+		}
 
-	if ($this->layout['layout'] == 'grid')
+		$content = '';
+		if ($this->layout['layout'] == 'grid')
 		{
 			$content .= '<div class="static-layout-grid"><!-- begin layout grid -->'."\n";
 		}
@@ -158,7 +159,7 @@ class GrlxPage2_Static extends GrlxPage2 {
 					$pattern_code = str_replace('{link}',$val['url'],$pattern_code);
 					
 					//Make sure image URLs are correct relative to subdirectories
-					if ( substr($val['image'],0,4) != 'http' && substr($value,0,2) != '//' )
+					if ( substr($val['image'],0,4) != 'http' && substr($val['image'],0,2) != '//' )
 						$pattern_code = str_replace('{image}',$this->milieu['directory'].$val['image'],$pattern_code);
 					else
 						$pattern_code = str_replace('{image}',$val['image'],$pattern_code);

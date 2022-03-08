@@ -19,18 +19,19 @@ $output = $sl-> buildSelect();
 
 class GrlxSelectList {
 
-	private function buildOption($title,$value,$selected=false){
+	private function buildOption($title='',$value='',$selected=false){
+		$sel = '';
 		if ( $selected !== false ) {
 			$sel = ' selected="selected"';
 		}
 		$output = '<option value="'.$value.'"'.$sel.'>'.$title.'</option>'."\n";
 		return $output;
 	}
-	public function buildSelect(){
-		$output = '<select name="'.$this-> name.'"'.$this-> style.'>'."\n";
-		if ( $this-> list ) {
+	public function buildSelect() {
+		$output = '<select name="'.($this-> name ??  '').'"'.($this-> style ?? '').'>'."\n";
+		if ( isset($this-> list) ) {
 			foreach($this-> list as $key => $val) {
-				if ( $this-> current == $val[$this-> valueID] ) {
+				if ( isset($this-> current) && $this-> current == $val[$this-> valueID] ) {
 					$selected = true;
 				}
 				else {
@@ -44,7 +45,7 @@ class GrlxSelectList {
 	}
 
 
-	function setStyle($value){
+	function setStyle($value) {
 		$this-> style = ' style="'.$value.'"';
 	}
 	function setName($name){

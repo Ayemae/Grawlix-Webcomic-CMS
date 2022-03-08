@@ -15,10 +15,10 @@ require_once('panl.init.php');
  */
 
 // Delete an item from the link list
-if ( $_GET['delete'] ) {
+if ( !empty($_GET['delete']) ) {
 
 	$id = explode('-',$_GET['delete']);
-	$id = $id[1];
+	$id = $id[1] ?? null;
 
 	if ( is_numeric($id) ) {
 		$db -> where('id', $id);

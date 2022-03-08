@@ -271,29 +271,29 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		if ( $this->currentList ) {
 			foreach ( $this->currentList as $page ) {
 				$page['sort_order'] = (integer)$page['sort_order'];
-				if ( is_numeric($page['marker_id']) ) {
+				if ( isset($page['marker_id']) && is_numeric($page['marker_id']) ) {
 					$this->markerType['title'] = $page['type_title'];
 					$this->markerType['rank'] = $page['rank'];
 					$this->markerType['marker_type_id'] = $page['marker_type_id'];
 					$i++;
 					$list[$i] = array(
-						'marker_id'      => $page['marker_id'],
-						'marker_title'   => $page['marker_title'],
-						'marker_description' => $page['marker_description'],
-						'marker_img'     => $page['marker_img'],
-						'marker_img_alt' => $page['marker_img_alt'],
-						'marker_rank'    => $page['rank'],
+						'marker_id'      => $page['marker_id'] ?? null,
+						'marker_title'   => $page['marker_title'] ?? '',
+						'marker_description' => $page['marker_description'] ?? '',
+						'marker_img'     => $page['marker_img'] ?? '',
+						'marker_img_alt' => $page['marker_img_alt'] ?? '',
+						'marker_rank'    => $page['rank'] ?? null,
 						'pages'          => array()
 					);
 				}
 				$list[$i]['pages'][$page['sort_order']] = array(
-					'page_id'      => $page['page_id'],
-					'page_title'   => $page['page_title'],
-					'date_publish' => $page['date_publish'],
-					'sort_order'   => $page['sort_order'],
-					'options'      => $page['options'],
-					'page_img'     => $page['page_img'],
-					'page_img_alt' => $page['page_img_alt']
+					'page_id'      => $page['page_id'] ?? null,
+					'page_title'   => $page['page_title'] ?? '',
+					'date_publish' => $page['date_publish'] ?? '',
+					'sort_order'   => $page['sort_order'] ?? null,
+					'options'      => $page['options'] ?? null,
+					'page_img'     => $page['page_img'] ?? '',
+					'page_img_alt' => $page['page_img_alt'] ?? ''
 				);
 			}
 		}
@@ -366,15 +366,16 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	}
 
 	protected function formatHierarchy2() {
+		$output = '';
 		if ( $this->currentList ) {
 			foreach ( $this->currentList as $c=>$list ) {
 
 				// Reset
-				unset($outputChapter);
-				unset($outputPages);
+				$outputChapter = '';
+				$outputPages = '';
 				$outputChapter = $this->formatChapterHead2($c,$list);
 
-				if ( $this->chapterNum || $this->layout['behavior'] == 'single' ) {
+				if ( !empty($this->chapterNum) || (isset($this->layout['behavior']) && $this->layout['behavior'] == 'single') ) {
 					foreach ( $list['pages'] as $p=>$page_info ) {
 						$outputPages .= $this->formatPageItem2($p,$page_info);
 					}
@@ -431,6 +432,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 
 	protected function formatChapterHead2($x=null,$info=null) {
 		// Only multi needs links for the chapters
+		$url = null;
 		if ($this->layout['behavior'] == 'multi')
 		{
 			$url = $this->buildPermalink($x,'archive');
@@ -448,39 +450,39 @@ class GrlxPage2_Archive extends GrlxPage2 {
 */
 
 		// Marker image (only for the main archives page)
-		if ( !is_numeric($this->chapterNum) )
+		if ( empty($this->chapterNum) || !is_numeric($this->chapterNum) )
 		{
+			$image = '';
 			if ( $this->meta['chapters'] && in_array('image', $this->meta['chapters']) && $info['marker_img'] ) {
 				$image = '<img src="'.$this->milieu['directory'].$info['marker_img'].'" alt="'.$info['marker_img_alt'].'" />';
-				if ( $url ) {
+				if ( !empty($url) ) {
 					$image = '<a class="image" href="'.$url.'">'.$image.'</a>'."\n";
 				}
 			}
-		}
-
-		if ( !is_numeric($this->chapterNum) ) {
 
 			// Number
-			if ( $this->meta['chapters'] && in_array('number', $this->meta['chapters']) ) {
+			if ( !empty($this->meta['chapters']) && in_array('number', $this->meta['chapters']) ) {
 				$text[] = $this->markerCount.'. ';
 				$this->markerCount++;
 			}
 			// Title
-			if ( $this->meta['chapters'] && in_array('title', $this->meta['chapters']) ) {
+			if ( !empty($this->meta['chapters']) && in_array('title', $this->meta['chapters']) ) {
 				$text[] = $info['marker_title'];
 			}
-			if ( $text )
+			if ( !empty($text) )
 			{
 				$text = implode(' ', $text);
 			}
-			if ( $url ) {
+			if ( !empty($url) ) {
 				$text = '<a href="'.$url.'">'.$text.'</a>';
 			}
 			// Description
-			if ( $this->meta['chapters'] && in_array('description', $this->meta['chapters']) ) {
+			$desc = '';
+			if ( !empty($this->meta['chapters']) && in_array('description', $this->meta['chapters']) ) {
 				$desc = '<p>'.$info['marker_description'].'</p>';
 			}
-			if ( $image || $text )
+			$link = '';
+			if ( !empty($image) || !empty($text) )
 			{
 				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<div class="archive-header">'.$image."\n<h3>".$text.'</h3>'."$desc\n".'</div>'."\n";
 			}
@@ -544,6 +546,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			$url = $this->buildPermalink($num,'page');
 		}
 		// Full image
+		$image = '';
 		if ( in_array('image', $this->meta['pages']) && $info['page_img'] ) {
 			$image = '<a class="thumb" href="'.$url.'"><img src="'.$this->milieu['directory'].$info['page_img'].'" alt="'.$info['page_img_alt'].'" /></a>';
 		}
@@ -573,7 +576,11 @@ class GrlxPage2_Archive extends GrlxPage2 {
 				$date = 'Undated';
 			}
 		}
-		if ( $page || $title || $date ) {
+		$text = '';
+		if ( isset($page) || isset($title) || isset($date) ) {
+			if(!isset($page)) $page = '';
+			if(!isset($title)) $title = '';
+			if(!isset($date)) $date = '';
 			$text = '<a href="'.$url.'">'.trim($page.$title.$date).'</a>';
 		}
 		$link = '<li class="archive-page">'.$image.$text.'</li>'."\n";

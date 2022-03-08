@@ -9,12 +9,12 @@
 
 class GrlxXML {
 
-	protected $filepath;
-	protected $stringXML;
-	protected $simpleXML;
-	protected $root;
-	public    $version;
-	protected $xpath;
+	protected $filepath = null;
+	protected $stringXML = null;
+	protected $simpleXML = null;
+	protected $root = null;
+	public    $version = null;
+	protected $xpath = null;
 
 	/**
 	 * Setup
@@ -40,8 +40,8 @@ class GrlxXML {
 	 * @param array $list - arguments from main script
 	 */
 	protected function getArgs($list=null) {
-		$list = $list[0];
-		if ( isset($list) ) {
+		$list = $list[0] ?? null;
+		if ( $list ) {
 			foreach ( $list as $key=>$val ) {
 				if ( property_exists($this,$key) ) {
 					$this->{$key} = $val;
@@ -81,7 +81,7 @@ class GrlxXML {
 		$str = '/'.trim($str,'/');
 		$str = $this->root.$str;
 		$str = $this->simpleXML->xpath($str);
-		$str = $str[0];
+		$str = $str[0] ?? null;
 	}
 
 	/**
@@ -110,8 +110,10 @@ class GrlxXML {
 	 */
 	public function getItemSets($xpath=null) {
 		$this->setXPath($xpath);
+		$list = null;
 		if ( is_object($xpath) ) {
 			$i = 0;
+			$list = [];
 			foreach ( $xpath->children() as $item=>$children ) {
 				$i++;
 				foreach ( $children as $key=>$val ) {
@@ -130,6 +132,7 @@ class GrlxXML {
 	 */
 	public function getValue($xpath=null) {
 		$this->setXPath($xpath);
+		$val = null;
 		if ( is_object($xpath) ) {
 			$val = (string)$xpath;
 		}
@@ -144,6 +147,7 @@ class GrlxXML {
 	 */
 	public function getChildren($xpath=null) {
 		$this->setXPath($xpath);
+		$list = null;
 		if ( is_object($xpath) ) {
 			foreach ( $xpath->children() as $key=>$val ) {
 				$list[$key] = (string)$val;
@@ -154,6 +158,7 @@ class GrlxXML {
 
 	public function getChildNodes($xpath=null) {
 		$this->setXPath($xpath);
+		$list = null;
 		if ( is_object($xpath) ) {
 			$i = 0;
 			foreach ( $xpath->children() as $item=>$children ) {
@@ -175,8 +180,10 @@ class GrlxXML {
 	 */
 	public function getClones($xpath=null,$name=null) {
 		$this->setXPath($xpath);
+		$list = null;
 		if ( is_object($xpath) ) {
 			foreach ( $xpath->{$name} as $val ) {
+				if(!$list) $list = [];
 				$list[] = (string)$val;
 			}
 		}
@@ -191,6 +198,7 @@ class GrlxXML {
 	 */
 	public function getClonesChildren($xpath=null) {
 		$this->setXPath($xpath);
+		$list = null;
 		if ( is_object($xpath) ) {
 			$name = $xpath->children()->getName();
 			foreach ( $xpath->{$name} as $val ) {
@@ -207,6 +215,7 @@ class GrlxXML {
 	 * @return array $list - name=>value list
 	 */
 	public function getAttributes($xpath) {
+		$list = null;
 		if ( is_object($xpath) ) {
 			foreach ( $xpath->attributes() as $key=>$val ) {
 				$list[$key] = (string)$val;
@@ -225,6 +234,7 @@ class GrlxXML {
  		if ( !$xpath ) {
 			$xpath = $this->xpath;
 		}
+		$list = null;
 		if ( is_object($xpath) ) {
 			$json = json_encode($xpath);
 			$list = json_decode($json,true);

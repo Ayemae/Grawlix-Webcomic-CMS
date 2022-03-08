@@ -27,58 +27,60 @@ if ( $var_list ) {
 	}
 }
 
-if ( !$marker_id ) {
+if ( empty($marker_id) ) {
 	header('location:book.view.php');
 	die();
 }
 
 $marker = new GrlxMarker($marker_id);
 
-$new_order ? $new_order : $new_order = 1;
+isset($new_order) ? $new_order : $new_order = 1;
 
-
-
+$alert_output = '';
+$metadata_output = '';
+$custom_image_output = '';
+$image_output = '';
+$upload_output = '';
+$orig_output = '';
 
 // ! ------ Updates
 
 
 // ! Images
-if ( $_FILES )
-{
+if ( !empty($_FILES) ) {
 	// Every new image gets its own folder.
 	$serial = date('YmdHis').substr(microtime(),2,6);
 	$path = '/'.DIR_COMICS_IMG.$serial;
 	$new_directory_made = mkdir('..'.$path);
+	$success1 = false;
 
 	// Move the file to its new home.
-	if ( $new_directory_made )
-	{
+	if ( $new_directory_made ) {
 		$success1 = move_uploaded_file($_FILES['new_image']['tmp_name'], '..'.$path.'/'.$_FILES['new_image']['name']);
 	}
 
 	// Got a problem? Report what went wrong.
 	if ( !$success1 ) {
-
 		// Can you write to the new folder?
 		if ( !is_writable('..'.$path)) {
 			$alert_output .= $message->alert_dialog('Unable to upload image. Looks like a folder permissions problem.');
 		}
 		else {
 			// See http://php.net/manual/en/features.file-upload.errors.php
-			switch ( $_FILES[$which]['error'][$key] ) {
-				case 1:
+			switch ( $_FILES['new_image']['error'] ) {
+				case UPLOAD_ERR_INI_SIZE:
 					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
 					break;
-				case 2:
-					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
+				case UPLOAD_ERR_FORM_SIZE:
+					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the form’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
 					break;
-				case 3:
+				case UPLOAD_ERR_PARTIAL:
 					$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was nothing to receive.');
 					break;
-				case 6:
+				case UPLOAD_ERR_NO_TMP_DIR:
 					$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was no “temp” folder on the server — contact your host.');
 					break;
-				case 8:
+				case UPLOAD_ERR_EXTENSION: //This error is actually about PHP extensions, not file extensions...
 					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It doesn’t look like a PNG, GIF, JPG, JPEG or SVG.');
 					break;
 			}
@@ -86,11 +88,9 @@ if ( $_FILES )
 	}
 
 	// If the image uploaded successfully, then …
-	if ( $success1 )
-	{
+	if ( $success1 ) {
 		// Update existing image records.
-		if ( $original_image_ref_id && $original_image_ref_id > 0 )
-		{
+		if ( $original_image_ref_id && $original_image_ref_id > 0 ) {
 			$data = array(
 				'url' => $path.'/'.$_FILES['new_image']['name'],
 				'date_modified' => $db->now()
@@ -98,38 +98,34 @@ if ( $_FILES )
 			$db->where('id',$original_image_ref_id);
 			$success2 = $db->update('image_reference', $data);
 		}
-
 		// Create a new image record.
-		else
-		{
-		$data = array(
-			'url' => $path.'/'.$_FILES['new_image']['name'],
-			'date_created' => $db->now()
-		);
-		$success3 = $db->insert('image_reference', $data); // I used success3 to differentiate between DB events.
+		else {
+			$data = array(
+				'url' => $path.'/'.$_FILES['new_image']['name'],
+				'date_created' => $db->now()
+			);
+			$success3 = $db->insert('image_reference', $data); // I used success3 to differentiate between DB events.
 
-		$data = array(
-			'rel_id' => $marker_id,
-			'rel_type' => 'marker',
-			'image_reference_id' => $success3,
-			'date_created' => $db->now()
-		);
+			$data = array(
+				'rel_id' => $marker_id,
+				'rel_type' => 'marker',
+				'image_reference_id' => $success3,
+				'date_created' => $db->now()
+			);
 
-		$success3 = $db->insert('image_match', $data);
+			$success3 = $db->insert('image_match', $data);
 		}
 	}
 }
 
 // ! Update the marker’s title
-if ( $marker_id && $new_title ) {
+if ( $marker_id && !empty($new_title) ) {
 	$success = $marker-> saveMarker ( $marker_id, $new_title, $edit_marker_type, $new_desc);
 	$marker = new GrlxMarker($marker_id); // reset
-	if ( $success == 1)
-	{
+	if ( $success == 1) {
 		$alert_output .= $message->success_dialog('Changes saved.');
 	}
-	else
-	{
+	else {
 		$alert_output .= $message->alert_dialog('Changes failed to save.');
 	}
 }
@@ -215,7 +211,7 @@ if ( !is_writable('../'.DIR_COMICS_IMG) ) {
 
 
 // Reset the marker info after making updates.
-if ( $_POST ) {
+if ( !empty($_POST) ) {
 	$marker = new GrlxMarker($marker_id);
 }
 
@@ -331,13 +327,12 @@ $new_upload_field .= '<p>Uploading more than '.$fileops-> up_get_max_file_upload
 
 
 
-$custom_image_output .= '<input type="hidden" name="original_image_ref_id" value="'.$marker->thumbInfo['id'].'"/>'."\n";
-if ( $marker->thumbInfo && is_array($marker->thumbInfo) )
-{
+if ( !empty($marker->thumbInfo) && is_array($marker->thumbInfo) ) {
+	$custom_image_output .= '<input type="hidden" name="original_image_ref_id" value="'.$marker->thumbInfo['id'].'"/>'."\n";
 	$thumbnail_image = '<img src="'.$marker->thumbInfo['url'].'" alt="'.$marker->thumbInfo['description'].'">';
 }
-else
-{
+else {
+	//$custom_image_output .= '<input type="hidden" name="original_image_ref_id" value=""/>'."\n";
 	$thumbnail_image = '<p>This marker has no archive image.</p>';
 }
 

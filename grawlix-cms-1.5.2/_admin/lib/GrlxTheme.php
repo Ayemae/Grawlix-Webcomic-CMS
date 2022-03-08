@@ -14,9 +14,9 @@ class GrlxTheme {
 	public    $milieuID;
 	public    $multiTone;
 	public    $defaultToneID;
-	protected $action;
+	protected $action = null;
 	protected $fileOps;
-	protected $dirList;
+	protected $dirList = null;
 	protected $dbDirList;
 	protected $themesList;
 	protected $uninstalledList;
@@ -108,8 +108,8 @@ class GrlxTheme {
 	 * @param array $list - arguments from main script
 	 */
 	protected function getArgs($list=null) {
-		$list = $list[0];
-		if ( isset($list) ) {
+		$list = $list[0] ?? null;
+		if ( $list ) {
 			foreach ( $list as $key=>$val ) {
 				if ( property_exists($this, $key) ) {
 					$this->{$key} = $val;
@@ -153,20 +153,20 @@ class GrlxTheme {
 		unset($this->errorOutput);
 		if ( $this->error['db_install'] ) {
 			array_walk($this->error['db_install'],'strfunc_li_wrap');
-			$output .= 'The following could not be added to the database:<ul>';
+			$output  = 'The following could not be added to the database:<ul>';
 			$output .= implode('',$this->error['db_install']);
 			$output .= '</ul>';
 		}
 		if ( $this->error['missing_file'] ) {
 			array_walk($this->error['missing_file'],'strfunc_li_wrap');
-			$output .= 'The following files cannot be found:<ul>';
+			$output  = 'The following files cannot be found:<ul>';
 			$output .= implode('',$this->error['missing_file']);
 			$output .= '</ul>';
 		}
 		if ( $this->error['multi-switch'] ) {
 			$output = $this->error['multi-switch'];
 		}
-		$this->errorOutput = $output;
+		$this->errorOutput = $output ?? null;
 	}
 
 	/**
@@ -174,21 +174,21 @@ class GrlxTheme {
 	 */
 	protected function formatSuccessOutput() {
 		unset($this->successOutput);
-		if ( $this->success['theme_install'] && $this->success['tone_install'] ) {
+		if ( isset($this->success['theme_install']) && $this->success['theme_install'] && isset($this->success['tone_install']) && $this->success['tone_install'] ) {
 			$count = count($this->success['tone_install']);
 			$toneStr = qty('tone',$count);
 			$output = 'Theme <b>'.$this->themeMeta['title'].'</b> and '.$toneStr.' have been installed.';
 		}
-		elseif ( $this->success['theme_install'] ) {
+		elseif ( isset($this->success['theme_install']) && $this->success['theme_install'] ) {
 			$output = 'Theme <b>'.$this->themeMeta['title'].'</b> has been installed.';
 		}
-		elseif ( $this->success['tone_install'] ) {
+		elseif ( isset($this->success['tone_install']) && $this->success['tone_install'] ) {
 			array_walk($this->success['tone_install'],'strfunc_li_wrap');
 			$output  = 'New tones have been installed:<ul>';
 			$output .= implode('',$this->success['tone_install']);
 			$output .= '</ul>';
 		}
-		$this->successOutput = $output;
+		$this->successOutput = $output ?? null;
 	}
 
 	/**
@@ -199,10 +199,10 @@ class GrlxTheme {
 			$this->checkThemeInstalled();
 			$this->checkTonesInstalled();
 		}
-		if ( $this->themesList ) {
+		if ( !empty($this->themesList) ) {
 			foreach ( $this->themesList as $dir=>$info ) {
-				$info['id'] ? $themeID = $info['id'] : $themeID = $dir;
-				if ( $info['preview'] ) {
+				$themeID = $info['id'] ?? $dir;
+				if ( !empty($info['preview']) ) {
 					$info['preview'] = '../'.DIR_THEMES.$dir.'/'.$info['preview'];
 				}
 				else {
@@ -221,18 +221,25 @@ class GrlxTheme {
 			'id' => 0,
 			'title' => 'None'
 		);
-		if ( $this->themesList ) {
+		if ( !empty($this->themesList) ) {
 			foreach ( $this->themesList as $id=>$array) {
 				$tones = $array['tones'];
-				if ( $tones ) {
+				if ( !empty($tones) ) {
 					foreach ( $tones as $key=>$info ) {
-						if ( $info['title'] != 'placeholder' ) {
+						if ( isset($info['title']) && $info['title'] != 'placeholder' ) {
 							$str = $array['title'].' — '.$info['title'];
 						}
-						$this->toneSelectList[$info['id']] = array(
-							'id' => $info['id'],
-							'title' => $str
-						);
+						if ( !empty($info['id']) ) {
+							$this->toneSelectList[$info['id']] = array(
+								'id' => $info['id'],
+								'title' => $str
+							);
+						}/* else {
+							$this->toneSelectList[''] = array(
+								'id' => null,
+								'title' => $str
+							);
+						}*/
 					}
 				}
 			}
@@ -244,7 +251,7 @@ class GrlxTheme {
 	 */
 	protected function getDirList() {
 		$list = $this->fileOps->get_dir_list('../'.DIR_THEMES);
-		if ( $list ) {
+		if ( !empty($list) ) {
 			foreach ( $list as $item ) {
 				if ( is_dir('../'.DIR_THEMES.$item) ) {
 					$this->dirList[$item] = $item;
@@ -346,8 +353,7 @@ class GrlxTheme {
 	 * Check for which themes are in the database or not
 	 */
 	protected function checkThemeInstalled() {
-		if ( $this->dirList )
-		{
+		if ( !empty($this->dirList) ) {
 			foreach ( $this->dirList as $dir=>$info ) {
 				if ( array_key_exists($dir,$this->dbList) ) {
 					$info['id'] = $this->dbList[$dir]['id'];
@@ -371,11 +377,11 @@ class GrlxTheme {
 			unset($dirTones);
 			unset($dbTones);
 			// Only check the installed themes for now
-			if ( !$this->themesList[$dir]['action'] ) {
+			if ( empty($this->themesList[$dir]['action']) ) {
 				$dirTones = $info['tones'];
 				$dbTones = $this->dbList[$dir]['tones'];
 				// Add placeholders to the list
-				if ( $dbTones['placeholder'] ) {
+				if ( !empty($dbTones['placeholder']) ) {
 					$this->themesList[$dir]['tones'] = $dbTones;
 				}
 				// Check for matching tones
@@ -549,10 +555,10 @@ class GrlxTheme {
 			$str = strfunc_make_title($this->dirName);
 			$this->themeMeta['title'] = $str;
 		}
-		if ( !$this->themeMeta['label'] ) {
+		if ( empty($this->themeMeta['label']) ) {
 			$this->themeMeta['label'] = $this->dirName;
 		}
-		if ( !$this->themeMeta['directory'] ) {
+		if ( empty($this->themeMeta['directory']) ) {
 			$this->themeMeta['directory'] = $this->dirName;
 		}
 		$this->themeMeta['date_created'] = $this->db->now();
@@ -580,7 +586,7 @@ class GrlxTheme {
 		if ( !$array ) { // Placeholder
 			$info['title'] = 'placeholder';
 		}
-		if ( $array['file'] ) { // CSS file
+		if ( !empty($array['file']) ) { // CSS file
 			$title = explode('.',$array['file']);
 			array_shift($title);
 			array_pop($title);
@@ -602,7 +608,7 @@ class GrlxTheme {
 			$info['date_created'] = $this->db->now();
 			$id = $this->db->insert('theme_tone',$info);
 		}
-		return $id;
+		return $id ?? null;
 	}
 
 	/**

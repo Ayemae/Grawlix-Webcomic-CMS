@@ -164,10 +164,10 @@ class GrlxPage2_RSS extends GrlxPage2 {
 		$output  = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 		$output .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'."\n";
 		$output .= '	<channel>'."\n";
-		$output .= '		<atom:link href="'.$_SERVER['SCRIPT_URI'].'" rel="self" type="application/rss+xml" />'."\n";
-		$output .= '		<title><![CDATA['.$this->bookInfo['title'].']]></title>'."\n";
-		$output .= '		<description><![CDATA['.$this->bookInfo['description'].']]></description>'."\n";
-		$output .= '		<link>http://'.$this->domainName.$this->milieu['directory'].$this->bookInfo['url'].'</link>'."\n";
+		$output .= '		<atom:link href="'.($_SERVER['SCRIPT_URI'] ?? '').'" rel="self" type="application/rss+xml" />'."\n";
+		$output .= '		<title><![CDATA['.($this->bookInfo['title'] ?? '').']]></title>'."\n";
+		$output .= '		<description><![CDATA['.($this->bookInfo['description'] ?? '').']]></description>'."\n";
+		$output .= '		<link>http://'.($this->domainName.$this->milieu['directory'] ?? '').($this->bookInfo['url'] ?? '').'</link>'."\n";
 //		$output .= '<author>'.$this->milieu['artist_name'].'</author>'."\n";
 		$output .= '		<generator>The Grawlix CMS</generator>'."\n";
 		foreach ( $this->feedItems as $page ) {

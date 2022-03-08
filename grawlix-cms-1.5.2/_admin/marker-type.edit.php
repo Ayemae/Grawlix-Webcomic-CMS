@@ -23,7 +23,7 @@ if ( $var_list ) {
 }
 
 
-if ( $marker_type_id ) {
+if ( isset($marker_type_id) ) {
 	$marker_type = new GrlxMarkerType($marker_type_id);
 }
 else {
@@ -32,11 +32,12 @@ else {
 }
 
 
+$alert_output = '';
 /*****
  * Updates
  */
-
-if ( $marker_type_id && $new_title ) {
+$success = false;
+if ( !empty($marker_type_id) && !empty($new_title) ) {
 	$success = $marker_type-> saveMarkerType ( $marker_type_id, $new_title );
 	$marker_type = new GrlxMarkerType($marker_type_id);
 }
@@ -57,7 +58,7 @@ $view->tooltype('chap');
 $view->headline('Marker type <span>'.$marker_type-> markerTypeInfo['title'].'</span>');
 
 
-$content_output .= '<form accept-charset="UTF-8" action="marker-type.edit.php" method="post">'."\n";
+$content_output  = '<form accept-charset="UTF-8" action="marker-type.edit.php" method="post">'."\n";
 $content_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 $content_output .= '	<input type="hidden" name="marker_type_id" value="'.$marker_type_id.'"/>'."\n";
 $content_output .= '	<label for="marker_type_id">This marker type is called:</label>'."\n";

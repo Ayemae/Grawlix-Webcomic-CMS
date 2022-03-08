@@ -63,7 +63,7 @@ class GrlxView_Login extends GrlxView {
 	 * @return string - html for the foot of the page
 	 */
 	public function close_view() {
-		$output .= '</main>';
+		$output  = '</main>';
 		$output .= '</div>';
 		$output .= $this->html_foot();
 		return $output;

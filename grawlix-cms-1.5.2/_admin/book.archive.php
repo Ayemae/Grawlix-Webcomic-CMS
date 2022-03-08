@@ -16,9 +16,9 @@ $args['infoXML'] = 1;
 $infoXML = new GrlxXML_Book($args);
 unset($args);
 
-$book_id = $_POST['book_id'];
-$book_id ? $book_id : $book_id = $_GET['book_id'];
-$book_id ? $book_id : $book_id = $_SESSION['book_id'];
+$book_id = $_POST['book_id'] ?? null;
+$book_id ? $book_id : $book_id = $_GET['book_id'] ?? null;
+$book_id ? $book_id : $book_id = $_SESSION['book_id'] ?? null;
 
 // A book ID is required. If you don’t have one at this point, then get the “first” book in the database.
 if ( !$book_id ) {
@@ -32,28 +32,25 @@ if ( !$book_id ) {
 	}
 }
 
+$alert_output = '';
 
-if ( $_POST['submit'] ) {
+if ( isset($_POST['submit']) ) {
 	$args['archiveNew'] = array(
 		'behavior' => clean_text($_POST['behavior']),
 		'structure' => clean_text($_POST['structure']),
-		'chapter'  => $_POST['chapter'],
-		'page'     => $_POST['page']
+		'chapter'  => $_POST['chapter'] ?? null,
+		'page'     => $_POST['page'] ?? null
 	);
 
 	// Sanitized for your protection.
-	if ( $args['chapter']['option'] )
-	{
-		foreach ( $args['chapter']['option'] as $key => $val )
-		{
+	if ( isset($args['chapter']) && isset($args['chapter']['option']) ) {
+		foreach ( $args['chapter']['option'] as $key => $val ) {
 			$args['chapter']['option'][$key] = clean_text($val);
 		}
 	}
 	
-	if ( $args['page']['option'] )
-	{
-		foreach ( $args['page']['option'] as $key => $val )
-		{
+	if ( isset($args['page']) && isset($args['page']['option']) ) {
+		foreach ( $args['page']['option'] as $key => $val ) {
 			$args['page']['option'][$key] = clean_text($val);
 		}
 	}
@@ -76,14 +73,14 @@ $xml = new GrlxXML_Book($args);
 
 
 // Get some basic information about this book.
-if ($book_id && is_numeric($book_id))
-{
+if ($book_id && is_numeric($book_id)) {
 	$db->where('id',$book_id);
 	$book_info = $db->getOne('book','title');
 }
 
 
 // ! Behavior
+$behavior_output = '';
 if ( $infoXML->archive['behavior'] ) {
 	foreach ( $infoXML->archive['behavior'] as $info ) {
 		$name = $info['name'];
@@ -109,11 +106,11 @@ $infoXML->archive['structure'] = array (
 	),
 	array (
 		'name' => 'v1.4',
-		'title' => 'Hierarchal',
+		'title' => 'Hierarchical',
 		'description' => 'Use HTML made for Grawlix CMS v1.4 themes and later.',
 	),
 );
-
+$structure_output = '';
 foreach ( $infoXML->archive['structure'] as $info ) {
 	$name = $info['name'];
 	$xml->structure == $name ? $check = ' checked="checked"' : $check = null;
@@ -128,7 +125,7 @@ $structure_output = $form->row_wrap($structure_output);
 
 
 // ! Layout
-
+$layout_output = '';
 if ( $xml->layout && $infoXML->archive['chapter']['layout'] && $infoXML->archive['page']['layout'] ) {
 	$layout_output  = '<div>';
 	$layout_output .= '<h5>Markers</h5>';
@@ -155,6 +152,7 @@ if ( $xml->layout && $infoXML->archive['chapter']['layout'] && $infoXML->archive
 	$layout_output = $form->row_wrap($layout_output);
 }
 
+$meta_output = '';
 if ( $xml->meta && $infoXML->archive['chapter']['option'] && $infoXML->archive['page']['option'] ) {
 
 	// Yeeeah, let’s just sneak this one in there. Ahem.
@@ -223,15 +221,13 @@ if ($action == 'gen-thumbs') {
 
 $view->page_title('Archives');
 $view->tooltype('arcv');
-if (is_file('book.list.php'))
-{
+if (is_file('book.list.php')) {
 	$view->headline('Archive settings <span>'.$book_info['title'].'</span>');
 }
-else
-{
+else {
 	$view->headline('Archive settings');
 }
-$view->action($action_output);
+$view->action($action_output ?? null);
 $form->input_hidden('book_id');
 $form->value($book_id);
 $hidden_book_info = $form->paint();
@@ -240,7 +236,7 @@ $view->group_css('arcv');
 $view->group_h2('Behavior');
 $view->group_instruction('Select how you want readers to navigate through your archives.');
 $view->group_contents($behavior_output);
-$content_output .= $view->format_group().'<hr/>';
+$content_output = $view->format_group().'<hr/>';
 
 $view->group_css('arcv');
 $view->group_h2('Structure');

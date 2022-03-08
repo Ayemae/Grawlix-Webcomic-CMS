@@ -29,8 +29,8 @@ if ( $variable_list ) {
 	}
 }
 
-$page_id = $_GET['page_id'];
-$page_id ? $page_id : $page_id = $_POST['page_id'];
+$page_id = $_GET['page_id'] ?? null;
+$page_id ? $page_id : $page_id = $_POST['page_id'] ?? null;
 
 // Hold it — no ID, no entrance.
 if ( !$page_id ) {
@@ -51,35 +51,30 @@ $fileops = new GrlxFileOps;
 $sl = new GrlxSelectList;
 
 // Make sure the image folder exists and is accessible.
-$alert_output .= $fileops->check_or_make_dir('../'.DIR_STATIC_IMG);
+$alert_output = $fileops->check_or_make_dir('../'.DIR_STATIC_IMG);
 
 $view-> yah = 6;
 
 
-if ( $msg == 'created' ) {
+if ( isset($msg) && $msg == 'created' ) {
 	$alert_output .= $message->success_dialog('New page built. Add your content below.');
 }
 
 
 
-
-
-
 // ! Delete old blocks
-if ( $delete_block_id && is_numeric($delete_block_id) && $page_id )
-{
+if ( isset($delete_block_id) && is_numeric($delete_block_id) && $page_id ) {
 	$db->where('id', $delete_block_id);
 	$success = $db->delete('static_content');
 }
 
 
 // ! Write blocks’ sort order
-if ( $_POST && $page_id ) {
-
+$static = false;
+if ( !empty($_POST) && $page_id ) {
 	// “default” matches the pattern filenames, e.g. /assets/patterns/hilt.default.php
 	$pattern_id = register_variable('pattern_id');
-	if ( !$pattern_id || $pattern_id == NULL || $pattern_id == '' )
-	{
+	if ( !$pattern_id || $pattern_id == NULL || $pattern_id == '' ) {
 		$pattern_id = 'default';
 	}
 
@@ -106,8 +101,7 @@ if ( $_POST && $page_id ) {
 	$alert_output .= $message->success_dialog('Page saved. '.$link-> paint().'.');
 }
 
-if ( !$static && $page_id )
-{
+if ( !$static && $page_id ) {
 	$static = new GrlxStaticPage($page_id);
 	$static->getInfo();
 }
@@ -116,17 +110,13 @@ if ( !$static && $page_id )
 
 // Automatically resort blocks to remove gaps in sort_order.
 
-if ( $page_id && $original_sort_order && $sort_order )
-{
+if ( $page_id && !empty($original_sort_order) && !empty($sort_order) ) {
 	$resorted_list = array();
-	foreach ( $original_sort_order as $key => $val )
-	{
-		if ( $sort_order[$key] < $val )
-		{
+	foreach ( $original_sort_order as $key => $val ) {
+		if ( $sort_order[$key] < $val ) {
 			$val = ($sort_order[$key] - 0.5) . 'a';
 		}
-		elseif ( $sort_order[$key] > $val )
-		{
+		elseif ( $sort_order[$key] > $val ) {
 			$val = ($sort_order[$key] + 0.5) . 'b';
 		}
 		$resorted_list[$val] = $key;
@@ -134,12 +124,10 @@ if ( $page_id && $original_sort_order && $sort_order )
 }
 
 // Update the official records.
-if ( $resorted_list && count($resorted_list) > 0 )
-{
+if ( !empty($resorted_list) && count($resorted_list) > 0 ) {
 	ksort($resorted_list);
 	$i = 1;
-	foreach ( $resorted_list as $key => $val )
-	{
+	foreach ( $resorted_list as $key => $val ) {
 		$data = array(
 			'sort_order' => $i
 		);
@@ -148,21 +136,17 @@ if ( $resorted_list && count($resorted_list) > 0 )
 		$i++;
 	}
 }
-
 // Check sort_order anyway. Don’t leave room for any gaps.
-elseif ($page_id)
-{
+elseif ($page_id) {
 	$cols = array('id','sort_order');
 	$db->where('page_id', $page_id);
 	$db->orderBy('sort_order', 'ASC');
 	$block_list = $db->get('static_content',NULL,$cols);
 }
-if ( $block_list )
-{
+if ( !empty($block_list) ) {
 	$new_order = array();
 	$i = 1;
-	foreach ( $block_list as $key => $val )
-	{
+	foreach ( $block_list as $key => $val ) {
 		$data = array('sort_order' => $i);
 		$db->where('id',$val['id']);
 		$db->update('static_content', $data);
@@ -179,7 +163,6 @@ if ( $block_list )
 
 // Get all relevant info about this page.
 if ( $page_id && is_numeric($page_id) ) {
-
 	$cols = array(
 		'id',
 		'title',
@@ -189,7 +172,6 @@ if ( $page_id && is_numeric($page_id) ) {
 	);
 	$db->where('id',$page_id);
 	$page_info = $db->getOne('static_page', $cols);
-
 
 	// Content blocks
 	$cols = array(
@@ -203,9 +185,8 @@ if ( $page_id && is_numeric($page_id) ) {
 	$content_list = $db->get('static_content', NULL, $cols);
 }
 
-
-if ( $page_info )
-{
+$settings_form = '';
+if ( $page_info ) {
 	$settings_form .= <<<EOL
 <input type="hidden" name="page_id" id="page_id" value="$page_id"/>
 <p>
@@ -220,9 +201,8 @@ if ( $page_info )
 EOL;
 }
 
-if ( $content_list )
-{
-
+$block_output = '';
+if ( !empty($content_list) ) {
 	$edit_link = new GrlxLinkStyle;
 	$edit_link->url('sttc.block-edit.php');
 	$edit_link->title('Edit block info.');
@@ -258,9 +238,7 @@ if ( $content_list )
 	$list-> row_class('content-blocks');
 
 
-	foreach ( $content_list as $key => $val )
-	{
-
+	foreach ( $content_list as $key => $val ) {
 		// Set up options unique to this item in the list.
 		$delete_link->query("delete_block_id=$val[id]&page_id=$page_id");
 		$edit_link->query("block_id=$val[id]");
@@ -268,24 +246,20 @@ if ( $content_list )
 		// General actions for this item.
 		$action_output = $delete_link->icon_link('delete').$edit_link->icon_link();
 
-		if ( $val['image'] && $val['image'] != '' )
-		{
+		if ( $val['image'] && $val['image'] != '' ) {
 			$preview = '<img src="'.$milieu_list['directory']['value'].$val['image'].'" alt="'.$val['image'].'" style="max-height:120px"/>';
 		}
-		else
-		{
+		else {
 			$preview = "-";
 		}
 
 		$order  = '<input type="hidden" name="original_sort_order['.$val['id'].']" value="'.$val['sort_order'].'"/>';
 		$order .= '<input type="text" size="3" style="width:3rem" name="sort_order['.$val['id'].']" value="'.$val['sort_order'].'"/>';
 
-		if ( $val['title'] && $val['title'] != '' )
-		{
+		if ( $val['title'] && $val['title'] != '' ) {
 			$title = $val['title'];
 		}
-		else
-		{
+		else {
 			$title = '(untitled)';
 		}
 
@@ -301,8 +275,7 @@ if ( $content_list )
 	$block_output .= $list->format_content();
 }
 
-if ( $page_id )
-{
+if ( $page_id ) {
 	$block_output .= '<a href="sttc.block-edit.php?page_id='.$page_id.'" class="create btn primary new"><i></i>Create a block</a>'."\n";
 }
 
@@ -312,8 +285,7 @@ if ( $page_id )
 // Which theme directory does this site use?
 $theme_directory = get_current_theme_directory($db);
 
-if (!$theme_directory || $theme_directory === FALSE)
-{
+if (empty($theme_directory) || $theme_directory === FALSE) {
 	$alert_output .= $message->alert_dialog('I couldn’t determine the <a href="./site.theme-manager.php">site’s theme</a>, and so can’t find any theme pattern files.');
 }
 
@@ -322,15 +294,11 @@ if (!$theme_directory || $theme_directory === FALSE)
 
 // Scan the current theme for pattern files in case the user
 // renamed some or created new ones.
-if ( $theme_directory && $theme_directory !== FALSE)
-{
+if ( !empty($theme_directory) ) {
 	$file_list = scandir('../themes/'.$theme_directory);
-	if($file_list)
-	{
-		foreach($file_list as $filename)
-		{
-			if ( substr($filename,0,8) == 'pattern.')
-			{
+	if( !empty($file_list) ) {
+		foreach( $file_list as $filename ) {
+			if ( substr($filename,0,8) == 'pattern.') {
 				$filename = explode('.',$filename);
 				$pattern_order_list[$filename[1]] = str_replace('-',' ',$filename[1]);
 			}
@@ -340,13 +308,11 @@ if ( $theme_directory && $theme_directory !== FALSE)
 
 // Build a list to let the artist chooses a pattern for this static page.
 
-if ( $pattern_order_list )
-{
+if ( !empty($pattern_order_list) ) {
 	$order_output = build_select_simple('pattern_id',$pattern_order_list, $page_info['options'],'width:200px');
 }
 else {
-	if ( !$theme_directory )
-	{
+	if ( !$theme_directory ) {
 		$theme_directory = '(unknown)';
 	}
 	$order_output = 'I couldn’t find any <a href="http://www.getgrawlix.com/docs/'.DOCS_VERSION.'/static-patterns">pattern files</a> in the /themes/'.$folder_name.' folder.';
@@ -381,7 +347,7 @@ $layout_select_output = '
 	<label>Page layout</label>
 	'.$sl-> buildSelect().'</div>';
 
-if ( $page_info['title'] ) {
+if ( !empty($page_info['title']) ) {
 	$page_title = $page_info['title'];
 }
 else {
@@ -421,7 +387,7 @@ $view->group_h2('Metadata');
 $view->group_instruction('General information for this static page.');
 $view->group_contents($settings_form);
 $settings_output = $view->format_group().'<hr />';
-$form_output .= $form->form_buttons();
+$form_output = $form->form_buttons(); //Unused...?
 
 $view->group_h2('Layout');
 $view->group_contents($layout_form);
@@ -442,7 +408,6 @@ $output  = $view->open_view();
 $output .= $view->view_header();
 $output .= $alert_output;
 $output .= $form->open_form();
-$output .= $hidden_fields;
 $output .= $settings_output;
 $output .= $layout_output;
 $output .= $content_output;

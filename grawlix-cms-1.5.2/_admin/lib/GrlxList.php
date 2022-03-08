@@ -72,13 +72,14 @@ class GrlxList {
 	}
 
 	public function format_headings() {
+		$output = '';
 		if ( $this->headings ) {
 			$i = 1;
-			$this->row_class ? $class = ' '.$this->row_class : null;
+			$class = $this->row_class ? ' '.$this->row_class : null;
 			$output = '<div class="heading'.$class.'">';
 			foreach ( $this->headings as $val ) {
 				if ( isset($val['value']) ) {
-					$val['class'] ? $css = ' class="'.$val['class'].'"' : null;
+					$css = $val['class'] ? ' class="'.$val['class'].'"' : null;
 					$output .= '<div'.$css.'><h6 id="th-'.$i.'">'.$val['value'].'</h6></div>';
 				}
 				else {
@@ -93,18 +94,19 @@ class GrlxList {
 
 	protected function parse_key($str=null) {
 		$parts = explode('||', $str);
-		$this->row_id($parts[0]);  // id
-		$this->row_vis($parts[1]); // on/off
+		$this->row_id($parts[0] ?? null);  // id
+		$this->row_vis($parts[1] ?? null); // on/off
 	}
 
 	public function format_content() {
-		if ( $this->content ) {
+		$output = '';
+		if ( isset($this->content) ) {
 			foreach ( $this->content as $key => $array ) {
 				$this->parse_key($key);
 				$output .= $this->format_row($array);
 			}
 		}
-		if ( $this->draggable ) {
+		if ( isset($this->draggable) && $this->draggable ) {
 			$output = '<ul id="sortable">'.$output.'</ul>';
 		}
 		return $output;
@@ -115,8 +117,8 @@ class GrlxList {
 		$first = key($array);
 		end($array);
 		$last = key($array);
-		$this->row_class ? $class = ' '.$this->row_class : null;
-		$this->row_vis ? $vis = $this->row_vis : null;
+		$class = $this->row_class ? ' '.$this->row_class : null;
+		$vis = $this->row_vis ? $this->row_vis : null;
 		$output = '<div class="item'.$class.$vis.'">';
 		foreach ( $array as $key => $val ) {
 			if ( $this->draggable && ($key == $first) ) {

@@ -25,22 +25,19 @@ if ( $var_list ) {
 
 
 $max = $db->getOne('book','MAX(sort_order) AS max');
-if ($max && $max['max'])
-{
+if ($max && $max['max']) {
 	$sort_order = $max['max'] + 1;
 }
-else
-{
+else {
 	$sort_order = 1;
 }
 
-
+$alert_output = '';
 
 // ! Updates
 
 // Don’t allow illegal characters.
-if ($url)
-{
+if ($url) {
 	$url = str_replace(' ', '-', $url);
 	$url = str_replace('?', '', $url);
 	$url = str_replace('&', 'and', $url);
@@ -60,8 +57,7 @@ if ($url)
 
 
 
-if ($_POST && $title)
-{
+if (!empty($_POST) && isset($title)) {
 	$default_options = <<<EOL
 <?xml version="1.0" encoding="UTF-8"?>
 <book version="1.1"><rss><option>image</option><option>number</option><option>blog</option><option>transcript</option></rss><archive><behavior>single</behavior><structure>v1.4</structure><chapter><layout>grid</layout><option>title</option><option>image</option></chapter><page><layout>list</layout><option>title</option></page></archive></book>
@@ -73,12 +69,10 @@ EOL;
 
 	// What number is the last item in the menu?
 	$last_menu = $db->getOne('path','MAX(sort_order) AS highest');
-	if ($last_menu)
-	{
+	if ($last_menu) {
 		$last_menu = $last_menu['highest'];
 	}
-	else
-	{
+	else {
 		$last_menu = 0;
 	}
 
@@ -93,7 +87,7 @@ EOL;
 
 	$data = array(
 		'title' => $title,
-		'url' => $url,
+		'url' => $url ?? '',
 		'rel_id' => $new_book_id,
 		'rel_type' => 'book',
 		'sort_order' => $last_menu + 1,
@@ -105,7 +99,7 @@ EOL;
 
 	$data = array(
 		'title' => $title.' archive',
-		'url' => $url.'/archive',
+		'url' => ($url ?? '').'/archive',
 		'rel_id' => $new_book_id,
 		'rel_type' => 'archive',
 		'sort_order' => $last_menu + 2,
@@ -119,8 +113,7 @@ EOL;
 	die();
 }
 
-if ($_POST && !$title)
-{
+if (!empty($_POST) && empty($title)) {
 	$alert_output = $message->alert_dialog('A title is required.');
 }
 
@@ -132,7 +125,7 @@ if ($_POST && !$title)
 
 
 
-$url ? $url : $url = '/comic'.$sort_order;
+!empty($url) ? $url : $url = '/comic'.$sort_order;
 
 
 $title_output = <<<EOL
@@ -155,7 +148,7 @@ EOL;
 
 
 
-$content_output .= '<form accept-charset="UTF-8" action="book.book-create.php" method="post" enctype="multipart/form-data">'."\n";
+$content_output  = '<form accept-charset="UTF-8" action="book.book-create.php" method="post" enctype="multipart/form-data">'."\n";
 $content_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 
 
@@ -191,6 +184,6 @@ print($output);
 
 <?php
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());
 ?>

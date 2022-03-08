@@ -26,7 +26,7 @@ if ( $var_list ) {
 
 
 
-if ( !$book_id ) {
+if ( empty($book_id) ) {
 	$book = new GrlxComicBook;
 	$book_id = $book-> bookID;
 }
@@ -37,20 +37,20 @@ else {
 $book-> getMarkers();
 
 // register_variable strips needed whitespace from text blocks
-$transcript = $_POST['transcript'];
-$transcript ? $transcript : $transcript = $_GET['transcript'];
-$transcript ? $transcript : $transcript = $_SESSION['transcript'];
-$blog_post = $_POST['blog_post'];
-$blog_post ? $blog_post : $blog_post = $_GET['blog_post'];
-$blog_post ? $blog_post : $blog_post = $_SESSION['blog_post'];
+$transcript = $_POST['transcript'] ?? null;
+$transcript ? $transcript : $transcript = $_GET['transcript'] ?? null;
+$transcript ? $transcript : $transcript = $_SESSION['transcript'] ?? null;
+$blog_post = $_POST['blog_post'] ?? null;
+$blog_post ? $blog_post : $blog_post = $_GET['blog_post'] ?? null;
+$blog_post ? $blog_post : $blog_post = $_SESSION['blog_post'] ?? null;
 
 
 
+$alert_output = '';
 
 /*****
  * Updates
  */
-
 
 
 
@@ -91,7 +91,7 @@ $view->group_css('page');
 $view->group_h2('Upload images');
 $view->group_instruction('Add page(s) to the end of your book.');
 $view->group_contents($quick_upload_field);
-$content_output .= $view->format_group()."\n";
+$content_output = $view->format_group()."\n";
 
 
 
@@ -546,7 +546,7 @@ print($output);
         border-bottom: 6px solid #be2626; }
 </style>
 
-<?=$images_output ?>
+<?=$images_output ?? '' ?>
 
 <?=$content_output ?>
 
@@ -571,6 +571,6 @@ Dropzone.options.myDropzone = {
 
 </script>
 <?php
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());
 ?>

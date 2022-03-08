@@ -30,7 +30,7 @@ class GrlxStaticPage {
 	 * @param array $list - arguments from main script
 	 */
 	protected function getArgs($list=null) {
-		$list = $list[0];
+		$list = $list[0] ?? null;
 		if ( isset($list) && is_array($list) ) {
 			foreach ( $list as $key=>$val ) {
 				if ( property_exists($this, $key) ) {

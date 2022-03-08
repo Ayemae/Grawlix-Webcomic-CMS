@@ -26,9 +26,9 @@ $form->send_to($_SERVER['SCRIPT_NAME']);
 /*****
  * Updates
  */
-
+$success = false;
 // When the user submits a form
-if ( $email && !$s ) {
+if ( !empty($email) && empty($s) ) {
 
 	// Check if valid user
 	$user = $db
@@ -38,7 +38,7 @@ if ( $email && !$s ) {
 	if ( $user['count'] == 1 ) {
 
 		// Give the user a new serial number.
-		for($i=0;$i<16;$i++){
+		for($i=0;$i<16;$i++) {
 			$new_serial .= rand(0,9);
 		}
 

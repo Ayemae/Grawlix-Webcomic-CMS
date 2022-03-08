@@ -20,13 +20,14 @@ $tone_id = numfunc_register_var('tone_id');
 $view-> yah = 9;
 
 
+$alert_output = '';
 
 /*****
  * Updates
  */
 
 // Save changes to the theme.
-if ( $_POST && $theme_id )
+if ( !empty($_POST) && !empty($theme_id) )
 {
 	$variable_list = array('title','description','author','url','version');
 	if ( $variable_list )
@@ -51,21 +52,17 @@ if ( $_POST && $theme_id )
 
 
 
-
-
-
-
 /*****
  * Display logic
  */
 
-if ( $theme_id ) {
+if ( !empty($theme_id) ) {
 	$theme_info = $db
 		->where('id', $theme_id)
 		->getOne('theme_list',NULL);
 }
 // Make sure the URL, if any, has a prefix.
-if ( ($theme_info['url'] !== null) && ($theme_info['url'] != 'None listed.') ) {
+if ( !empty($theme_info) && ($theme_info['url'] !== null) && ($theme_info['url'] != 'None listed.') ) {
 	if ( $theme_info['url'] && substr($theme_info['url'], 0, 7) != 'http://' ) {
 		$theme_info['url'] = 'http://'.$theme_info['url'];
 	}
@@ -73,11 +70,8 @@ if ( ($theme_info['url'] !== null) && ($theme_info['url'] != 'None listed.') ) {
 
 // Scan for tone files.
 if ($handle = opendir('../themes/'.$theme_info['directory'])) {
-	while (false !== ($entry = readdir($handle)))
-
-	{
-		if (substr($entry,0,4) == 'tone' )
-		{
+	while (false !== ($entry = readdir($handle))) {
+		if (substr($entry,0,4) == 'tone' ) {
 			// Is this tone in the database?
 			$check_tone = $db
 				->where('options', $entry)
@@ -85,8 +79,7 @@ if ($handle = opendir('../themes/'.$theme_info['directory'])) {
 				->getOne('theme_tone',NULL);
 
 			// If it’s not in the database, then add it.
-			if ( !$check_tone )
-			{
+			if ( !$check_tone ) {
 				$title = substr($entry,5,-4);
 				$title = str_replace('_', ' ', $title);
 				$data = array (
@@ -101,7 +94,6 @@ if ($handle = opendir('../themes/'.$theme_info['directory'])) {
 			}
 		}
 	}
-
 	closedir($handle);
 }
 
@@ -113,12 +105,9 @@ $tone_list = $db
 	-> get('theme_tone', NULL, $cols);
 
 // Does each DB entry have a corresponding CSS file?
-if ( $tone_list )
-{
-	foreach ( $tone_list as $key => $val )
-	{
-		if ( !is_file('../themes/'.$theme_info['directory'].'/'.$val['options']))
-		{
+if ( !empty($tone_list) ) {
+	foreach ( $tone_list as $key => $val ) {
+		if ( !is_file('../themes/'.$theme_info['directory'].'/'.$val['options'])) {
 			// No? Then remove it from the database.
 			$db->where('id',$val['id']);
 			$db->delete('theme_tone', 1);
@@ -127,25 +116,19 @@ if ( $tone_list )
 	}
 }
 
-
-if ( $tone_list )
-{
-	if ( count($tone_list) == 1 )
-	{
+$tone_list_output = '';
+if ( !empty($tone_list) ) {
+	if ( count($tone_list) == 1 ) {
 		$tone_list_output = '<h3>One lonely tone found</h3>';
 	}
-	else
-	{
+	else {
 		$tone_list_output = '<h3>'.count($tone_list).' tones found</h3>';
 	}
-	foreach ( $tone_list as $key => $val )
-	{
-		if ( $new_tone_list && in_array($val['options'], $new_tone_list) ) 
-		{
+	foreach ( $tone_list as $key => $val ) {
+		if ( !empty($new_tone_list) && in_array($val['options'], $new_tone_list) )  {
 			$tone_list_output .= '<p><strong>'.$val['title'].'</strong> ('.$val['options'].') — <strong>now installed!</strong></p>';
 		}
-		else
-		{
+		else {
 			$tone_list_output .= '<p><strong>'.$val['title'].'</strong> ('.$val['options'].')</p>';
 		}
 	}

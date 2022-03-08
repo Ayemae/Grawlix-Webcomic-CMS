@@ -130,7 +130,7 @@ class GrlxAlert {
 			'On ya!',
 			'Ace!',
 			'Brilliexcellant!',
-			'Dazzlbring!',
+			'Dazzling!',
 			'Splindeed!',
 			'Beyond infinity!',
 			'Skookum!',

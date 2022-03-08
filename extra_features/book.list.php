@@ -1,6 +1,6 @@
 <?php
 
-/* Artists use this script to browse their static site pages.
+/* Artists use this script to browse their multiple books.
  */
 
 /* ! ------ Setup */
@@ -17,24 +17,19 @@ $view-> yah = 2;
 
 /* ! ------ Updates */
 
-if ($_GET['yes_delete_id'] && is_numeric($_GET['yes_delete_id']))
-{
+if ( isset($_GET['yes_delete_id']) && is_numeric($_GET['yes_delete_id']) ) {
 	$delete_id = $_GET['yes_delete_id'];
 
 	// Get a list of pages so we know what markers to delete.
 	$db->where('book_id', $delete_id);
 	$doomed_page_list = $db->get('book_page',NULL,'marker_id');
-	if ( $doomed_page_list )
-	{
-		foreach ( $doomed_page_list as $key => $val )
-		{
-			if ($val['marker_id'] && $val['marker_id'] > 0)
-			{
+	if ( $doomed_page_list ) {
+		foreach ( $doomed_page_list as $key => $val ) {
+			if ( $val['marker_id'] && $val['marker_id'] > 0 ) {
 				$doomed_marker_list[] = $val['marker_id'];
 			}
 		}
-		if ($doomed_marker_list)
-		{
+		if ( isset($doomed_marker_list) ) {
 
 			$db->where('id',$doomed_marker_list,'IN');
 			$db->delete('marker');
@@ -56,12 +51,10 @@ if ($_GET['yes_delete_id'] && is_numeric($_GET['yes_delete_id']))
 	$db->delete('path');
 
 	$alert_output = $message->success_dialog('Book deleted.');
-
 }
 
 
-if ($_GET['delete_id'] && is_numeric($_GET['delete_id']))
-{
+if ( isset($_GET['delete_id']) && is_numeric($_GET['delete_id']) ) {
 	$db->where('id',$_GET['delete_id']);
 	$book_title = $db->getOne('book','title');
 	$book_title = $book_title['title'];
@@ -70,12 +63,10 @@ if ($_GET['delete_id'] && is_numeric($_GET['delete_id']))
 	$page_count = $db->getOne('book_page','COUNT(id) AS tally');
 	$page_count = $page_count['tally'];
 	$yes_delete = '<a href="book.list.php?yes_delete_id='.$_GET['delete_id'].'">Yes, delete</a>';
-	if ($page_count == 1)
-	{
+	if ($page_count == 1) {
 		$alert_output = $message->alert_dialog('Are you sure you want to delete <em>'.$book_title.'</em> with '.$page_count.' page? '.$yes_delete.'.');
 	}
-	else
-	{
+	else {
 		$alert_output = $message->alert_dialog('Are you sure you want to delete <em>'.$book_title.'</em> with '.$page_count.' pages? '.$yes_delete.'.');
 	}
 }
@@ -97,7 +88,7 @@ $home = $db
 	->getOne('path',$cols);
 
 
-if ( $book_list ) {
+if ( !empty($book_list) ) {
 	foreach ( $book_list as $key => $val ) {
 
 		// Get its path.
@@ -106,12 +97,10 @@ if ( $book_list ) {
 		$db->where('url','/', '!=');
 		$url = $db->getOne('path','url');
 
-		if ($url && $url['url'])
-		{
+		if ($url && $url['url']) {
 			$url = $_SERVER['HTTP_HOST'].'<a href="site.nav.php" title="Edit path.">'.$url['url'].'</a>';
 		}
-		else
-		{
+		else {
 			$url = $_SERVER['HTTP_HOST'].'<a href="site.nav.php" title="Edit path.">(none)</a>';
 		}
 
@@ -128,8 +117,7 @@ if ( $book_list ) {
 		$info_link->action('info');
 
 		// Only let the user delete books if there’s more than one.
-		if (count($book_list) > 1)
-		{
+		if (count($book_list) > 1) {
 			$delete_link = new GrlxLinkStyle;
 			$delete_link->url('book.list.php');
 			$delete_link->title('Delete book.');
@@ -137,7 +125,6 @@ if ( $book_list ) {
 			$delete_link->action('edit');
 			$delete_link->query("delete_id=$val[id]");
 			$delete_link_output = $delete_link->icon_link('delete');
-
 		}
 	
 		// Get the number of pages per book.
@@ -153,12 +140,10 @@ if ( $book_list ) {
 		// General actions for this item.
 		$action_output = $delete_link_output.$edit_link->icon_link().$info_link->icon_link();
 
-		if ($home['rel_type'] == 'book' && $home['rel_id'] == $val['id'])
-		{
+		if ($home['rel_type'] == 'book' && $home['rel_id'] == $val['id']) {
 			$is_home = '<strong>yes</strong>';
 		}
-		else
-		{
+		else {
 			$is_home = '<span class="disabled">no</span>';
 		}
 
@@ -173,8 +158,7 @@ if ( $book_list ) {
 	}
 }
 
-if ( $list_items ) {
-
+if ( !empty($list_items) ) {
 	$heading_list[] = array(
 		'value' => 'Title',
 		'class' => null
@@ -191,7 +175,7 @@ if ( $list_items ) {
 		'value' => 'URL',
 		'class' => null
 	);
-	if ( $marker_type_list ) {
+	if ( !empty($marker_type_list) ) { //this is never populated
 		$heading_list[] = array(
 			'value' => 'Marker',
 			'class' => null
@@ -210,7 +194,6 @@ if ( $list_items ) {
 	$list->content($list_items);
 	$book_list_output  = $list->format_headings();
 	$book_list_output .= $list->format_content();
-
 }
 
 $view->page_title('Bookshelf');
@@ -252,7 +235,7 @@ $output .= $view->view_header();
 $output .= $alert_output;
 print($output);
 
-if ( $book_list_output ) {
+if ( !empty($book_list_output) ) {
 	print($book_list_output);
 }
 elseif(is_file('book.book-create.php')) {

@@ -53,10 +53,10 @@ spl_autoload_register('grlx_load');
 
 // Is the config file complete?
 if (
-	!$setup['db_host'] ||
-	!$setup['db_user'] ||
-	!$setup['db_pswd'] ||
-	!$setup['db_name']
+	empty($setup['db_host']) ||
+	empty($setup['db_user']) ||
+	empty($setup['db_pswd']) ||
+	empty($setup['db_name'])
 ) {
 	die('Holy hole in the plot, Batman! Joker\'s made a laugh of the config file!');
 }
@@ -74,7 +74,7 @@ $db_ops = new GrlxDbOps($db);
 
 /* ! Check security * * * * * * * */
 
-if ( !$except ) {
+if ( empty($except) || !$except ) {
 	if ( !$_SESSION['admin']) {
 		header('location:panl.login.php?ref='.$_SERVER['REQUEST_URI']);
 		die('no session');
@@ -102,7 +102,7 @@ $frequency_list_init = display_pretty_publish_frequency();
 // Get vital milieu data
 $milieu_list = get_site_milieu($db);
 //Set the timezone:
-if($milieu_list['timezone'] && $milieu_list['timezone']['value']) {
+if(isset($milieu_list['timezone']) && isset($milieu_list['timezone']['value'])) {
 	date_default_timezone_set($milieu_list['timezone']['value']);
 	//Set the database session timezone:
 	$db->setTimezone($milieu_list['timezone']['value']);

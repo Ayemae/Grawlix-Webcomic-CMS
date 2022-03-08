@@ -5,14 +5,16 @@ class GrlxImage {
 	public $src = '';
 	public $alt = '';
 	public $class = '';
+	public $style = null;
+	public $target = null;
 
 	function paint() {
 		$this-> check_src();
-		$this->src ? $src = ' src="'.$this->src.'"' : null;
-		$this->alt ? $alt = ' alt="'.$this->alt.'"' : null;
-		$this->class ? $class = ' class="'.$this->class.'"' : null;
-		$this->style ? $style = ' style="'.$this->style.'"' : null;
-		$this->target ? $target = ' target="'.$this->target.'"' : null;
+		$src = $this->src ? ' src="'.$this->src.'"' : null;
+		$alt = $this->alt ? ' alt="'.$this->alt.'"' : null;
+		$class = $this->class ? ' class="'.$this->class.'"' : null;
+		$style = $this->style ? ' style="'.$this->style.'"' : null;
+		$target = $this->target ? ' target="'.$this->target.'"' : null;
 
 		$output = '<img'.$src.$alt.$class.$style.'/>';
 
@@ -21,11 +23,13 @@ class GrlxImage {
 
 	function check_src($src='') {
 		$src ? $src : $src = $this-> src;
-		if ( substr($src,0,1) == '/' ) {
-			$src = '..'.$src;
+		if(!empty($src)) {
+			if (substr($src,0,1) == '/' ) {
+				$src = '..'.$src;
+			}
+			$file_headers = @get_headers($src);
 		}
-		$file_headers = @get_headers($src);
-		if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+		if(!isset($file_headers) || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
 			$this-> src = 'img/image_not_found.100x.png';
 		}
 		else {

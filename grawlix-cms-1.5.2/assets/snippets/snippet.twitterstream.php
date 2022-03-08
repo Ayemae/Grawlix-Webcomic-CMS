@@ -1,6 +1,6 @@
 <?php
 $info = $this->widgets['twitter_timeline'];
-if ( $info ) : ?>
+if ( !empty($info) ) : ?>
 <?=$info['link']?>
 	<section>
 		<h4>Recent tweets</h4>

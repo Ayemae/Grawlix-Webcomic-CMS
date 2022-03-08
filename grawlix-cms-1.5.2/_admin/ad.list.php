@@ -37,6 +37,7 @@ if ( $var_list ) {
 	}
 }
 
+$alert_output = '';
 // Does the ad image repository exist? If not, try to make it.
 // $alert_output = $fileops->check_or_make_dir('..'.$image_path);
 
@@ -78,28 +79,22 @@ $size_list = array (
 // When upgrading from v1.0.x to 1.1, check to make sure 
 // that the ad table has a title field.
 $field_list = $db->rawQuery ("DESC ".DB_PREFIX."ad_reference", NULL, NULL);
-if ( $field_list )
-{
+if ( $field_list ) {
 	$found_title = FALSE;
-	foreach ( $field_list as $key => $val )
-	{
-		if ( $field_list['Field'] == 'title' )
-		{
+	foreach ( $field_list as $key => $val ) {
+		if ( isset( $val['Field']) && $val['Field'] == 'title' ) {
 			$found_title = TRUE;
 		}
 	}
 }
-if ( $found_title === FALSE )
-{
+if ( $found_title === FALSE ) {
 	$db->rawQuery ("ALTER TABLE ".DB_PREFIX."ad_reference ADD title VARCHAR(32)", NULL, NULL);
 }
 
 // Got enough ad slots?
 $result = $db->getOne('theme_slot','COUNT(id) AS tally');
-if ( $result['tally'] < 6 )
-{
-	for ($i=$result['tally']+1;$i<=6;$i++)
-	{
+if ( $result['tally'] < 6 ) {
+	for ($i=$result['tally']+1;$i<=6;$i++) {
 		$data = array(
 			'title' => 'Slot '.$i,
 			'label' => 'slot-'.$i,
@@ -113,7 +108,7 @@ if ( $result['tally'] < 6 )
 }
 
 
-if ( $_POST && is_numeric($wonderful_id) && $wonderful_id > 0 ) {
+if ( !empty($_POST) && isset($wonderful_id) && is_numeric($wonderful_id) && $wonderful_id > 0 ) {
 
 	// Enter the ID number.
 	$data = array('user_info'=>$wonderful_id);
@@ -136,8 +131,7 @@ WHERE
 
 
 
-if ( $_POST && (!$wonderful_id || $wonderful_id == 0) ) {
-
+if ( !empty($_POST )&& (empty($wonderful_id) || !$wonderful_id || $wonderful_id == 0) ) {
 	// Zero out the ID.
 	$data = array('user_info'=>'');
 	$db->where('label','projectwonderful');
@@ -158,7 +152,7 @@ WHERE
 }
 
 
-if ( $delete_ad_id ) {
+if ( isset($delete_ad_id) ) {
 	$db->where('id', $delete_ad_id);
 	if($db->delete('ad_reference')) {
 		$alert_output .= $message->success_dialog('Ad deleted. I’m sorry for your loss.');
@@ -175,7 +169,7 @@ $check_these = array(
 	'large' => 'large_file'
 );
 
-if ( $check_these && $_FILES && 1==2 ) {
+if ( $check_these && !empty($_FILES) && 1==2 ) {
 	foreach ( $check_these as $key => $val ) {
 
 		// Got a new file upload? Then upload it.
@@ -185,7 +179,7 @@ if ( $check_these && $_FILES && 1==2 ) {
 	}
 }
 
-if ( $upload_sizes ) {
+if ( isset($upload_sizes) ) {
 	$data = array(); // reset
 	foreach ( $upload_sizes as $key => $val ) {
 		$data[$key.'_width'] = $val[0];
@@ -197,12 +191,12 @@ if ( $upload_sizes ) {
 	$new_id = $db->insert('ad_reference', $data);
 }
 
-if ( $new_id ) {
+if ( isset($new_id) && $new_id ) {
 	header('location:ad.promo-edit.php?ad_id='.$new_id);
 	die();
 }
 
-if ( $_GET['update_wonderful'] ) {
+if ( !empty($_GET['update_wonderful']) ) {
 	$wonderful_third_data = get_third_login('projectwonderful',$db);
 
 	if ( $wonderful_third_data && $wonderful_third_data['active'] == 1 ) {
@@ -236,15 +230,13 @@ $ad_list = get_ads(null,$db);
 ///////// Read PW data.
 
 // Get the login ID, if any.
-$wonderful_third_data ? $wonderful_third_data : $wonderful_third_data = get_third_login('projectwonderful',$db);
+isset($wonderful_third_data) ? $wonderful_third_data : $wonderful_third_data = get_third_login('projectwonderful',$db);
 
-
+$wonderful_ad_list_content = null;
 if ( $wonderful_third_data && $wonderful_third_data['active'] == 1 ) {
-
 	// Find the saved XML file.
 	$pw_xml = '../assets/data/projectwonderful.xml';
-	if ( is_file($pw_xml) )
-	{
+	if ( is_file($pw_xml) ) {
 		$wonderful_xml = file_get_contents($pw_xml);
 	}
 
@@ -255,8 +247,7 @@ if ( $wonderful_third_data && $wonderful_third_data['active'] == 1 ) {
 	}
 
 	// Got wonderful ads? Great! Build a list for the artist.
-	if ( $wonderful_ad_list ) {
-
+	if ( !empty($wonderful_ad_list) ) {
 		$heading_list = array(); // reset
 		$heading_list[] = array(
 			'value' => 'Ad image',
@@ -325,7 +316,7 @@ $link-> tap('Project Wonderful');
 $link-> url('https://www.projectwonderful.com');
 $link-> title('Visit this advertising service’s website.');
 
-$wonderful_info_output .= '<form accept-charset="UTF-8" action="ad.list.php" method="post">'."\n";
+$wonderful_info_output  = '<form accept-charset="UTF-8" action="ad.list.php" method="post">'."\n";
 $wonderful_info_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 $wonderful_info_output .= '<p><label for="wonderful_id" class="instructions">Enter your '.$link-> paint().' account ID, or leave blank if you’re not a member.</label>'."\n";
 $wonderful_info_output .= '<input type="text" name="wonderful_id" id="wonderful_id" size="4" style="width:5rem;" value="'.$wonderful_third_data['user_info'].'"/>'."\n";
@@ -334,14 +325,13 @@ $wonderful_info_output .= '</form>'."\n";
 
 $list-> content($wonderful_ad_list_content);
 
-$wonderful_ad_list_output .= $list->format_headings();
+$wonderful_ad_list_output  = $list->format_headings();
 $wonderful_ad_list_output .= $list->format_content();
 
 
 
 
-
-
+$adlist_content = [];
 ///////// Build the Google Adsense panel.
 if ( $ad_list ) {
 
@@ -374,7 +364,7 @@ if ( $ad_list ) {
 	}
 }
 
-if ( $adlist_content ) {
+if ( !empty($adlist_content) ) {
 
 	$heading_list = array(); // reset
 	$heading_list[] = array(
@@ -396,7 +386,7 @@ if ( $adlist_content ) {
 
 	$list-> content($final_adlist_content);
 
-	$adsense_list_output .= $list->format_headings();
+	$adsense_list_output  = $list->format_headings();
 	$adsense_list_output .= $list->format_content();
 
 }
@@ -419,7 +409,6 @@ $adsense_list_output .= $adsense_new_link-> paint();
 ///////// Build the promos panel.
 
 if ( $ad_list ) {
-
 	$heading_list = array(); // reset
 /*
 	$heading_list[] = array(
@@ -469,7 +458,7 @@ if ( $ad_list ) {
 			}
 
 			$size_key = $val['small_width'].','.$val['large_height'];
-			$size = $size_list[$size_key];
+			$size = $size_list[$size_key] ?? null;
 			$size ? $size : $size = 'Custom';
 
 
@@ -512,8 +501,7 @@ if ( $ad_list ) {
 
 
 
-if ( $promo_content ) {
-
+if ( !empty($promo_content) ) {
 	$list->content($promo_content);
 	$ad_list_output  = '<form accept-charset="UTF-8" action="ad.list.php" method="get">'."\n";
 	$ad_list_output .= $list->format_headings();
@@ -546,8 +534,7 @@ $slot_list = get_slots(1,'ad',$db);
 
 // No slots? Create one.
 
-if ( !$slot_list )
-{
+if ( !$slot_list ) {
 	$data = array(); // reset
 	$data['title'] = 'Slot 1';
 	$data['label'] = 'default';
@@ -574,10 +561,7 @@ if ( $slot_list ) {
 }
 
 
-
-
 if ( $slot_list ) {
-
 	$heading_list = array(); // reset
 	$heading_list[] = array(
 		'value' => 'Name',
@@ -636,7 +620,7 @@ $view->group_css('ad');
 $view->group_h2('Ad slots');
 $view->group_instruction('Slots are locations on your site’s pages that contain ads.');
 $view->group_contents($slot_list_output);
-$content_output .= $view->format_group().'<hr /><br/>';
+$content_output = $view->format_group().'<hr /><br/>';
 
 $view->group_h2('House ads');
 $view->group_instruction('A.k.a. promos, these are custom graphics and links you upload yourself.');

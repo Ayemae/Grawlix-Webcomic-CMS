@@ -47,14 +47,12 @@ CREATE TABLE IF NOT EXISTS `grlx_static_content` (
 
 }
 
-if ( $made_new_table == TRUE )
-{
+if ( $made_new_table == TRUE ) {
 	// Get the existing pages.
 	$page_list = $db->get('static_page',NULL,'id,options');
 }
 
-if ( $page_list )
-{
+if ( !empty($page_list) ) {
 	$message_output .= '<p>OK: Got the page list</p>';
 	foreach ( $page_list as $key => $val )
 	{
@@ -102,8 +100,7 @@ if ( $page_list )
 		}
 	}
 }
-else
-{
+else {
 	$message_list['Pages'][] = 'I didn’t find any find static pages to upgrade. Most likely you already ran this script, or didn’t have any static pages to begin with.';
 	$message_list['Next steps'][] = 'First, <strong>did you have any static pages?</strong> If not, then you’re good to go — ignore all this.';
 	$message_list['Next steps'][] = 'If you had static pages, then test a static page on <a href="/">your site</a>. If it works, then <strong>delete the script named “_upgrade-to-1.3php”</strong> in your _admin folder.';
@@ -147,7 +144,7 @@ else {
 
 // Loop through $layout_list, updating the layout info to static_page
 
-if ( $page_list && $layout_list )
+if ( !empty($page_list) && !empty($layout_list) )
 {
 	$data = array(); // reset
 	foreach ( $layout_list as $key => $val )
@@ -164,11 +161,11 @@ if ( $page_list && $layout_list )
 		}
 	}
 }
-elseif ( $page_list ) {
+elseif ( !empty($page_list) ) {
 	$message_list['Layout'][] = 'Layout list unavailable';
 }
 
-if ( !$message_list || count($message_list) == 0 )
+if ( empty($message_list) || count($message_list) == 0 )
 {
 	$message_output .= '<h2>Success!</h2><p><strong>Please delete the <code>_update-to-1.3.php</code> script</strong></p>';
 }
@@ -192,13 +189,10 @@ $output  = $view->open_view();
 $output .= $view->view_header();
 
 print($output . $message_output);
-if ( $message_list )
-{
-	foreach ( $message_list as $key => $val )
-	{
+if ( !empty($message_list) ) {
+	foreach ( $message_list as $key => $val ) {
 		print('<h3>'.$key.'</h3>');
-		if ( $val )
-		{
+		if ( $val ) {
 			print('<ul>');
 			foreach ( $val as $key2 => $val2 )
 			{

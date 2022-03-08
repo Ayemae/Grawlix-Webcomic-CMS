@@ -1,3 +1,14 @@
+Grawlix is a content management system (CMS) for webcomics.
+
+REQUIREMENTS
+---
+
+To install Grawlix, you will need a web host with support for:
+- MySQL
+- PHP 7.0+
+
+A version of Grawlix for PHP 5.x is also available, see the `php5-compatible` branch.
+
 HOW TO INSTALL
 ---
 

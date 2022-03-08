@@ -152,7 +152,7 @@ class GrlxXML_Book extends GrlxXML {
 			if ( is_array($val) ) {
 				foreach ( $val as $key2=>$val2 ) {
 					if ( is_string($val2) ) {
-						$this->simpleXML->archive->{$key}->{$key2} = $val2;
+						$this->simpleXML->archive->{$key}[$key2] = $val2;
 					}
 					if ( is_array($val2) ) {
 						foreach ( $val2 as $key3=>$val3 ) {
@@ -172,7 +172,7 @@ class GrlxXML_Book extends GrlxXML {
 			if ( is_array($val) ) {
 				foreach ( $val as $key2=>$val2 ) {
 					if ( is_string($val2) ) {
-						$this->simpleXML->rss->{$key}->{$key2} = $val2;
+						$this->simpleXML->rss->{$key}[$key2] = $val2;
 					}
 					if ( is_array($val2) ) {
 						foreach ( $val2 as $key3=>$val3 ) {

@@ -9,8 +9,8 @@
 
 require_once('panl.init.php');
 
-$db_vars = strfunc_split_tablerow($_GET['item']);
-$tone_id = $_GET['tone_id'];
+$db_vars = strfunc_split_tablerow($_GET['item'] ?? null);
+$tone_id = $_GET['tone_id'] ?? null;
 
 if ( is_numeric($tone_id) && is_numeric($db_vars['id']) && $db_vars['table'] ) {
 	$db_vars['table'] == 'milieu' ? $col = 'value' : $col = 'tone_id';

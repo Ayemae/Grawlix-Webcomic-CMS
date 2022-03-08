@@ -33,13 +33,12 @@ if ( $var_list ) {
 	}
 }
 
-if ($_POST)
-{
+if (!empty($_POST) && isset($_POST['rss_options'])) {
 	$args['rssNew'] = $_POST['rss_options'];
 }
 
 
-if ( $book_id ) {
+if ( !empty($book_id) ) {
 	$book = new GrlxComicBook($book_id);
 	$_SESSION['book_id'] = $book_id;
 }
@@ -66,9 +65,11 @@ $frequency_list = array (
 	'Fridays' => 'Fridays'
 );
 
+$alert_output = '';
+
 /* ! ------ Updates */
 
-if ( $publish_frequency && $book_id ) {
+if ( isset($publish_frequency) && isset($book_id) ) {
 
 	$data = array(
 		'publish_frequency' => $publish_frequency,
@@ -81,7 +82,7 @@ if ( $publish_frequency && $book_id ) {
 	//set_book_dates($book_id,$publish_frequency,$db);
 }
 
-if ( $book && $_POST ) {
+if ( $book && !empty($_POST) ) {
 	$data = array(
 		'title' => $new_title,
 		'description' => $new_description,
@@ -117,16 +118,13 @@ $args['bookID'] = $book_id;
 $xml = new GrlxXML_Book($args);
 
 // ! Feed options
-
+$rss_options_output = '';
 if ( $options_list ) {
 	foreach ( $options_list as $key => $val ) {
-
-		if ( $xml->rss && in_array($key, $xml->rss))
-		{
+		if ( $xml->rss && in_array($key, $xml->rss)) {
 			$check = ' checked="checked"';
 		}
-		else
-		{
+		else {
 			$check = '';
 		}
 
@@ -138,7 +136,7 @@ if ( $options_list ) {
 }
 
 // ! Pub frequency
-
+$publish_frequency_output = '';
 if ( $frequency_list ) {
 	$publish_frequency_output .= '<label for="publish_frequency">Publish frequency</label>'."\n";
 	$publish_frequency_output .= '<select id="publish_frequency" name="publish_frequency" style="width:8rem">'."\n";
@@ -158,10 +156,10 @@ if ( $frequency_list ) {
 
 // ! Metadata
 
-$new_title_output .= '<label for="new_title">Title</label>'."\n";
+$new_title_output  = '<label for="new_title">Title</label>'."\n";
 $new_title_output .= '<input type="text" name="new_title" value="'.$book->info['title'].'" size="16" style="width:16rem"/>'."\n";
 
-$new_description_output = '<label for="new_title">Summary</label>'."\n";
+$new_description_output  = '<label for="new_title">Summary</label>'."\n";
 $new_description_output .= '<input type="text" name="new_description" value="'.$book->info['description'].'" size="32" style="width:24rem"/>'."\n";
 
 
@@ -169,7 +167,7 @@ $new_description_output .= '<input type="text" name="new_description" value="'.$
 $view->group_h2('Metadata');
 $view->group_instruction('Change the name, description, and promised frequency of your book.');
 $view->group_contents($new_title_output.$new_description_output.$publish_frequency_output);
-$content_output .= $view->format_group();
+$content_output = $view->format_group();
 
 $link->url('book.view.php');
 $link->tap('Back to pages');
@@ -182,9 +180,9 @@ $view->action($link->text_link('back'));
 
 /* ! ------ Output the display */
 
-$view->page_title("Book: $book_info[title]");
+$view->page_title("Book: ".($book->info['title'] ?? ''));
 $view->tooltype('chap');
-$view->headline('Book <span>'.$book->info['title'].'</span>');
+$view->headline('Book <span>'.($book->info['title'] ?? '').'</span>');
 
 $view->group_h2('Feed options');
 $view->group_instruction('Choose which bits of information readers will see in their RSS and JSON feeds.');

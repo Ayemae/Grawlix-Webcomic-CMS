@@ -20,7 +20,7 @@ $page_id = $_GET['page_id'];
  */
 
 // PAGE
-if ( is_numeric($page_id) && is_numeric($chapter_id) ) {
+if ( isset($page_id) && is_numeric($page_id) && isset($chapter_id) && is_numeric($chapter_id) ) {
 
 	$item = $db
 		-> where('id', $page_id)
@@ -68,7 +68,7 @@ elseif ( is_numeric($book_id) && is_numeric($chapter_id) ) {
 }
 */
 // BOOK
-elseif ( is_numeric($book_id) ) {
+elseif ( isset($book_id) && is_numeric($book_id) ) {
 
 	$item = $db
 		-> where('id', $book_id)

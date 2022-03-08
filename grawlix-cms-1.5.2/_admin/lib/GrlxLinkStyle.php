@@ -99,9 +99,9 @@ class GrlxLinkStyle extends GrlxLink {
 	}
 
 	function icon_no_anchor($keyword='') {
-		$keyword ? $keyword = ' class="'.$keyword.'"' : null;
-		$this->title ? $title = ' title="'.$this->title.'"' : null;
-		$this->id ? $id = ' id="'.$this->id.'"' : null;
+		$keyword = $keyword ? ' class="'.$keyword.'"' : null;
+		$title = $this->title ? ' title="'.$this->title.'"' : null;
+		$id = $this->id ? ' id="'.$this->id.'"' : null;
 		$output = '<i'.$keyword.$id.$title.'></i>';
 		return $output;
 	}

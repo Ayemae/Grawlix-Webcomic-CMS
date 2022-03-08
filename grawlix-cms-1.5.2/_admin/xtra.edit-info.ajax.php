@@ -15,7 +15,7 @@ $modal->send_to('xtra.social.php');
 
 $var_list = array('service_id', 'match_id', 'widget_id');
 foreach ( $var_list as $var_name ) {
-	if ( is_numeric($_GET[$var_name]) ) {
+	if ( isset($_GET[$var_name]) && is_numeric($_GET[$var_name]) ) {
 		$$var_name = $_GET[$var_name];
 	}
 }
@@ -26,7 +26,7 @@ foreach ( $var_list as $var_name ) {
  */
 
 // Widgets
-if ( $widget_id ) {
+if ( isset($widget_id) && $widget_id ) {
 	$cols = array(
 		'w.id AS widget_id',
 		's.id AS service_id',
@@ -47,7 +47,7 @@ if ( $widget_id ) {
 }
 
 // Everything else
-if ( $service_id ) {
+if ( isset($service_id) && $service_id ) {
 	$cols = array(
 		'id AS service_id',
 		'title',
@@ -60,6 +60,7 @@ if ( $service_id ) {
 		-> get('third_service', null, $cols);
 }
 
+$modal_output = '';
 // Build form
 if ( $db->count > 0 ) {
 	foreach ( $result as $item ) {
@@ -73,7 +74,7 @@ if ( $db->count > 0 ) {
 		$modal->maxlength(32);
 		$modal_output .= $modal->paint();
 
-		if ( $widget_id ) {
+		if ( isset($widget_id) && $widget_id ) {
 			$modal->input_text('widget_value');
 			$modal->label("Enter your $item[widget_info]");
 			$modal->required(true);
@@ -86,12 +87,12 @@ if ( $db->count > 0 ) {
 			$modal->headline("Enter your details <span>$item[title]</span>");
 		}
 	}
-	if ( $match_id ) {
+	if ( isset($match_id) && $match_id ) {
 		$modal->input_hidden('match_id');
 		$modal->value($match_id);
 		$modal_output .= $modal->paint();
 	}
-	if ( $widget_id ) {
+	if ( isset($widget_id) && $widget_id ) {
 		$modal->input_hidden('widget_id');
 		$modal->value($widget_id);
 		$modal_output .= $modal->paint();

@@ -20,21 +20,22 @@ $image_path = $milieu_list['directory']['value'].'/assets/images/icons';
 
 $view-> yah = 11;
 
+
+$alert_output = '';
+
 /*****
  * Updates
  */
 
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-
+if ( isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['input']) ) {
 	$input = $_POST['input'];
 	foreach ( $input as $val ) {
 		$val = trim($val);
 		$val = htmlspecialchars($val, ENT_COMPAT);
 	}
 	//$input['url'] = mb_strtolower($input['url'],"UTF-8"); //Some URLs are case-sensitive!
-	if ( count($_FILES) > 0 ) {
-		if ( in_array($_FILES['input']['type']['img_path'], $allowed_image_types) )
-		{
+	if ( isset($_FILES) && count($_FILES) > 0  && isset($_FILES['input']) ) {
+		if ( in_array($_FILES['input']['type']['img_path'], $allowed_image_types) ) {
 			$file_name = basename($_FILES['input']['name']['img_path']);
 			$uploadfile = '..'.$image_path.'/' . $file_name;
 			$web_file_path = $image_path.'/' . $file_name;
@@ -43,18 +44,17 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 				$web_file_path = $_POST['old_img_url'];
 			}
 		}
-		else
-		{
+		else {
 			$alert_output .= $message->alert_dialog('You can only upload JPG, PNG, GIF or SVG files.');
 		}
 	}
 
 	// Act on an edit from the reveal modal
-	if ( $_POST['modal-submit'] && is_numeric($_POST['edit_id']) ) {
+	if ( !empty($_POST['modal-submit']) && isset($_POST['edit_id']) && is_numeric($_POST['edit_id']) ) {
 		if ( $input['title'] && $input['url'] ) {
 			$data = array(
 				'title' => $input['title'],
-				'img_path' => $web_file_path,
+				'img_path' => $web_file_path ?? null,
 				'url' => $input['url']
 			);
 			$db -> where('id', $_POST['edit_id']);
@@ -67,23 +67,35 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	}
 
 	// Save new link
-	if ( $_POST['submit'] ) {
-		if ( $input['title'] && $input['url'] ) {
+	if ( !empty($_POST['submit']) ) {
+		if ( !empty($input['title']) && !empty($input['url']) ) {
 
-			$file_name = basename($_FILES['icon_file']['name']);
-			$uploadfile = '..'.$image_path .'/'. $file_name;
-			$web_file_path = $image_path .'/'. $file_name;
+			if(isset($_FILES['icon_file'])) {
+				$file_name = basename($_FILES['icon_file']['name']);
+				$uploadfile = '..'.$image_path .'/'. $file_name;
+				$web_file_path = $image_path .'/'. $file_name;
 
-			if (move_uploaded_file($_FILES['icon_file']['tmp_name'], $uploadfile)) {
+				if (move_uploaded_file($_FILES['icon_file']['tmp_name'], $uploadfile)) {
+				} else {
+				}
+			} else
+				$web_file_path = null;
+
+			if(web_file_path) {
+				$data = array(
+					'title' => $input['title'],
+					'url' => $input['url'],
+					'sort_order' => 0,
+					'img_path' => $web_file_path
+				);
 			} else {
+				$data = array(
+					'title' => $input['title'],
+					'url' => $input['url'],
+					'sort_order' => 0
+					//img_path has to be excluded entirely to avoid being set to empty
+				);
 			}
-
-			$data = array(
-				'title' => $input['title'],
-				'url' => $input['url'],
-				'sort_order' => 0,
-				'img_path' => $web_file_path
-			);
 			$new_id = $db -> insert('link_list', $data);
 			if ( $new_id <= 0 ) {
 				$alert_output = $message->alert_dialog('Could not add new link.');
