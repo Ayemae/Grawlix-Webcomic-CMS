@@ -219,19 +219,15 @@ class GrlxPage2_Comic extends GrlxPage2 {
 		}
 
 		// Get custom page URL info.
-		if ( $navLinks )
-		{
-			foreach ( $navLinks as $key => $val )
-			{
+		if ( $navLinks ) {
+			foreach ( $navLinks as $key => $val ) {
 				$test_url = explode('/',$val['url']);
 				$test_url = array_pop($test_url);
-				if ( is_numeric($test_url))
-				{
+				if ( is_numeric($test_url)) {
 					$this->db->where('book_id', '1'); // HARDCODED for testing
 					$this->db->where('sort_order', $test_url);
 					$x = $this->db->getOne('book_page', 'options');
-					if ($x['options'] && $x['options'] != '')
-					{
+					if ($x['options'] && $x['options'] != '') {
 						$navLinks[$key]['url'] .= '-'.$x['options'];
 					}
 				}

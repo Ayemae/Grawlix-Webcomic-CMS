@@ -32,7 +32,7 @@ function strfunc_check_empty($str) {
 function strfunc_get_id($str) {
 	$part = explode('-', $str);
 	$int = end($part);
-	if ( is_numeric($int) ) {
+	if ( isset($int) && is_numeric($int) ) {
 		return $int;
 	}
 	else {
@@ -189,28 +189,25 @@ function clean_text( $text, $strip_tags=true, $limit=2000 ) {
 	return $text;
 }
 
-function check_type($value,$expected)
-{
-	switch ($expected)
-	{
+function check_type($value,$expected) {
+	if( !isset($value) || !isset($expected) )
+		return FALSE;
+	switch ($expected) {
 		case 'int':
-			if (is_numeric($value))
-			{
+			if (is_numeric($value)) {
 				return TRUE;
 			}
 			break;
 
 		case 'string':
 		case 'html':
-			if (is_string($value))
-			{
+			if (is_string($value)) {
 				return TRUE;
 			}
 			break;
 
 		case 'float':
-			if (is_float($value))
-			{
+			if (is_float($value)) {
 				return TRUE;
 			}
 			break;

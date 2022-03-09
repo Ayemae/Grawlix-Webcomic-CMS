@@ -397,7 +397,7 @@ class GrlxPage2 {
 				$this->grlxbar['edit_text'] = $this->pageInfo['edit_this']['text'];
 				$this->grlxbar['edit_link'] = $this->filebase.DIR_PANEL.$this->pageInfo['edit_this']['link'];
 			}
-			if ( is_numeric($_SESSION['admin']) ) {
+			if ( isset($_SESSION['admin']) && is_numeric($_SESSION['admin']) ) {
 				$this->grlxbar['panel_text'] = 'Go to your Panel';
 				$this->grlxbar['panel_link'] = $this->filebase.DIR_PANEL.'book.view.php';;
 			}
@@ -417,15 +417,12 @@ class GrlxPage2 {
 	 * @param string $type - archive, page
 	 * @return string $str - path
 	 */
-	protected function buildPermalink($val = null, $type = 'page')
-	{
-		if ($type == 'archive')
-		{
+	protected function buildPermalink($val = null, $type = 'page') {
+		if ($type == 'archive') {
 			$str = $this->milieu['directory'].$this->request.'/'.$val; // Chapter number
 		}
 
-		if ($type == 'page')
-		{
+		if ($type == 'page') {
 			$str = $this->milieu['directory'].$this->bookInfo['url'].'/'.$val;
 		}
 
@@ -732,7 +729,7 @@ class GrlxPage2 {
 			->get('theme_slot ts',null,$cols);
 
 		// Organize results
-		if ( $result ) {
+		if ( !empty($result) ) {
 			foreach ( $result as $ad ) {
 				if ( is_numeric($ad['ad_id']) ) {
 					$slot = $ad['label'];

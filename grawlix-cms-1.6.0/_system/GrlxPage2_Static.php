@@ -31,16 +31,13 @@ class GrlxPage2_Static extends GrlxPage2 {
 	 *
 	 * @param		object		$grlxRequest
 	 */
-	public function contents($request)
-	{
+	public function contents($request) {
 		parent::contents($request);
 
-		if (is_numeric($this->u_id))
-		{
+		if ( isset($this->u_id) && is_numeric($this->u_id) ) {
 			$this->getStaticPageByID($this->u_id);
 		}
-		else
-		{
+		else {
 			// ????????
 		}
 

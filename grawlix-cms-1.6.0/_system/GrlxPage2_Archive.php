@@ -80,18 +80,15 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	/**
 	 * Action for the different layout settings
 	 */
-	protected function routeBehaviorOptions()
-	{
-		switch ( $this->layout['behavior'] )
-		{
+	protected function routeBehaviorOptions() {
+		switch ( $this->layout['behavior'] ) {
 			case 'single':
 				unset($this->chapterNum);
 				$this->getPages();
 				break;
 			case 'multi':
 				$this->layout['behavior'] = 'multi';
-				if ( is_numeric($this->chapterNum) )
-				{
+				if ( isset($this->chapterNum) && is_numeric($this->chapterNum) ) {
 					$this->getPageRange();
 					$this->getPages();
 				}
@@ -306,7 +303,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	protected function buildHeadline() {
 		if ( $this->layout['behavior'] == 'multi' ) {
 			$str = $this->markerType['title'].' ';
-			if ( is_numeric($this->chapterNum) ) {
+			if ( isset($this->chapterNum) && is_numeric($this->chapterNum) ) {
 				$str .= $this->chapterNum.' ';
 				if ( $this->currentList[1]['marker_title'] ) {
 					$str .= '<span class="title">'.$this->currentList[1]['marker_title'].'</span>';
