@@ -393,9 +393,9 @@ class GrlxPage2 {
 	 */
 	protected function buildAdminBar() {
 		if ( $this->isAdmin ) {
-			if ( $this->pageInfo['edit_this'] ) {
-				$this->grlxbar['edit_text'] = $this->pageInfo['edit_this']['text'];
-				$this->grlxbar['edit_link'] = $this->filebase.DIR_PANEL.$this->pageInfo['edit_this']['link'];
+			if ( !empty($this->pageInfo['edit_this']) ) {
+				$this->grlxbar['edit_text'] = $this->pageInfo['edit_this']['text'] ?? null;
+				$this->grlxbar['edit_link'] = $this->filebase.DIR_PANEL.$this->pageInfo['edit_this']['link'] ?? null;
 			}
 			if ( isset($_SESSION['admin']) && is_numeric($_SESSION['admin']) ) {
 				$this->grlxbar['panel_text'] = 'Go to your Panel';
@@ -438,11 +438,11 @@ class GrlxPage2 {
 		if ( $this->isHome ) {
 			$str = null;
 		}
-		elseif ( $this->canonicalLink ) {
+		elseif ( !empty($this->canonicalLink) ) {
 			$str = $this->canonicalLink;
 		}
 		else {
-			$str = $this->pageInfo['permalink'];
+			$str = $this->pageInfo['permalink'] ?? null;
 		}
 		$output = '<link rel="canonical" href="http://'.$this->domainName.$str.'" />'."\n";
 		return $output;

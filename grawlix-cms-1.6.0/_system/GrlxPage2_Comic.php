@@ -173,7 +173,7 @@ class GrlxPage2_Comic extends GrlxPage2 {
 			$this->pageInfo['page_content']  = '<h2>Page '.$sortRequest.' not found!</h2>';
 			$this->pageInfo['page_content'] .= '<p>Maybe it doesn’t exist. Or maybe you’re not allowed to see it yet.</p>';
 		}
-		if ( $result['tone_id'] ) {
+		if ( $result && !empty($result['tone_id']) ) {
 			$this->theme['tone_id'] = $result['tone_id'];
 		}
 	}
