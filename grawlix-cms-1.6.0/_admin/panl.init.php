@@ -75,7 +75,7 @@ $db_ops = new GrlxDbOps($db);
 /* ! Check security * * * * * * * */
 
 if ( empty($except) || !$except ) {
-	if ( !$_SESSION['admin']) {
+	if ( empty($_SESSION['admin']) ) {
 		header('location:panl.login.php?ref='.$_SERVER['REQUEST_URI']);
 		die('no session');
 	}
@@ -91,8 +91,7 @@ if ( empty($except) || !$except ) {
 		header('location:panl.login.php');
 		die('no permission');
 	}
-	if ( $_POST && $_POST['grlx_xss_token'] && $_POST['grlx_xss_token'] != $_SESSION['admin'] )
-	{
+	if ( !empty($_POST) && !empty($_POST['grlx_xss_token']) && !empty($_SESSION['admin']) && $_POST['grlx_xss_token'] != $_SESSION['admin'] ) {
 		die('invalid form');
 	}
 }

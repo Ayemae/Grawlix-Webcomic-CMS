@@ -42,7 +42,7 @@ if ( isset($_POST['submit']) && $_POST['submit'] == 'Login' ) {
 		$count = $db -> count;
 
 		// Check password hash
-		if ( password_verify($extra, $result['password']) && is_numeric($result['id']) ) {
+		if ( password_verify($extra, $result['password']) && isset($result['id']) && is_numeric($result['id']) ) {
 			// Successful login
 			$characters1 = range('a','z');
 			$characters2 = range(0,9);
