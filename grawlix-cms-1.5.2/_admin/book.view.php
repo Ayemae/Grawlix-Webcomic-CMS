@@ -545,6 +545,40 @@ if ($book->pageList && count($book->pageList) > $pages_per_view)
 EOL;
 }
 
+// Determine the length of the buffer
+$dateyear = date('Y');
+$datemonth = date('m');
+$dateday = date('d');
+$schedyear = 2020;
+$schedmonth = 1;
+$schedday = 31;
+
+$lastsched = end($book-> pageList);
+$lastsched_id = $lastsched['id'];
+	
+if ( $lastsched_id ) {
+	$lastschedPage = new GrlxComicPage($lastsched_id);
+$schedyear = substr($lastschedPage-> pageInfo['date_publish'],0,4);
+$schedmonth = substr($lastschedPage-> pageInfo['date_publish'],5,2);
+$schedday = substr($lastschedPage-> pageInfo['date_publish'],8,2);
+}
+$datebuffer1 = strtotime(date('Y-m-d', strtotime($dateyear.'-'.$datemonth.'-'.$dateday.' 10:00:00 GMT')));
+$datebuffer2 = strtotime(date('Y-m-d', strtotime($schedyear.'-'.$schedmonth.'-'.$schedday.' 10:00:00 GMT')));
+
+// Find how many days of buffer. 
+// I don't remember what I've coded, but if "+6" is what 
+// I think it is... 
+// TODO:
+// Make the buffer posting time length to be a variable that can be set from the Admin panel.
+$buffertime = (($datebuffer2 - $datebuffer1)/86400)+6;
+
+
+if ($buffertime > 0){
+$buffer = '<div class="row"> The buffer should be updated in: <b>'.$buffertime.' days.</b></div>';
+if ($buffertime < 2){
+	$buffer = '<div class="row"> The buffer should be updated in: <b>'.$buffertime.' day.</b></div>';
+	}
+}
 
 $output  = $view->open_view();
 $output .= $view->view_header();
