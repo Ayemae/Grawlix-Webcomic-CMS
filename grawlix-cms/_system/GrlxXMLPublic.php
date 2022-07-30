@@ -20,10 +20,11 @@ class GrlxXMLPublic {
 		}
 		if ( $this->stringXML ) {
 			$this->setString($this->stringXML);
-			$this->getInfo();
 		}
 		if ( !is_object($this->simpleXML) ) {
 			die('<h1>Could not load XML.</h1>');
+		} else {
+			$this->getInfo();
 		}
 	}
 
