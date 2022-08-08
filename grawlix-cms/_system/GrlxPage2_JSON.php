@@ -59,6 +59,7 @@ class GrlxPage2_JSON extends GrlxPage2 {
 	 * Put the page together
 	 */
 	public function buildPage() {
+		if( isset($this->httpHeader) ) header($this->httpHeader);
 		$this->getPages();
 		$this->formatFeedItems();
 		$this->formatOutput();

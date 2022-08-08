@@ -48,11 +48,6 @@ class GrlxPage2 {
 	public function __construct() {
 		global $_db;
 		$this->db = $_db;
-
-		/*if ( $this->httpHeader )
-		{
-			header($this->httpHeader);
-		}*/
 	}
 
 	/**
@@ -290,6 +285,7 @@ class GrlxPage2 {
 			$this->isAdmin = true;
 		}
 		if($this->statusCode == 404) header('HTTP/1.0 404 Not Found');
+		else if ( isset($this->httpHeader) ) header($this->httpHeader);
 		$this->getThemeToneInfo();
 		$this->buildSupportFileLinks();
 		$this->buildHeaderMeta();
