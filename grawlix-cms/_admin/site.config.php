@@ -179,17 +179,19 @@ $db->orderBy('sort_order,title', 'ASC');
 $book_list = $db->get('book',NULL,'id,title');
 
 
+$alert_output = '';
 
 /* ! Updates */
 
 
-$book_id = $_POST['book_id'];
-$book_id ? $book_id : $book_id = $_GET['book_id'];
+$book_id = $_POST['book_id'] ?? null;
+$book_id ? $book_id : $book_id = $_GET['book_id'] ?? null;
 if ( !$book_id ) {
 	$book = new GrlxComicBook;
 	$book_id = $book->bookID;
 }
 
+//RSS info is now handled on book-edit instead, to allow multi-book support.
 /*
 $options_list = array (
 //	'title'  => 'Comic page title',
@@ -212,18 +214,18 @@ $xml = new GrlxXML_Book($args);
 
 
 // Save changes to milieu items
-if ( $_POST['submit'] ) {
+if ( isset($_POST['submit']) ) {
 
-	$input = $_POST['input'];
-	$ga_input = $_POST['googleanalytics'];
+	$input = $_POST['input'] ?? null;
+	$ga_input = $_POST['googleanalytics'] ?? null;
 //	$milieu_group = explode('-', $_POST['submit']);
 //	$milieu_group = $milieu_group[1];
 	$count = 0;
 
-	$homepage = strfunc_split_tablerow($_POST['homepage']);
+	$homepage = strfunc_split_tablerow($_POST['homepage'] ?? '');
 
 	// Safety checks for site root
-	if ( !(trim($input['directory'])) ) {
+	if ( empty($input['directory']) || !(trim($input['directory'])) ) {
 		unset($input['directory']);
 	}
 	else {
@@ -259,8 +261,11 @@ if ( $_POST['submit'] ) {
 			$db->update('third_match',$data);
 		}
 	}
-	if ( $homepage['table'] && is_numeric($homepage['id']) ) {
-		$data = array('rel_type'=>$homepage['table'],'rel_id'=>$homepage['id']);
+	if ( !empty($homepage['table']) && isset($homepage['id']) && is_numeric($homepage['id']) ) {
+		$data = array(
+			'rel_type'=>$homepage['table'],
+			'rel_id'=>$homepage['id']
+		);
 		$db->where('url','/');
 		$db->update('path',$data);
 		if ( $db -> count > 0 ) {
@@ -302,7 +307,6 @@ if ( $options_list ) {
 		$rss_options_output .= '</div>';
 	}
 }
-*/
 
 
 
@@ -314,7 +318,7 @@ if ( $xml->saveResult == 'success' ) {
 if ( $xml->saveResult == 'error' ) {
 	$message = new GrlxAlert;
 	$alert_output = $message->alert_dialog('Changes failed to save.');
-}
+}*/
 
 $db->where('label', 'directory');
 $site_directory = $db->getOne('milieu', 'value');
@@ -383,6 +387,7 @@ $result = $db
 	-> where('sort_order', 1, '>=')
 	-> get('milieu sm', NULL, $cols);
 
+$current_timezone = '';
 if ( $result ) {
 	foreach ( $result as $key => $val ) {
 		if ( $val['label'] == 'timezone' ) {
@@ -391,6 +396,7 @@ if ( $result ) {
 	}
 }
 
+$select_options = '';
 if ( $timezone_master_list ) {
 	$sl-> setName('input[timezone]');
 	$sl-> setList($timezone_master_list);
@@ -400,6 +406,7 @@ if ( $timezone_master_list ) {
 	$select_options = $sl-> buildSelect();
 }
 
+$form_output = '';
 if ( $db -> count > 0 ) {
 	foreach ( $result as $item ) {
 		if ( $item['description'] ) {
@@ -472,7 +479,7 @@ else {
 $result = $db
 	->where('title','Home')
 	->getOne('static_page','id');
-$static_id = $result['id'];
+$static_id = $result['id'] ?? null;
 
 // Get current home reference
 $cols = array('id,rel_type,rel_id');
@@ -480,16 +487,19 @@ $home = $db
 	->where('url','/')
 	->getOne('path',$cols);
 
-$current_home = $home['rel_type'].'-'.$home['rel_id'];
+$current_home = !empty($home) ? ($home['rel_type'].'-'.$home['rel_id']) : null;
 
-if ( $home['rel_type'] == 'static' ) {
+$edit_home = '';
+if ( !empty($home) && $home['rel_type'] == 'static' ) {
 	$link->url('sttc.page-edit.php?page_id='.$static_id);
 	$link->tap('Edit home page');
 	$edit_home = $link->text_link('editmeta');
 }
 
 // Site homepage settings
-if ( $home && $book_id && $static_id ) {
+$home_instruction = '';
+$home_output = '';
+if ( !empty($home) && $book_id && $static_id ) {
 	$home_instruction = 'Your site’s home can display the latest comic or a static page.';
 	if ( $book_list )
 	{
@@ -530,7 +540,7 @@ $view->group_css('config');
 $view->group_h2('Basics');
 $view->group_instruction($instruction);
 $view->group_contents($form_output);
-$content_output .= $view->format_group();
+$content_output = $view->format_group();
 
 $view->group_h2('Homepage');
 $view->group_instruction($home_instruction);

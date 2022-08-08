@@ -14,7 +14,7 @@ $modal->row_class('widelabel');
 
 $edit_id = register_variable('edit_id');
 
-if ( $edit_id && is_numeric($edit_id) ) {
+if ( isset($edit_id) && is_numeric($edit_id) ) {
 	$cols = array(
 		'title',
 		'url',
@@ -27,7 +27,7 @@ if ( $edit_id && is_numeric($edit_id) ) {
 		-> getOne('path', $cols);
 }
 // Any new items can only be external links
-elseif ( $edit_id === 'new' ) {
+elseif ( isset($edit_id) && $edit_id === 'new' ) {
 	$item['rel_type'] = 'external';
 }
 else {
@@ -38,7 +38,7 @@ else {
 /*****
  * Display logic
  */
-
+$hidden_output = '';
 if ( $edit_id == 'new' ) {
 	$modal->headline('Add <span>external link</span>');
 	$modal->save_value('add');
@@ -52,14 +52,14 @@ else {
 
 // Edits based on rel_type
 if ( $item['rel_type'] == 'external' ) {
-	if ( $item['url'] == '' ) {
+	if ( empty($item['url']) ) {
 		$item['url'] = 'http://';
 	}
 	$modal->input_url('url');
 }
 else {
 	$modal->input_path('url');
-	if ( $item['edit_path'] == 0 ) {
+	if ( isset($item['edit_path']) && $item['edit_path'] == 0 ) {
 		$modal->readonly(true);
 	}
 }
@@ -77,7 +77,7 @@ $url_field_output = $modal->paint();
 
 $modal->input_clickable('title');
 $modal->name('input[title]');
-$modal->value($item['title']);
+$modal->value($item['title'] ?? '');
 $title_field_output = $modal->paint();
 
 $modal->contents($hidden_output.$title_field_output.$url_field_output);

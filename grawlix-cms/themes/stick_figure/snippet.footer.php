@@ -10,7 +10,6 @@
 				<?=show_ad('slot-1') ?>
 		</footer>
 		<?=snippet('googleanalytics')?>
-		<?=snippet('project-wonderful')?>
 
 	</body>
 </html>

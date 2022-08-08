@@ -6,9 +6,10 @@ require_once('panl.init.php');
 
 $update = 'upgrade-to-1.3.php';
 
+$alert_output = '';
 if ( file_exists($update) ) {
 	$message = new GrlxAlert;
-	$alert_output = $message->info_dialog('Welcome to 1.3!<br /><br />You should <a href="'.$update.'">update your database</a> now.');
+	$alert_output = $message->info_dialog('Welcome to '.GRAWLIX_VERSION.'!<br /><br />You should <a href="'.$update.'">update your database</a> now.');
 }
 
 
@@ -28,10 +29,10 @@ $db-> where('date_publish >= NOW()');
 $db-> orderBy('sort_order','ASC');
 $id_info = $db-> getOne('book_page','id');
 
-if ( $id_info ) {
+if ( !empty($id_info) ) {
 	$comic_page = new GrlxComicPage($id_info['id']);
 }
-if ( $comic_page ) {
+if ( isset($comic_page) ) {
 	$image = reset($comic_page-> imageList);
 	$link-> url('book.page-edit.php?page_id='.$comic_page-> pageID);
 	$link-> tap($comic_page-> pageInfo['title']);
@@ -44,7 +45,7 @@ else {
 }
 
 
-
+//TODO: New documentation!
 $docs_link = 'http://www.getgrawlix.com/docs/'.DOCS_VERSION.'/';
 
 $primary_output = <<<EOL
@@ -96,10 +97,8 @@ $ref_set_output = <<<EOL
 <div class="row">
 <div class="medium-12 columns">
 <ul>
-  <li><a href="$docs_link">Read the documentation</a></li>
-  <li><a href="http://www.getgrawlix.com/forum/">Get help at the forum</a></li>
-  <li><a href="http://twitter.com/grawlixcomix/">Twitter news and support</a></li>
-  <li><a href="http://www.patreon.com/grawlixcomix?ty=h">Feed the bat and get insider info</a></li>
+  <!--<li><a href="$docs_link">Read the documentation</a></li>-->
+  <li><a href="https://github.com/Ayemae/Grawlix-Webcomic-CMS">Get help on GitHub</a></li>
 </ul>
 </div>
 </div>
@@ -111,7 +110,7 @@ EOL;
 $view->group_h2('Get going');
 $view->group_instruction('Start making your webcomic.');
 $view->group_contents($primary_output);
-$content_output .= $view->format_group().'<hr/>'."\n";
+$content_output = $view->format_group().'<hr/>'."\n";
 
 $view->group_h2('Tools');
 $view->group_instruction('Choose from the sections to the left, or browse these topics.');

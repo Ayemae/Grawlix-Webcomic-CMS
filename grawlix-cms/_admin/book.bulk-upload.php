@@ -22,6 +22,7 @@ $view-> yah = 2;
 $book_id = $book-> bookID;
 
 
+$alert_output = '';
 
 /*****
  * Updates
@@ -77,7 +78,7 @@ EOL;
 $view->group_h2('Add images');
 $view->group_instruction('Upload images from your computer to make comic pages.');
 $view->group_contents($upload_output);
-$content_output .= $view->format_group().'<hr />';
+$content_output = $view->format_group().'<hr />';
 
 /*
 $view->group_h2('Starting at');
@@ -537,6 +538,6 @@ print ( $alert_output );
 <?php
 $view->add_jquery_ui();
 $view->add_script('dropzone.js');
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());
 ?>

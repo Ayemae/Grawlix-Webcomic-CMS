@@ -115,16 +115,15 @@ $optional_files = array(
 
 
 // Does the .htaccess file exist?
-function check_htaccess($htaccess_string){
-
+function check_htaccess($htaccess_string) {
 	$x = check_path('../.htaccess');
 
 	if ( $x['exists'] === false ){
-		$message .= '<p>Missing .htaccess file</p>'."\n";
+		$message = '<p>Missing .htaccess file</p>'."\n";
 		$status = 'error';
 	}
 	else {
-		$message .= '<p>Found the .htaccess file</p>'."\n";
+		$message = '<p>Found the .htaccess file</p>'."\n";
 		$status = 'aok';
 	}
 
@@ -132,8 +131,7 @@ function check_htaccess($htaccess_string){
 }
 
 
-function check_path($item){
-
+function check_path($item) {
 	// Does the file/folder exist?
 	if ( !is_dir($item) && !is_file($item)) {
 		$writable['exists'] = false;
@@ -157,7 +155,7 @@ function check_path($item){
 }
 
 // Check individual folders in /comics
-function fetch_comic_folders(){
+function fetch_comic_folders() {
 	if ($dir = opendir('../'.DIR_COMICS_IMG)) {
 
 		while (false !== ($entry = readdir($dir))) {
@@ -170,18 +168,17 @@ function fetch_comic_folders(){
 	return $result;
 }
 
-function display_permissions($name,$folder){
+function display_permissions($name,$folder) {
+	if ( $folder['exists'] == true ) {
+		$output = 'Found '.$name.'<br/>'."\n";
+	}
+	else {
+		$output = '<strong>Missing '.$name.'</strong><br/>'."\n";
+	}
+	return $output;
+}
 
-if ( $folder['exists'] == true ) {
-	$output .= 'Found '.$name.'<br/>'."\n";
-}
-else {
-	$output .= '<strong>Missing '.$name.'</strong><br/>'."\n";
-}
-return $output;
-}
-
-function check_comic_seo($db){
+function check_comic_seo($db) {
 	$errors = false; // Be optimistic
 
 	$link = new GrlxLink;
@@ -193,14 +190,17 @@ function check_comic_seo($db){
 	$page_list = $db->get ('book_page',null,'id,title,sort_order');
 	$page_list = rekey_array($page_list,'id');
 
-	if ( $page_list ) {
+	if ( !empty($page_list) ) {
 		foreach ( $page_list as $key => $val ) {
 			if ( trim($val['title']) == '' ) {
 				$untitled_list[$key] = $val;
 				$errors = true;
 			}
 			else {
-				$title_count[$val['title']]++;
+				if( isset($title_count[$val['title']]) )
+					$title_count[$val['title']]++;
+				else
+					$title_count[$val['title']] = 1;
 			}
 			if ( $val['title'] && strlen($val['title']) < 8 ) {
 				$short_name_list[$key] = $val;
@@ -213,8 +213,8 @@ function check_comic_seo($db){
 		}
 	}
 
-	if ( $title_count ) {
-		$duplicate_title_error = false;
+	$duplicate_title_error = false;
+	if ( isset($title_count) ) {
 		foreach ( $title_count as $key => $val ) {
 			if ( $val > 1 ) {
 				$duplicate_title_error = true;
@@ -222,8 +222,8 @@ function check_comic_seo($db){
 		}
 	}
 
-
-	if ( $short_name_list ) {
+	$output = '';
+	if ( isset($short_name_list) ) {
 		$output .= '<p>'.count($short_name_list).' comic pages have short titles.</p><ul>'."\n";
 		$link-> rel = null;
 		foreach ( $short_name_list as $key => $val ) {
@@ -235,10 +235,8 @@ function check_comic_seo($db){
 		}
 		$output .= '</ul>'."\n";
 	}
-	else {
-//		$output .= '<p>Good news: Every page has a title.</p>'."\n";
-	}
-	if ( $long_name_list ) {
+
+	if ( isset($long_name_list) ) {
 		$link-> rel = null;
 		$output .= '<p>'.count($long_name_list).' comic pages have overlong titles. '.$link->paint().' titles no longer than about 60 characters.</p><ul>'."\n";
 		foreach ( $long_name_list as $key => $val ) {
@@ -249,7 +247,7 @@ function check_comic_seo($db){
 		$output .= '</ul>'."\n";
 	}
 
-	if ( $untitled_list ) {
+	if ( isset($untitled_list) ) {
 		$link-> rel = null;
 		$output .= '<p>'.count($untitled_list).' comic pages have no titles.</p><ul>'."\n";
 		foreach ( $untitled_list as $key => $val ) {
@@ -276,17 +274,17 @@ function check_comic_seo($db){
 	return array($errors,$output);
 }
 
-function check_menu($path_items=array()){
+/*function check_menu($path_items=array()) {
 	$dupe_check = array_count_values($path_items);
 	foreach ( $dupe_check as $key => $val ) {
 		if ( $val > 1 ) {
 			$dupes[] = $key;
 		}
 	}
-}
+}*/
 
 
-function display_module($module=array(),$link){
+function display_module($module=array(),$link) {
 //echo '<pre>$module|';print_r($module);echo '|</pre>';
 	if ( $module['status'] == 0 ) {
 		$status = 'verified';
@@ -295,7 +293,7 @@ function display_module($module=array(),$link){
 		$status = 'problem';
 	}
 
-	$output .= '<div>';
+	$output = '<div>';
 	$output .= $module['report'];
 	$output .= '</div>';
 	return array($output,'<span class="health-section"><a><i class="'.$status.'"></i></a></span>');
@@ -303,7 +301,7 @@ function display_module($module=array(),$link){
 
 
 
-function image_weight_test($root_folder,$root_list,$image_status_list){
+function image_weight_test($root_folder,$root_list,$image_status_list) {
 
 	$link = new GrlxLinkStyle;
 	$fileops = new GrlxFileOps;
@@ -330,18 +328,15 @@ function image_weight_test($root_folder,$root_list,$image_status_list){
 						$image_info = NULL; // reset
 						$image_bytes = NULL; // reset
 
-						if ( is_file($folder.'/'.$filename) )
-						{
+						if ( is_file($folder.'/'.$filename) ) {
 							$image_info = getimagesize($folder.'/'.$filename);
 							$image_bytes = filesize($folder.'/'.$filename);
 						}
-						else
-						{
+						else {
 							die();
 						}
 
-						if ( $image_bytes && $image_info )
-						{
+						if ( $image_bytes && $image_info ) {
 							$weight = figure_pixel_weight($image_info[0],$image_info[1],$image_bytes);
 							$short = round($weight,3);
 							$status = interpret_image_weight($weight);
@@ -351,7 +346,8 @@ function image_weight_test($root_folder,$root_list,$image_status_list){
 								'status' => $status,
 								'filename' => $filename,
 								'bytes' => $image_bytes,
-								'path' => $folder.'/'.$filename
+								'path' => $folder.'/'.$filename,
+								'image_info' => $image_info
 							);
 							if ( $status > $overall_status ) {
 								$overall_status = $status;
@@ -359,20 +355,16 @@ function image_weight_test($root_folder,$root_list,$image_status_list){
 						}
 					}
 				}
-				if ( $sorted_set )
-				{
+				if ( isset($sorted_set) ) {
 					krsort($sorted_set);
 				}
 			}
 		}
 	}
-
-	if ( $sorted_set )
-	{
-		foreach ( $sorted_set as $rank )
-		{
-			foreach ( $rank as $image )
-			{
+	$output = '';
+	if ( isset($sorted_set) ) {
+		foreach ( $sorted_set as $rank ) {
+			foreach ( $rank as $image ) {
 				$pad = $image['short'] * 300;
 				$status = $image['status'];
 				$image_bytes = number_format($image['bytes']);
@@ -388,6 +380,8 @@ function image_weight_test($root_folder,$root_list,$image_status_list){
 				$this_link = $link-> paint();
 
 				$background = $image_status_list[$status][0];
+				$short = $image['short'];
+				$image_info = $image['image_info'];
 				$output .= <<<EOL
 <p>
 	<span style="background:$background;padding-right:{$pad}px;">&nbsp;</span><br/><strong>$short bytes / pixel</strong> <small>($image_bytes b / $image_info[0] &times; $image_info[1] px)</small> $this_link
@@ -399,19 +393,6 @@ EOL;
 	}
 	return array($output,$overall_status);
 }
-/*
-
-					}
-				}
-			}
-		}
-	}
-}
-*/
-
-
-
-
 
 
 
@@ -419,14 +400,13 @@ EOL;
 $root_list = $fileops->get_dir_list('../'.DIR_COMICS_IMG);
 $weight_report = image_weight_test('../'.DIR_COMICS_IMG,$root_list,$image_status_list);
 
-
 $image_weight_module['anchor'] = 'image_weight';
 $image_weight_module['heading'] = 'Image weight check';
-$image_weight_module['status'] = $weight_report[1];
+$image_weight_module['status'] = $weight_report[1] ?? null;
 //$image_weight_module['report']  = '<p>“Image weight” is a ratio of bytes / dimensions. Images with a better ratio load faster than others with similar pixel width &amp; height.</p>';
-$image_weight_module['report'] .= $weight_report[0];
+$image_weight_module['report'] = $weight_report[0] ?? null;
 
-if ( !$image_weight_module || !$image_weight_module['report'] ) {
+if ( !isset($image_weight_module) || !isset($image_weight_module['report']) ) {
 	$image_weight_module['report'] = 'I didn’t find any images.';
 }
 
@@ -448,7 +428,7 @@ if ( $panel_files ) {
 		}
 	}
 }
-if ( $missing_panel ) {
+if ( isset($missing_panel) ) {
 	$panel_file_module['anchor'] = 'files';
 	$panel_file_module['heading'] = 'Admin panel';
 	$panel_file_module['status'] = 20;
@@ -470,7 +450,7 @@ if ( $admin_existing_list ) {
 		}
 	}
 }
-if ( $extra_panel_files ) {
+if ( isset($extra_panel_files) ) {
 	$panel_file_module['anchor'] = 'files';
 	$panel_file_module['heading'] = 'Admin panel';
 	$panel_file_module['status'] = 20;
@@ -499,7 +479,6 @@ $comic_dir_list = $fileops->get_dir_list(DIR_COMICS_IMG);
 
 // Get the contents of each comic image folder.
 if ( $comic_dir_list ) {
-
 	foreach ( $comic_dir_list as $subdirectory ) {
 		$subdirectory = DIR_COMICS_IMG . '/' . $subdirectory;
 		$this_dir = $fileops->get_dir_list($subdirectory);
@@ -518,11 +497,10 @@ if ( $comic_dir_list ) {
 $reference_list = get_image_reference($db);
 
 // Compare the two.
-if ( $filename_list ) {
-
+if ( !empty($filename_list) ) {
 	// Look for images in FTP but not in MySQL.
 	foreach ( $filename_list as $key => $val ) {
-		if ( !$reference_list[$key] ) {
+		if ( !isset($reference_list[$key]) ) {
 			$ftp_not_mysql[$key] = $val;
 		}
 	}
@@ -535,12 +513,11 @@ if ( $filename_list ) {
 			}
 		}
 	}
-
 }
 
 
 $orphan_image_module['status'] = 0;
-if ( $ftp_not_mysql ) {
+if ( isset($ftp_not_mysql) ) {
 	$total = count($ftp_not_mysql);
 	if ( $total > 30 ) {
 		$limit = 25;
@@ -574,11 +551,11 @@ if ( $ftp_not_mysql ) {
 		$orphan_image_module['report'] .= '<p>…and '.$remaining.' more.</p>';
 	}
 }
-if ( !$orphan_image_module || !$orphan_image_module['report'] ) {
+if ( !isset($orphan_image_module) || !isset($orphan_image_module['report']) ) {
 	$orphan_image_module['report'] = 'I didn’t find any extra images.';
 }
 
-if ( $mysql_not_ftp ) {
+if ( isset($mysql_not_ftp) ) {
 	$orphan_image_module['anchor'] = 'orphan_image';
 	$orphan_image_module['heading'] = 'Orphan image check';
 	$orphan_image_module['status'] = 10;
@@ -618,15 +595,14 @@ else {
 /////////// Permissions check
 
 $comic_folders = fetch_comic_folders(DIR_COMICS_IMG);
-if ( $folder_list && $comic_folders ) {
+if ( isset($folder_list) && isset($comic_folders) ) {
 	$folder_list = array_merge($folder_list,$comic_folders);
 }
-elseif ( !$folder_list && $comic_folders ) {
+elseif ( !isset($folder_list) && isset($comic_folders) ) {
 	$folder_list = $comic_folders;
 }
 
-if ( $folder_list ) {
-
+if ( isset($folder_list) ) {
 	$permissions_module['status'] = 0;
 	$error_count = 0;
 //	$permissions_module['report'] .= '<p>This checks the ability to add or edit files on your behalf.</p>'."\n";
@@ -646,8 +622,7 @@ if ( $folder_list ) {
 //			$permissions_module['report'] .= $folder.' <strong>OK</strong><br/>'."\n";
 		}
 	}
-	if ( !$permissions_module['report'] )
-	{
+	if ( !isset($permissions_module['report']) ) {
 		$permissions_module['report'] = 'No issues found.';
 	}
 }
@@ -671,7 +646,7 @@ else {
 
 /////////// Permissions check
 
-$htaccess_status = check_htaccess($htaccess_string);
+$htaccess_status = check_htaccess($htaccess_string ?? null);
 if ( $htaccess_status['status'] == 'aok' ) {
 	$htaccess_module['status'] = 0;
 	$htaccess_module['anchor'] = 'htaccess';
@@ -694,7 +669,7 @@ $report = display_module($permissions_module,$link);
 $view->group_h2($report[1].' Permissions');
 $view->group_instruction('This checks the ability to add or edit files on your behalf.');
 $view->group_contents( $report[0] );
-$content_output .= $view->format_group().'<hr />';
+$content_output = $view->format_group().'<hr />';
 
 // Group
 $report = display_module($panel_file_module,$link);

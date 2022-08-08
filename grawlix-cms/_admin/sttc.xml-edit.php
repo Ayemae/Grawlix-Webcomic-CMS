@@ -38,7 +38,7 @@ if ( $variable_list ) {
 }
 
 // Hold it — no ID, no entrance.
-if ( !$page_id ) {
+if ( empty($page_id) ) {
 	header('location:sttc.page-list.php');
 	die();
 }
@@ -57,7 +57,7 @@ $fileops = new GrlxFileOps;
 $sl = new GrlxSelectList;
 
 // Make sure the image folder exists and is accessible.
-$alert_output .= $fileops->check_or_make_dir('../'.DIR_STATIC_IMG);
+$alert_output = $fileops->check_or_make_dir('../'.DIR_STATIC_IMG);
 
 $view-> yah = 6;
 
@@ -67,7 +67,7 @@ $view-> yah = 6;
  */
 
 // This comes from sttc.xml-new.php.
-if ( $msg == 'created' ) {
+if ( isset($msg) && $msg == 'created' ) {
 	$link1 = new GrlxLinkStyle;
 	$link1-> url('sttc.xml-new.php');
 	$link1-> tap('Create another new page');
@@ -82,9 +82,8 @@ if ( $msg == 'created' ) {
 // If the static images’ folder exists (that’s $folder_check),
 // then loop through the artist-submitted files (if any).
 
-if ( !$alert_output && $_FILES && $_FILES['item']['name'] ) {
+if ( !$alert_output && !empty($_FILES) && !empty($_FILES['item']) && !empty($_FILES['item']['name']) ) {
 	foreach ( $_FILES['item']['name'] as $key => $image_file_name ) {
-
 		// Assume this upload is invalid until proven otherwise.
 		$can_continue = FALSE;
 
@@ -97,34 +96,29 @@ if ( !$alert_output && $_FILES && $_FILES['item']['name'] ) {
 		// What size and kind of image is this?
 		$type = $_FILES['item']['type'][$key]['image']; // Really oughta check against valid image types.
 
-		if ( $allowed_image_types && $type && is_image_type($type,$allowed_image_types))
-		{
+		if ( $allowed_image_types && $type && is_image_type($type,$allowed_image_types)) {
 			$can_continue = TRUE;
 		}
-		elseif ( $type )
-		{
+		elseif ( $type ) {
 			$alert_output .= $message->alert_dialog('I couldn’t upload the image. It doesn’t look like a PNG, GIF, JPG, JPEG or SVG.');
 		}
 
 		// Also check for other errors, like the server’s file size limit.
 		// You’d be surprised what I’ve seen people try to upload.
-		switch ( $_FILES[item][error][$key]['image'])
-		{
-			case 1:
+		switch ( $_FILES[item][error][$key]['image']) {
+			case UPLOAD_ERR_INI_SIZE:
 				$alert_output .= $message->alert_dialog('I couldn’t upload an image that exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit. <a href="http://getgrawlix.com/docs/'.DOCS_VERSION.'/image-optimization">Learn about image optimization</a>.');
 				break;
-			case 3:
-				// Handled in v2
+			case UPLOAD_ERR_PARTIAL:
+				$alert_output .= $message->alert_dialog('I couldn’t receive the image. The file was only partially uploaded.');
 				break;
-			case 4:
-				// Handled in v2
+			case UPLOAD_ERR_NO_FILE:
+				$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was nothing to receive.');
 				break;
 		}
 
-// Display the file size limit
-// echo ini_get( 'upload_max_filesize' );
 
-		// “Upload_file” is where we put it relative to the folder.
+		// “Uploadfile” is where we put it relative to the folder.
 		// “Web file path” is its offical, absolute location for the public-facing website.
 		if ( $tmp_name && $can_continue === TRUE ) {
 			$uploadfile = '../'.DIR_STATIC_IMG . $image_file_name;
@@ -140,8 +134,7 @@ if ( !$alert_output && $_FILES && $_FILES['item']['name'] ) {
 }
 
 // ! Write items’ XML
-if ( $_POST['item'] && $page_id ) {
-
+if ( !empty($_POST['item']) && !empty($page_id) ) {
 	// quick and dirty check to see how many items
 	$check = count($_POST['item']) - 1;
 	if ( $check <= 1 ) {
@@ -151,8 +144,7 @@ if ( $_POST['item'] && $page_id ) {
 
 	// “default” matches the pattern filenames, e.g. /assets/patterns/hilt.default.php
 	$pattern_id = register_variable('pattern_id');
-	if ( !$pattern_id || $pattern_id == NULL || $pattern_id == '' )
-	{
+	if ( empty($pattern_id) || $pattern_id == NULL || $pattern_id == '' ) {
 		$pattern_id = 'default';
 	}
 
@@ -167,7 +159,7 @@ if ( $_POST['item'] && $page_id ) {
 	$save_xml .= "\t\t<pattern>$pattern_id</pattern>\n";
 	$save_xml .= "\t\t<layout>$layout_id</layout>\n";
 	$save_xml .= "\t\t<function>$function</function>\n";
-	if ( $expected_field_set ) {
+	if ( !empty($expected_field_set) ) {
 		foreach ( $expected_field_set as $val ) {
 			$save_xml .= "\t\t<option>$allowed_container_types[$val]</option>\n";
 		}
@@ -182,12 +174,11 @@ if ( $_POST['item'] && $page_id ) {
 //	$save_xml .= "\t".'<content>'."\n";
 
 	foreach ( $_POST['item'] as $item_id => $item_contents ) {
-
 		// A dash of extra sanitization.
 //		$item_contents['heading'] = htmlspecialchars($item_contents['heading']);
 //		$item_contents['text'] = htmlspecialchars($item_contents['text']);
-		$item_contents['heading'] = $item_contents['heading'];
-		$item_contents['text'] = $item_contents['text'];
+		$item_contents['heading'] = $item_contents['heading'] ?? null;
+		$item_contents['text'] = $item_contents['text'] ?? null;
 		$item_contents['heading'] = str_replace('javascript', '', $item_contents['heading']);
 		$item_contents['text'] = str_replace('javascript', '', $item_contents['text']);
 		// Make sure this page’s items have only what they need, e.g. headings or images.
@@ -201,7 +192,6 @@ if ( $_POST['item'] && $page_id ) {
 		}
 
 		if ( $valid_type == TRUE ) {
-
 			// Keep track of how many items we’re saving.
 			$item_saved_count++;
 
@@ -222,10 +212,8 @@ if ( $_POST['item'] && $page_id ) {
 			$save_xml .= "\t\t".'<item>'."\n\t\t\t".'<pattern>'.'</pattern>'."\n";
 
 			foreach ( $item_contents as $this_container_type => $this_container ) {
-
 				$this_container = trim ( $this_container );
 				$save_xml .= "\t\t\t".'<'.$this_container_type.'><![CDATA['.$this_container.']]></'.$this_container_type.'>'."\n";
-
 			}
 			$save_xml .= "\t\t".'</item>'."\n";
 		}
@@ -258,11 +246,9 @@ if ( $_POST['item'] && $page_id ) {
 
 	$alert_output .= $message->success_dialog('Items saved. <ul><li>'.$link-> paint().'</li><li><a href="'.$static-> info['url'].'">View this page live</a></li></ul>');
 }
-
 // If it doesn’t look like XML, then treat the page’s content as
 // “raw”, unstructured, unruly text. But go ahead and save it.
-elseif ( $_POST['raw_content'] && $page_id ) {
-
+elseif ( !empty($_POST['raw_content']) && isset($page_id) ) {
 //	$xml_content = htmlspecialchars($_POST['raw_content']);
 	$xml_content = $_POST['raw_content'];
 	$xml_content = str_replace('javascript', '', $xml_content);
@@ -279,7 +265,7 @@ elseif ( $_POST['raw_content'] && $page_id ) {
 	$alert_output .= $message->success_dialog('Freeform content saved. '.$link-> paint('grlx page list'));
 }
 
-
+$form_output = '';
 /*****
  * ! Display logic
  */
@@ -290,8 +276,7 @@ if ( $page_id && is_numeric($page_id) ) {
 	$static-> getInfo();
 }
 
-if ( $static && $static-> info ) {
-
+if ( !empty($static) && $static-> info ) {
 	// Reality check: Does this look like XML?
 	// No? Must be freeform content.
 	if ( substr($static-> info['options'],0,5) != '<?xml' ) {
@@ -321,7 +306,6 @@ if ( $static && $static-> info ) {
 		// Loop through each item …
 		if ( $item_objects && $manifest ) {
 			foreach ( $item_objects as $number => $item ) {
-
 				// …building input elements for each allowed datum type.
 				foreach ( $manifest as $type ) {
 					$value = (string)$item[$type];
@@ -339,9 +323,9 @@ if ( $static && $static-> info ) {
 	}
 }
 
+$new_output = '';
 // ! Build sets of “new” fields
-if ( $manifest ) {
-
+if ( !empty($manifest) ) {
 	for ( $i=$number+2; $i<=$number+$limit+1; $i++) {
 		foreach ( $manifest as $type ) {
 			$f = 'build_'.$type.'_field';
@@ -359,9 +343,8 @@ if ( $manifest ) {
 $pattern_option_list = $fileops-> get_dir_list('../'.DIR_PATTERNS);
 
 // Now go through them and remove those that do *not* match the page’s XML format.
-if ( $pattern_option_list && $xml_format ) {
+if ( !empty($pattern_option_list) && !empty($xml_format) ) {
 	foreach ( $pattern_option_list as $id => $filename ) {
-
 		// The first part of a pattern file’s name is its XML format (a.k.a. “HILT” combo). Compare that
 		// to the page’s XML format.
 		$this_pattern = explode('.', $filename);
@@ -376,7 +359,7 @@ $form->row_class('widelabel');
 
 // If anything’s left over, loop through and make radio buttons
 // to let the artist choose among the appropriate pattern files.
-if ( $pattern_option_list && $static_xml ) {
+if ( !empty($pattern_option_list) && !empty($static_xml) ) {
 	$i = 0;
 	$page_pattern = $static_xml->getValue('/options/pattern');
 	$page_layout = $static_xml->getValue('/options/layout');
@@ -394,7 +377,6 @@ if ( $pattern_option_list && $static_xml ) {
 		// Ignore the images. Look to the PHP files.
 		// Sample file name: hilt.default.php, not hilt.default.svg
 		if ( !in_array($ext, $allowed_sttc_file_types) && !in_array('xml', $this_pattern) ) {
-
 			// Set up the thumbnail file.
 			$thumbnail = '../'.DIR_PATTERNS.$parts.'.'.$pattern.'.svg';
 
@@ -552,7 +534,7 @@ $view->group_contents($form_output);
 $view->group_instruction('Stuff the readers see.');
 $content_output = $view->format_group();
 
-if ( $new_output ) {
+if ( !empty($new_output) ) {
 	$view->group_h3('Add more');
 	$new_output .= $form->form_buttons();
 	$view->group_contents($new_output);

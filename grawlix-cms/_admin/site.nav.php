@@ -16,11 +16,12 @@ $list = new GrlxList;
 
 $view-> yah = 7;
 
+
+$current_alert_output = '';
 /* ! Updates */
 
 // Act on an edit from the reveal modal
-if ( $_POST['modal-submit'] ) {
-
+if ( !empty($_POST['modal-submit']) && !empty($_POST['input']) ) {
 	$input = $_POST['input'];
 	foreach ( $input as $val ) {
 		$val = trim($val);
@@ -31,8 +32,8 @@ if ( $_POST['modal-submit'] ) {
 	// Add an external URL to nav
 	if ( $_POST['modal-submit'] == 'add' ) {
 		$data = array(
-			'title' => $input['title'],
-			'url' => $input['url'],
+			'title' => $input['title'] ?? null,
+			'url' => $input['url'] ?? null,
 			'rel_type' => 'external',
 			'sort_order' => 0,
 			'in_menu' => 1
@@ -45,7 +46,7 @@ if ( $_POST['modal-submit'] ) {
 	}
 
 	// Save an edit
-	if ( ($_POST['modal-submit'] == 'save') && is_numeric($_POST['edit_id']) ) {
+	if ( ($_POST['modal-submit'] == 'save') && isset($_POST['edit_id']) && is_numeric($_POST['edit_id']) ) {
 		$data = array(
 			'title' => $input['title'],
 			'url' => $input['url']
@@ -88,7 +89,7 @@ $static_list = rekey_array($result,'id');
 $result = $db-> get ('book',null,'id,title');
 $book_list = rekey_array($result,'id');
 
-if ( $static_list && $nav_item ) {
+if ( !empty($static_list) && !empty($nav_item) ) {
   foreach ( $nav_item as $key => $val ) {
     if ( $val['rel_type'] == 'static' ) {
       $rel_id = $val['rel_id'];
@@ -97,16 +98,19 @@ if ( $static_list && $nav_item ) {
   }
 }
 
-if ( $book_list && $nav_item ) {
+if ( !empty($book_list) && !empty($nav_item) ) {
   foreach ( $nav_item as $key => $val ) {
     if ( $val['rel_type'] == 'book' || $val['rel_type'] == 'archive' ) {
-      $rel_id = $val['rel_id'];
-      $nav_item[$key]['title'] = $book_list[$rel_id]['title'];
+		$rel_id = $val['rel_id'];
+		if( isset($book_list[$rel_id]) )
+			$nav_item[$key]['title'] = $book_list[$rel_id]['title'] ?? null;
+		else
+			$nav_item[$key]['title'] = null;
     }
   }
 }
 
-if ( $nav_item ) {
+if ( !empty($nav_item) ) {
 	foreach ( $nav_item as $key => $item ) {
 		// Construct archive paths
 		if ( $item['rel_type'] == 'archive' ) {
@@ -129,12 +133,13 @@ if ( $path_items ) {
 	}
 }
 
+$dupe_alert_output = '';
 if ( isset($dupes) ) {
 	$dupe_alert_output = $message->alert_dialog('Duplicates detected! You should create unique path names to avoid problems.');
 }
 
 // Build output
-if ( $nav_item ) {
+if ( !empty($nav_item) ) {
 
 	$list->row_class('menu');
 	$list->sort_by('menu');
@@ -170,22 +175,18 @@ if ( $nav_item ) {
 			$item['url'] = '<span class="fixme">'.$item['url'].'</span>';
 		}
 
-		if ($item['title'])
-		{
+		if ( !empty ($item['title']) ) {
 			$title = $item['title'];
 		}
-		else
-		{
+		else {
 			$title = '-';
 		}
 
-		if (strlen($item['url']) > 32)
-		{
+		if (!empty($item['url']) && strlen($item['url']) > 32) {
 			$url = substr($item['url'],0,28).'…';
 		}
-		else
-		{
-			$url = $item['url'];
+		else {
+			$url = $item['url'] ?? null;
 		}
 
 		if (strlen($title) > 24)
@@ -258,7 +259,6 @@ $display_output .= $list->format_content();
 
 $output  = $view->open_view();
 $output .= $view->view_header();
-$output .= $alert_output;
 $output .= $modal->modal_container();
 $output .= $current_alert_output;
 $output .= $dupe_alert_output;

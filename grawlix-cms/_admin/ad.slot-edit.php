@@ -26,7 +26,7 @@ if ( $var_list ) {
 }
 
 // No ad selected? Send ’em back to the list.
-if ( !$slot_id || !is_numeric($slot_id) ) {
+if ( !isset($slot_id) || !is_numeric($slot_id) ) {
 	header('location:ad.list.php');
 }
 
@@ -37,6 +37,7 @@ $priority_list = array(
 	'-1' => 'Hidden' // below zero = out of the loop.
 );
 
+$alert_output = '';
 
 /*****
  * Updates
@@ -52,8 +53,8 @@ if ( $label && $title && $slot_id ) {
 		$alert_output = $message->success_dialog('Slot data saved.');
 }
 
+$change_made = false;
 if ( $change_from && $slot_id ) {
-	$change_made = false;
 	foreach ( $change_from as $key => $this_from ) {
 		$this_to = $change_to[$key];
 
@@ -97,6 +98,7 @@ if ( $slot_id ) {
 
 
 // What ads might fit into this slot?
+$possible_ad_list = null;
 if ( $slot_info ) {
 //	$possible_ad_list = $db->where('large_width', $slot_info['max_width'],'<=')
 //	->where('large_height', $slot_info['max_height'],'<=')
@@ -153,7 +155,7 @@ if ( $possible_ad_list ) {
 $number_o_ads = qty('ad',count($possible_ad_list));
 
 
-if ( $ad_list ) {
+if ( !empty($ad_list) ) {
 	$heading_list = array('Ad','Action');
 	$list->headings($heading_list);
 	$list->row_class('ad');
@@ -161,7 +163,7 @@ if ( $ad_list ) {
 
 //	$ad_list_instructions  = '<p>This slot measures <strong>'.$slot_info['max_width'].' &times; '.$slot_info['max_height'].'</strong> pixels. That means <strong>'.$number_o_ads.'</strong> can fit here.</p>'."\n";
 
-	$ad_list_output .= $list->format_headings();
+	$ad_list_output  = $list->format_headings();
 	$ad_list_output .= $list->format_content();
 
 }
@@ -179,9 +181,9 @@ $title_output = '<input type="text" name="title" id="title" value="'.$slot_info[
 
 // Group
 $view->group_h2('Ad list');
-$view->group_instruction($ad_list_instructions);
+//$view->group_instruction($ad_list_instructions);
 $view->group_contents( $ad_list_output );
-$content_output .= $view->format_group().'<hr />';
+$content_output = $view->format_group().'<hr />';
 
 
 // Group
@@ -220,7 +222,7 @@ print( $view->view_header() );
 	<input type="hidden" name="grlx_xss_token" value="<?=$_SESSION['admin']?>"/>
 <?=$content_output ?>
 
-<?php if ( $ad_list ) : ?>
+<?php if ( !empty($ad_list) ) : ?>
 		<p><button class="btn primary save" name="submit" type="submit" value="save"><i></i>Save</button></p>
 <?php endif; ?>
 		<input type="hidden" id="slot-id" name="slot_id" value="<?=$slot_id ?>"/>

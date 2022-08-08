@@ -1,7 +1,7 @@
 <!-- GRAWLIX TEMPLATE: This comes from snippet.comments -->
 <?php
 $info = $this->services['comments']; // Get info from database via page class
-$open_output = '<article id="comments">';
+$open_output = '<article id="comments"><h4>Reader comments</h4>';
 $close_output = '</article>';
 ?>
 
@@ -24,7 +24,6 @@ $close_output = '</article>';
 <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 <?=$close_output?>
 <?php endif; ?>
-
 
 <?php if ( !empty($info['intensedebate']) ) : ?>
 <?=$open_output?>

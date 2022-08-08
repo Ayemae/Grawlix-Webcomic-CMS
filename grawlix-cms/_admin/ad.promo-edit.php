@@ -25,16 +25,18 @@ if ( $var_list ) {
 		$$val = register_variable($val);
 	}
 }
-$code = $_POST['code'];
+$code = $_POST['code'] ?? null;
 
 
 // No ad selected? Send ’em back to the list.
-if ( !$ad_id || !is_numeric($ad_id) ) {
+if ( empty($ad_id) || !is_numeric($ad_id) ) {
 	header('location:ad.list.php');
 }
 
 // Folder in which we keep ad images.
 $image_path = $milieu_list['directory']['value'].'/assets/images/ads';
+
+$alert_output = '';
 
 // List of status levels.
 /*
@@ -79,19 +81,20 @@ $check_these = array(
 );
 
 
-if ( $check_these ) {
+if ( $check_these && !empty($_POST)) {
 	foreach ( $check_these as $key => $val ) {
-
 		// Got a new file upload? Then upload it.
-		$upload_status[$key] = upload_specific_file($val,$image_path);
-		$upload_sizes[$key] = getimagesize('..'.$image_path.'/' . basename($_FILES[$val]['name']));
+		if(!empty($_FILES[$val])) {
+			$upload_status[$key] = upload_specific_file($val,$image_path);
+			$upload_sizes[$key] = getimagesize('..'.$image_path.'/' . basename($_FILES[$val]['name']));
+		}
 	}
 }
 
 
 
 // Prepare to update the ad’s database record.
-if ( $_POST && $ad_id ) {
+if ( !empty($_POST) && $ad_id ) {
 	$data = array (
 		'title' => $title,
 		'code' => $code,
@@ -99,7 +102,7 @@ if ( $_POST && $ad_id ) {
 	);
 	if ( $check_these ) {
 		foreach ( $check_these as $key => $val ) {
-			if ( is_array($upload_sizes[$key]) ) {
+			if ( !empty($upload_sizes[$key]) && is_array($upload_sizes[$key]) ) {
 				$data[$key.'_width'] = $upload_sizes[$key][0];
 				$data[$key.'_height'] = $upload_sizes[$key][1];
 			}
@@ -110,9 +113,9 @@ if ( $_POST && $ad_id ) {
 	// Have we uploaded an image? Then add it to the list.
 	// I made this optional so we don’t override a previously-
 	// uploaded file’s record in the database.
-	if ( $check_these ) {
+	if ( $check_these && !empty($upload_status)) {
 		foreach ( $check_these as $key => $val ) {
-			if ( $upload_status[$key][0] == 'success' ) {
+			if ( !empty($upload_status[$key]) && $upload_status[$key][0] == 'success' ) {
 				$data[$key.'_image_url'] = $image_path.'/' . basename($_FILES[$key.'_image_url']['name']);
 			}
 		}
@@ -166,20 +169,18 @@ if ( $check_these ) {
 
 
 
-if ( $promo_info ) {
-
-	$image_obj-> src = $promo_info['small_image_url'];
-	$image_obj-> alt = $promo_info['small_image_url'];
+if ( !empty($promo_info) ) {
+	$image_obj-> src = $promo_info['small_image_url'] ?? null;
+	$image_obj-> alt = $promo_info['small_image_url'] ?? null;
 	$small_img = $image_obj-> paint();
 
-	$image_obj-> src = $promo_info['medium_image_url'];
-	$image_obj-> alt = $promo_info['medium_image_url'];
+	$image_obj-> src = $promo_info['medium_image_url'] ?? null;
+	$image_obj-> alt = $promo_info['medium_image_url'] ?? null;
 	$medium_img = $image_obj-> paint();
 
-	$image_obj-> src = $promo_info['large_image_url'];
-	$image_obj-> alt = $promo_info['large_image_url'];
+	$image_obj-> src = $promo_info['large_image_url'] ?? null;
+	$image_obj-> alt = $promo_info['large_image_url'] ?? null;
 	$large_img = $image_obj-> paint();
-
 }
 
 $alert_output .= $fileops->check_or_make_dir('..'.$image_path);
@@ -233,6 +234,7 @@ EOL;
  */
 
 // Group
+$content_output = '';
 /*
 $view->group_h2('Mobile image');
 $view->group_instruction('Image that will appear on small screens, e.g. smartphones.');

@@ -170,7 +170,7 @@ class MysqliDb
 	 */
 	public function setTimezone($timezone) {
 		$dateTimeZone = new DateTimeZone($timezone);
-		$date = new DateTime(null, $dateTimeZone);
+		$date = new DateTime("now", $dateTimeZone);
 		$timezone = $dateTimeZone->getOffset($date)/60/60; //convert to hours
 		
 		//Check whether this timezone has a decimal component, they're not all whole hours:
@@ -242,7 +242,7 @@ class MysqliDb
     {
         $this->_query = $query;
         if ($sanitize)
-            $this->_query = filter_var ($query, FILTER_SANITIZE_STRING,
+            $this->_query = filter_var ($query, FILTER_SANITIZE_ADD_SLASHES,
                                     FILTER_FLAG_NO_ENCODE_QUOTES);
         $stmt = $this->_prepareQuery();
 
@@ -273,7 +273,7 @@ class MysqliDb
      */
     public function query($query, $numRows = null)
     {
-        $this->_query = filter_var($query, FILTER_SANITIZE_STRING);
+        $this->_query = filter_var($query, FILTER_SANITIZE_ADD_SLASHES);
         $stmt = $this->_buildQuery($numRows);
         $stmt->execute();
         $this->_stmtError = $stmt->error;
@@ -292,7 +292,7 @@ class MysqliDb
      */
     public function get($tableName, $numRows = null, $columns = '*')
     {
-        if (empty ($columns))
+        if ( empty($columns) )
             $columns = '*';
 
         $column = is_array($columns) ? implode(', ', $columns) : $columns; 
@@ -478,7 +478,7 @@ class MysqliDb
             die ('Wrong JOIN type: '.$joinType);
 
         if (!is_object ($joinTable))
-            $joinTable = self::$_prefix . filter_var($joinTable, FILTER_SANITIZE_STRING);
+            $joinTable = self::$_prefix . filter_var($joinTable, FILTER_SANITIZE_ADD_SLASHES);
 
         $this->_join[] = Array ($joinType,  $joinTable, $joinCondition);
 

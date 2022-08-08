@@ -19,10 +19,10 @@ if ( $var_list ) {
 	}
 }
 
-$code = $_POST['code'];
+$code = $_POST['code'] ?? null;
 
 // No ad selected? Send ’em back to the list.
-if ( !$ad_id || !is_numeric($ad_id) ) {
+if ( !isset($ad_id) || !is_numeric($ad_id) ) {
 //	header('location:ad.list.php');
 }
 
@@ -38,13 +38,13 @@ $priority_list = array(
 
 
 
-
+$alert_output = '';
 /*****
  * Updates
  */
 
 // Prepare to update the ad’s database record.
-if ( $_POST && $ad_id ) {
+if ( !empty($_POST) && $ad_id ) {
 	$data = array (
 		'code' => $code,
 		'title' => $title
@@ -59,7 +59,7 @@ if ( $_POST && $ad_id ) {
 	}
 }
 
-if ( $_POST && !$ad_id ) {
+if ( !empty($_POST) && !$ad_id ) {
 	$data = array (
 		'title' => $title,
 		'code' => $code,
@@ -91,9 +91,8 @@ else {
 }
 
 
-
+$ad_output = '';
 if ( $ad_info ) {
-
 	$ad_output = <<<EOL
 <label for="title">Title (for your reference)</label>
 <input type="text" style="width:10rem" name="title" id="title" value="$ad_info[title]"/>

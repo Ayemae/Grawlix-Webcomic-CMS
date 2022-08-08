@@ -27,9 +27,9 @@ $form->send_to($_SERVER['SCRIPT_NAME']);
 /*****
  * Updates
  */
-
+$success = false;
 // When the user submits a form
-if ( $new_password && $s ) {
+if ( !empty($new_password) && !empty($s) ) {
 
 	// Give the user a new serial number.
 	for($i=0;$i<16;$i++){

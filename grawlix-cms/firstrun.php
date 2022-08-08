@@ -132,7 +132,7 @@ class GrlxFirstRun {
 		}
 		if ( $populate ) {
 			$dir_problem_list = $this->makeAssetDirs();
-			if ( is_array($dir_problem_list))
+			if ( isset($dir_problem_list) && is_array($dir_problem_list))
 			{
 				$this->error  = 'Couldn’t create certain directories:';
 			}
@@ -140,14 +140,14 @@ class GrlxFirstRun {
 		else {
 			$this->error = 'Couldn’t populate the database.';
 		}
-		if ( !is_array($dir_problem_list) ) {
+		if ( empty($dir_problem_list) || !is_array($dir_problem_list) ) {
 
 			$this->step = 'Complete';
 			$this->success = 'The Grawlix CMS is almost installed!';
 		}
 		else {
 			$this->error = 'Couldn’t create asset directories.';
-			if ( $dir_problem_list )
+			if ( !empty($dir_problem_list) )
 			{
 				foreach ( $dir_problem_list as $key => $val )
 				{

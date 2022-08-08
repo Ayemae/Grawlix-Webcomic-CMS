@@ -9,17 +9,19 @@ function numfunc_check_empty($int) {
 }
 
 function numfunc_register_var($str=null){
+	$var = null;
 	if ($str) {
-		$var = $_POST[$str];
-		$var ? $var : $var = $_GET[$str];
-		$var ? $var : $var = $_SESSION[$str];
+		$var = $_POST[$str] ?? null;
+		$var ? $var : $var = $_GET[$str] ?? null;
+		$var ? $var : $var = $_SESSION[$str] ?? null;
 	}
 	$var = numfunc_check_empty($var);
 	return $var;
 }
 
 function strfunc_check_empty($str) {
-	$str = trim($str);
+	if(isset($str))
+		$str = trim($str);
 	if ( $str === null || $str == '' ) {
 		$str = '—';
 	}
@@ -30,7 +32,7 @@ function strfunc_check_empty($str) {
 function strfunc_get_id($str) {
 	$part = explode('-', $str);
 	$int = end($part);
-	if ( is_numeric($int) ) {
+	if ( isset($int) && is_numeric($int) ) {
 		return $int;
 	}
 	else {
@@ -85,7 +87,7 @@ function strfunc_toggle_vis($str) {
 		)
 */
 function flatten_array(&$arr) {
-	if ( $arr ) {
+	if ( isset($arr) ) {
 		foreach ( $arr as $key=>$val ) {
 			foreach ( $val as $str ) {
 				$flat[] = $str;
@@ -105,9 +107,11 @@ function get_comic_book_id($db) {
 // Return an array whose keys are based on a given bit of data per item in the array itself.
 // It’s somewhat meta.
 function rekey_array($list,$field='id'){
+	$new_list = null;
 	if ( is_array($list) ) {
 		foreach ( $list as $val ) {
 			$key = $val[$field];
+			if(!$new_list) $new_list = array();
 			$new_list[$key] = $val;
 		}
 	}
@@ -115,6 +119,9 @@ function rekey_array($list,$field='id'){
 }
 
 function upload_specific_file($which,$path){
+	if(empty($_FILES) || empty($_FILES[$which]))
+		return array(); //no files
+	
 	if ( is_array($_FILES[$which]['name']) ) {
 		$file_name = basename($_FILES[$which]['name'][0]); // To do: make this handle multiples
 	}
@@ -167,6 +174,8 @@ function upload_multiple_files($path){
 /* Clean user-submitted text.
  */
 function clean_text( $text, $strip_tags=true, $limit=2000 ) {
+	if(empty($text))
+		return '';
 	$text = trim($text); // Remove excess space.
 	$text = substr($text, 0, $limit); // Keep things to an accepted byte size.
 	if ($strip_tags) {
@@ -180,28 +189,25 @@ function clean_text( $text, $strip_tags=true, $limit=2000 ) {
 	return $text;
 }
 
-function check_type($value,$expected)
-{
-	switch ($expected)
-	{
+function check_type($value,$expected) {
+	if( !isset($value) || !isset($expected) )
+		return FALSE;
+	switch ($expected) {
 		case 'int':
-			if (is_numeric($value))
-			{
+			if (is_numeric($value)) {
 				return TRUE;
 			}
 			break;
 
 		case 'string':
 		case 'html':
-			if (is_string($value))
-			{
+			if (is_string($value)) {
 				return TRUE;
 			}
 			break;
 
 		case 'float':
-			if (is_float($value))
-			{
+			if (is_float($value)) {
 				return TRUE;
 			}
 			break;
@@ -211,47 +217,39 @@ function check_type($value,$expected)
 
 function register_variable($variable_name=NULL,$variable_type=NULL){
 	if ($variable_name) {
-		$var = $_POST[$variable_name];
-		$var ? $var : $var = $_GET[$variable_name];
-		$var ? $var : $var = $_SESSION[$variable_name];
-	}
+		$var = $_POST[$variable_name] ?? NULL;
+		$var ? $var : $var = $_GET[$variable_name] ?? NULL;
+		$var ? $var : $var = $_SESSION[$variable_name] ?? NULL;
+	} else return FALSE;
 	if ( is_array($var) ) {
 		foreach ( $var as $key => $val ) {
-			if ( $variable_type[$key] )
-			{
+			if ( $variable_type && $variable_type[$key] ) {
 				$valid_type = check_type($val,$variable_type);
 			}
-			else
-			{
+			else {
 				$valid_type = TRUE; // Retain legacy checks … for now.
 			}
-			if ( $valid_type === TRUE )
-			{
+			if ( $valid_type === TRUE ) {
 				$var[$key] = clean_text($val,FALSE);
 				return $var;
 			}
 		}
 	}
 	else {
-		if ( $variable_type )
-		{
+		if ( $variable_type ) {
 			// Is this what we expect?
 			$valid_type = check_type($var,$variable_type);
 		}
-		else
-		{
+		else {
 			// Retain legacy checks … for now.
 			$valid_type = TRUE;
 		}
 
-		if ( $valid_type === TRUE )
-		{
-			if ( $variable_type == 'html' )
-			{
+		if ( $valid_type === TRUE ) {
+			if ( $variable_type == 'html' ) {
 				$var = clean_text($var,FALSE); // Allow tags
 			}
-			else
-			{
+			else {
 				$var = clean_text($var,TRUE); // Remove tags
 			}
 			return $var;
@@ -319,7 +317,7 @@ function build_select_simple($name='',$list=array(), $current='', $style=NULL){
 	{
 		$style = ' style="'.$style.'"';
 	}
-	$output .= '<select name="'.$name.'" id="'.$name.'"'.$style.'>'."\n";
+	$output = '<select name="'.$name.'" id="'.$name.'"'.$style.'>'."\n";
 	foreach ( $list as $key => $val ) {
 		$current == $key ? $sel = ' selected="selected"' : $sel = '';
 		$output .= '<option value="'.$key.'"'.$sel.'>'.$val.'</option>'."\n";
@@ -330,7 +328,7 @@ function build_select_simple($name='',$list=array(), $current='', $style=NULL){
 
 /*
 function build_select_val_as_key( $name = '', $list = array(), $current = '' ) {
-	$output .= '<select name="'.$name.'" id="'.$name.'">'."\n";
+	$output = '<select name="'.$name.'" id="'.$name.'">'."\n";
 	foreach ( $list as $key => $val ) {
 		$current == $val ? $sel = ' selected="selected"' : $sel = '';
 		$output .= '<option value="'.$val.'"'.$sel.'>'.$val.'</option>'."\n";
@@ -342,6 +340,7 @@ function build_select_val_as_key( $name = '', $list = array(), $current = '' ) {
 
 /*
 function build_radio($name='',$list=array(), $current=''){
+	$output = '';
 	foreach ( $list as $key => $val ) {
 		$current == $key ? $sel = ' checked="checked"' : $sel = '';
 		$output .= '<input type="radio" name="'.$name.'" value="'.$key.'"'.$sel.'/>'.$val."\n";
@@ -1315,63 +1314,6 @@ function get_third_login($label='projectwonderful',$db){
 	return $result;
 }
 
-
-// // Deprecated. :( 
-// function interpret_wonderful_xml($wonderful_xml_obj,$ad_list,$db){
-// 	if ( $wonderful_xml_obj->adboxes->adbox ) {
-// 		foreach ( $wonderful_xml_obj->adboxes->children() as $key => $val ) {
-
-// 			$found = false;
-// 			$attr = $val->attributes();
-// 			$source_rel_id = (string)$attr['adboxid'];
-// 			if ( $attr )
-// 			{
-// 				foreach ( $attr as $key3 => $val3 )
-// 				{
-// 					$attr_list[$key3] = (string)$val3[0];
-// 				}
-// 			}
-// 			// Compare the database ad list to the XML. We want
-// 			// to find new ads, if any.
-// 			if ( $wonderful_xml_obj && $ad_list ) {
-// 				foreach ( $ad_list as $key2 => $val2 ) {
-// 					if ( $val2['source_rel_id'] == $source_rel_id ) {
-// 						$found = true;
-// 					}
-// 				}
-// 			}
-
-// 			// What? We don’t have this ad in MySQL? Then add it.
-// 			if ( $found === FALSE ) {
-// 				$code = (string)$val->advancedcode;
-// 				$source_rel_id = (string)$attr->adboxid;
-// 				$data = array (
-// 					'title' => $attr_list['sitename'],
-// 					'source_rel_id' => $source_rel_id,
-// 					'source_id' => 2,
-// 					'large_width' => $attr_list['width'],
-// 					'large_height' => $attr_list['height'],
-// 					'code' => $code
-// 				);
-// 				$new_ad_id = $db->insert('ad_reference', $data);
-// 			}
-
-// 			// Either way, add it to the ad list.
-// 			$wonderful_ad_list[] = array (
-// 				'source_rel_id' => $source_rel_id,
-// 				'title' => $attr['sitename'],
-// 				'large_width' => $attr_list['width'],
-// 				'large_height' => $attr_list['height'],
-// 				'thumbnail' => $attr['thumbnail'],
-// 				'source_id' => '2',
-// 				'code' => $code
-// 			);
-// 		}
-// 	}
-// 	return $wonderful_ad_list;
-// }
-
-
 function get_slot_info($slot_id,$db){
 	$db->where ('id', $slot_id);
 	$result = $db->getOne('theme_slot',null,'label,theme_id,max_width,max_height');
@@ -1563,6 +1505,8 @@ function read_theme_xml($xml_object){
 
 function is_image($path)
 {
+	if(empty($path)) return FALSE;
+	
 	$ext_list = array('png','jpg','gif','svg');
 	if ( in_array(substr($path,-3,3), $ext_list) )
 	{
@@ -1733,30 +1677,30 @@ function make_all_thumbs($imageList, $thumb_max){
 	}
 }
 
-function report_image_error($image_info,$error_code)
+function report_image_error($image_path,$error_code)
 {
-	if ( !is_writable('../'.$image_info['directory'])) {
+	if ( !is_writable('../'.$image_path)) {
 		return 'Unable to upload image. Looks like a folder permissions problem.';
-		return $alert_output;
 	}
 	else {
-		switch ( $_FILES['error'][$key] ) {
-			case 1:
-				$alert_output = $alert_output = 'I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.';
+		switch ( $error_code ) {
+			case UPLOAD_ERR_INI_SIZE:
+				$alert_output = 'I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.';
 				break;
-			case 2:
-				$alert_output = $alert_output = 'I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.';
+			case UPLOAD_ERR_FORM_SIZE:
+				$alert_output = 'I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.';
 				break;
-			case 3:
-				$alert_output = $alert_output = 'I couldn’t receive the image. There was nothing to receive.';
+			case UPLOAD_ERR_PARTIAL:
+				$alert_output = 'I couldn’t receive the image. There was nothing to receive.';
 				break;
-			case 6:
-				$alert_output = $alert_output = 'I couldn’t receive the image. There was no “temp” folder on the server — contact your host.';
+			case UPLOAD_ERR_NO_TMP_DIR:
+				$alert_output = 'I couldn’t receive the image. There was no “temp” folder on the server — contact your host.';
 				break;
-			case 8:
-				$alert_output = $alert_output = 'I couldn’t upload the image. It doesn’t look like a PNG, GIF, JPG, JPEG or SVG.';
+			case UPLOAD_ERR_EXTENSION: //This error is actually about PHP extensions, not file extensions...
+				$alert_output = 'I couldn’t upload the image. It doesn’t look like a PNG, GIF, JPG, JPEG or SVG.';
 				break;
 		}
+		return $alert_output;
 	}
-	return $alert_output;
+	return '';
 }

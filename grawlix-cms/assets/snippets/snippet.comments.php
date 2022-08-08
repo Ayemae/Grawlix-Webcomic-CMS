@@ -4,15 +4,15 @@ $open_output = '<article id="comments"><h4>Reader comments</h4>';
 $close_output = '</article>';
 ?>
 
-<?php if ( $info['disqus'] ) : ?>
+<?php if ( !empty($info) && !empty($info['disqus']) ) : ?>
 <?=$open_output?>
 <div id="disqus_thread"></div><!-- Comments load here -->
 <script type="text/javascript">
 	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 	var disqus_shortname = '<?=$info['disqus']?>';
 	var disqus_url = '<?=show('permalink')?>';
-    //Comment out the next line if you're updating Grawlix and you were previously using the permalink URLs instead of page identifiers, to avoid breaking existing Disqus threads
-    var disqus_identifier = '<?=show('page_id')?>';  
+	//Uncomment the next line only if you're doing a fresh install or are only about to add Disqus comments. If you already have Disqus comments, this line might unlink your existing Disqus threads from the pages.
+	//var disqus_identifier = '<?=show('page_id')?>'; 
 	var disqus_disable_mobile = true;
 	/* * * DON'T EDIT BELOW THIS LINE * * */
 	(function() {
@@ -26,30 +26,7 @@ $close_output = '</article>';
 <?=$close_output?>
 <?php endif; ?>
 
-<?php if ( $info['livefyre'] ) : ?>
-<?=$open_output?>
-<div id="livefyre-comments"></div>
-<script type="text/javascript" src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
-<script type="text/javascript">
-(function () {
-	var articleId = fyre.conv.load.makeArticleId(null);
-	fyre.conv.load({}, [{
-		el: 'livefyre-comments',
-		network: "livefyre.com",
-		siteId: "<?=$info['livefyre']?>",
-		articleId: articleId,
-		signed: false,
-		collectionMeta: {
-			articleId: articleId,
-			url: fyre.conv.load.makeCollectionUrl(),
-		}
-	}], function() {});
-}());
-</script>
-<?=$close_output?>
-<?php endif; ?>
-
-<?php if ( $info['intensedebate'] ) : ?>
+<?php if ( !empty($info) && !empty($info['intensedebate']) ) : ?>
 <?=$open_output?>
 <script>
 var idcomments_acct = '<?=$info['intensedebate']?>';

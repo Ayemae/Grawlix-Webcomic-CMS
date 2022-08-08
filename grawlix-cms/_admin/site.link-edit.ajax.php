@@ -16,7 +16,7 @@ $modal = new GrlxForm_Modal;
  * Display logic
  */
 
-if ( is_numeric($_GET['edit_id']) ) {
+if ( isset($_GET['edit_id']) && is_numeric($_GET['edit_id']) ) {
 
 	$edit_id = $_GET['edit_id'];
 	$cols = array(
@@ -31,12 +31,11 @@ if ( is_numeric($_GET['edit_id']) ) {
 		$input = $item;
 	}
 }
-
 $modal->multipart(true);
 $modal->send_to('site.link-list.php');
 
 $modal->input_hidden('edit_id');
-$modal->value($edit_id);
+$modal->value($edit_id ?? null);
 $modal_output = $modal->paint();
 
 $modal->input_title('input[title]');
@@ -59,7 +58,6 @@ $modal_output .= $modal->paint();
 $modal->headline("Edit <span>$input[title]</span>");
 $modal->contents($modal_output);
 $modal_output = $modal->paint_modal();
-
 
 /*****
  * Display

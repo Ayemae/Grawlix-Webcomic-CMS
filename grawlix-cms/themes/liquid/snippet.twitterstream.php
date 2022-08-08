@@ -2,7 +2,7 @@
 <?php
 $info = $this->services['follow']['twitter'];
 
-if ( $info ) : ?>
+if ( !empty($info) ) : ?>
 <div class="twitterstream desktop-only">
 <h6>Twitter Timeline</h6>
 <a class="twitter-timeline" 

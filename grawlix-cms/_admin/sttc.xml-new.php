@@ -97,7 +97,7 @@ $page_type_list[8] = array(
  * Updates
  */
 
-if ( $_GET['id'] ) {
+if ( !empty($_GET['id']) ) {
 	$id = $_GET['id'];
 	$layout_type_id = $page_type_list[$id]['layout_type'];
 	$xml_source = '../'.DIR_PATTERNS.''.$layout_type_id.'.xml';
@@ -113,7 +113,6 @@ if ( $_GET['id'] ) {
 	// Let’s add some custom default data.
 	if ( $starter && $starter != null ) {
 		switch ( $id ) {
-
 			case 1:
 				$starter = str_replace('{function}', $page_type_list[1]['function'], $starter);
 				$starter = str_replace('{heading1}', 'All about the artist', $starter);
@@ -186,43 +185,41 @@ if ( $_GET['id'] ) {
 	);
 	$static_id = $db->insert('static_page', $data);
 	if ( $static_id ) {
-		if ( $static_id ) {
-			$result = $db-> get ('path',null,'MAX(sort_order) AS max');
-			$sort_order = $result[0]['max'] + 1;
-			$sort_order ? $sort_order : $sort_order = 0;
+		$result = $db-> get ('path',null,'MAX(sort_order) AS max');
+		$sort_order = $result[0]['max'] + 1;
+		$sort_order ? $sort_order : $sort_order = 0;
 
-      // Wait — does this URL exist in the database?
-      $new_url = $page_type_list[$id]['url'];
-      $db-> where ('url', $new_url);
-      $maybe_existing = $db-> getOne('path',null,'url');
+		// Wait — does this URL exist in the database?
+		$new_url = $page_type_list[$id]['url'];
+		$db-> where ('url', $new_url);
+		$maybe_existing = $db-> getOne('path',null,'url');
 
-      if ( $maybe_existing && is_array($maybe_existing) ) {
-        $new_url .= date('-h-i-s');
-      }
-
-			$data = array (
-				'title' => $page_type_list[$id]['label'],
-				'url' => $new_url,
-				'rel_id' => $static_id,
-				'rel_type' => 'static',
-				'in_menu' => 1,
-				'edit_path' => 1,
-				'sort_order' => $sort_order
-			);
-			$db->insert('path', $data);
+		if ( $maybe_existing && is_array($maybe_existing) ) {
+			$new_url .= date('-h-i-s');
 		}
+
+		$data = array (
+			'title' => $page_type_list[$id]['label'],
+			'url' => $new_url,
+			'rel_id' => $static_id,
+			'rel_type' => 'static',
+			'in_menu' => 1,
+			'edit_path' => 1,
+			'sort_order' => $sort_order
+		);
+		$db->insert('path', $data);
 		header('location:sttc.xml-edit.php?msg=created&page_id='.$static_id);
 		die();
 	}
 }
 
-function existing_url($db,$url_to_test){
+function existing_url($db,$url_to_test) {
   $db-> where ('url', $url_to_test);
   $result = $db-> getOne('path',null,'url');
   return $result;
 }
 
-function display_new_block($info,$id){
+function display_new_block($info,$id) {
 	$output = <<<EOL
 						<div class="row">
 							<div class="small-3 columns">
@@ -250,11 +247,10 @@ EOL;
 $view->page_title('New static page');
 $view->tooltype('chap');
 $view->headline('New static page');
-$view->action($action_output);
+$view->action($action_output ?? null);
 
 $output  = $view->open_view();
 $output .= $view->view_header();
-$output .= $alert_output;
 print($output);
 
 
@@ -263,7 +259,7 @@ print($output);
 			<div id="sttc-pg-edit">
 				<form accept-charset="UTF-8" action="sttc.xml-new.php" method="post" data-abide enctype="multipart/form-data">
 					<input type="hidden" name="grlx_xss_token" value="<?=$_SESSION['admin']?>"/>
-<?php if ( !$_POST ) : ?>
+<?php if ( empty($_POST) ) : ?>
 
 				<div class="row">
 					<div class="medium-4 columns">
@@ -292,12 +288,12 @@ print($output);
 					</div>
 				</div>
 <?php endif; ?>
-<?php if ( $_POST['static-type'] ) : ?>
+<?php if ( !empty($_POST['static-type']) ) : ?>
 <?php endif; ?>
 				</form>
 			</div>
 
 <?php
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());

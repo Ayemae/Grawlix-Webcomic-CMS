@@ -43,7 +43,7 @@ class GrlxMarker {
 			'title' => $title,
 			'marker_type_id' => $type_id
 		);
-		if ( $new_desc ) {
+		if ( !empty($new_desc) ) {
 			$data['description'] = $new_desc;
 		}
 		$id = $this-> db-> insert('marker', $data);
@@ -71,7 +71,7 @@ class GrlxMarker {
 	}
 
 	// delete based on page ID, not primary ID
-	public function deleteMarker($marker_id,$pages_too=false){
+	public function deleteMarker($marker_id,$pages_too=false) {
 
 		$this-> db-> where('id', $marker_id);
 		$success = $this-> db->delete('marker');
@@ -97,17 +97,16 @@ class GrlxMarker {
 		return $result1[0];
 	}
 
-	function getMarkerInfo()
-	{
+	function getMarkerInfo() {
 		if ( $this-> markerID ) {
 			$this-> db-> join('book_page bp', 'marker_id = m.id', 'LEFT');
 			$this-> db-> where('m.id', $this-> markerID);
 			$info = $this-> db-> get ('marker m', null, 'm.title,m.description,m.marker_type_id,bp.sort_order');
-			$this-> markerInfo = $info[0];
+			$this-> markerInfo = $info[0] ?? '';
 		}
 	}
 
-	function getMarkerThumbnail(){
+	function getMarkerThumbnail() {
 		if ( $this-> markerID ) {
 			$this-> db-> join('image_match im', 'im.image_reference_id = ir.id', 'LEFT');
 			$this-> db-> where('im.rel_id', $this-> markerID);
@@ -115,17 +114,16 @@ class GrlxMarker {
 			$this-> db-> orderBy('im.date_created', 'DESC');
 			$info = $this-> db-> get ('image_reference ir', null, 'ir.id AS id, url, description');
 
-			$this-> thumbInfo = $info[0];
+			$this-> thumbInfo = $info[0] ?? null;
 		}
 	}
 
-	function getPageRange($sort_order=null){
-
+	function getPageRange($sort_order=null) {
 		if ( $this->markerInfo ) {
 			$sort_order ? $sort_order : $sort_order = $this->markerInfo['sort_order'];
 			if ( $sort_order ) {
 				$this-> db-> where ('sort_order', $sort_order, '>=');
-				$this-> db-> where ('book_id', $this->markerInfo['book_id'] );
+				$this-> db-> where ('book_id', $this->markerInfo['book_id'] ?? null );
 				$this-> db-> orderBy ('sort_order','ASC');
 				$result = $this-> db-> get ('book_page',null,'id,sort_order');
 
@@ -166,7 +164,7 @@ class GrlxMarker {
 			$this-> getPageRange();
 		}
 		if ( $this->startPage && $this->endPage ) {
-			$this-> db-> where ('book_id',$this->markerInfo['book_id']);
+			$this-> db-> where ('book_id',$this->markerInfo['book_id'] ?? null);
 			$this-> db-> where ("sort_order >= $this->startPage");
 			$this-> db-> where ("sort_order <= $this->endPage");
 			$this-> db-> orderBy ('sort_order','ASC');

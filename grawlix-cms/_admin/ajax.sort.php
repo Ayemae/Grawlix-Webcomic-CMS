@@ -35,7 +35,7 @@ if ( $_POST['chapter'] ) {
  * Pages
  */
 
-if ( $_POST['page'] ) {
+if ( isset($_POST['page']) ) {
 	$page_list = $_POST['page'];
 	$total = count($page_list);
 	$i = 1;
@@ -54,7 +54,7 @@ if ( $_POST['page'] ) {
  * Images
  */
 
-if ( $_POST['image_match_id'] ) {
+if ( isset($_POST['image_match_id']) ) {
 	$i = 1;
 	foreach ( $_POST['image_match_id'] as $val ) {
 		$data = array('sort_order' => $i);
@@ -69,7 +69,7 @@ if ( $_POST['image_match_id'] ) {
  * Site menu items
  */
 
-if ( $_POST['menu'] ) {
+if ( isset($_POST['menu']) ) {
 	$i = 1;
 	foreach ( $_POST['menu'] as $val ) {
 		$data = array('sort_order' => $i);
@@ -84,7 +84,7 @@ if ( $_POST['menu'] ) {
  * Link list items
  */
 
-if ( $_POST['link'] ) {
+if ( isset($_POST['link']) ) {
 	$i = 1;
 	foreach ( $_POST['link'] as $val ) {
 		$data = array('sort_order' => $i);

@@ -22,14 +22,14 @@ $view-> yah = 2;
 
 $book_id = $book-> bookID;
 
-
+$alert_output = '';
 
 /*****
  * Updates
  */
 
 
-if ( $_FILES && $book_id ){
+if ( !empty($_FILES) && $book_id ){
 
 	if ( is_writable('../'.DIR_COMICS_IMG) ) {
 
@@ -79,10 +79,10 @@ if ( $_FILES && $book_id ){
 	}
 }
 
-if ( $_POST && $_FILES['file']['name']['0'] == '' ) {
+if ( !empty($_POST) && isset($_FILES['file']) && $_FILES['file']['name']['0'] == '' ) {
 	$alert_output .= $message->alert_dialog('Nothing uploaded. Did you select some images from your computer?');
 }
-elseif ( $fileops-> error_list ) {
+elseif ( isset($fileops) && $fileops-> error_list ) {
 	$alert_fileops .= '<ul>'."\n";
 	foreach ( $fileops-> error_list as $key => $val ) {
 		$alert_fileops .= '<li>'.$val.'</li>'."\n";
@@ -92,26 +92,23 @@ elseif ( $fileops-> error_list ) {
 }
 
 
-if ( $_POST['add-marker-type'] && $_POST['new_order'] && $first_page_id ) {
-
-	$title = $_POST['new_name'];
+if ( !empty($_POST['add-marker-type']) && !empty($_POST['new_order']) && !empty($first_page_id) ) {
+	$title = $_POST['new_name'] ?? null;
 	$title ? $title : $title = 'Untitled';
 	$new_marker_id = $marker-> createMarker($title,$_POST['add-marker-type'],$first_page_id);
 }
 
-if ( $first_page_id && $new_marker_id ) {
-
+if ( !empty($first_page_id) && !empty($new_marker_id) ) {
 	$data = array (
 		'marker_id' => $new_marker_id
 	);
 	$db-> where('id',$first_page_id);
 	$success = $db->update('book_page', $data);
-
 }
 
 
 
-if ( $new_marker_id && $_POST['return-or-not'] == '1' ) {
+if ( !empty($new_marker_id) && isset($_POST['return-or-not']) && $_POST['return-or-not'] == '1' ) {
 	header('location:marker.view.php?marker_id='.$new_marker_id);
 	die();
 }
@@ -121,6 +118,8 @@ if ( $new_marker_id && $_POST['return-or-not'] == '1' ) {
 /*****
  * Display
  */
+
+$content_output = '';
 
 if ( !is_writable('../'.DIR_COMICS_IMG) ) {
 	$alert_output .= $message-> alert_dialog('I can’t write to the '.DIR_COMICS_IMG.' directory. Looks like a permissions problem.');
@@ -134,6 +133,7 @@ $form->multipart();
 
 $marker_type_list = $db-> get ('marker_type',null,'id,title');
 $marker_type_list = rekey_array($marker_type_list,'id');
+$select_options = null;
 
 if ( $marker_type_list ) {
 	$sl-> setName('add-marker-type');
@@ -156,7 +156,7 @@ if ( $marker_type_list ) {
 
 
 
-$new_title_field .= '<label for="new_name">New marker title</label>'."\n";
+$new_title_field  = '<label for="new_name">New marker title</label>'."\n";
 
 $new_title_field .= '<input autofocus style="width:20rem" size="20" type="text" id="new_name" name="new_name" maxlength="64" placeholder="Title" value="">'."\n";
 
@@ -179,9 +179,10 @@ $new_order_field = '<input name="new_order" id="new_order" size="3" style="width
 $view->page_title('New pages');
 $view->tooltype('chap');
 $view->headline('New pages');
-$view->action($action_output);
+$view->action($action_output ?? null);
 
-if ( count ( $this_type ) > 1 ) {
+
+if ( isset($marker_type_list) && count ( $marker_type_list ) > 1 ) {
 	$view->group_h2('Type');
 	$view->group_instruction('What kind of marker is this?');
 	$view->group_contents($select_options);
@@ -195,7 +196,7 @@ else {
 
 $quick_upload_field = <<<EOL
 <form action="uploadtome.php" class="dropzone" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="grlx_xss_token" value="{$_SESSION[admin]}"/>
+	<input type="hidden" name="grlx_xss_token" value="{$_SESSION['admin']}"/>
 	<div class="fallback">
   	<input name="file[]" type="file" multiple />
 	</div>
@@ -226,7 +227,9 @@ $link-> url = 'http://www.getgrawlix.com/docs/'.DOCS_VERSION.'/marker';
 $link-> tap = 'mark these pages';
 
 $view->group_h3('Marker');
-$view->group_instruction('Optionally, you can '.$link-> external_link().' with a new '.$this_type.'.');
+//$view->group_instruction('Optionally, you can '.$link-> external_link().' with a new '.$this_type.'.');
+//TODO: This page seems to be undecided about whether it's made for creating new marker (book.view already does this) or for bulk uploads with optional marker creation.
+$view->group_instruction('Optionally, you can '.$link-> external_link().'. Enter the marker\'s name here.');
 $view->group_contents($new_title_field);
 $content_output .= $view->format_group();
 
@@ -243,7 +246,7 @@ print ( $alert_output );
 ?>
 
 				<div class="row collapse">
-<? if ( $book_list_output ): ?>
+<? if ( isset($book_list_output) ): ?>
 <?=$book_list_output ?>
 <? endif; ?>
 <?=$content_output ?>
@@ -256,6 +259,6 @@ print ( $alert_output );
 <?php
 $view->add_jquery_ui();
 $view->add_script('dropzone.js');
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());
 ?>

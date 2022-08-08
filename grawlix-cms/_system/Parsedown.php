@@ -23,6 +23,8 @@ class Parsedown
 
     function text($text)
     {
+		if(empty($text))
+			return '';
         # make sure no definitions are set
         $this->DefinitionData = array();
 

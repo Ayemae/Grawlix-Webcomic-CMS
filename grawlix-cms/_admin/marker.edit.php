@@ -33,16 +33,16 @@ else {
 	die();
 }
 
-
+$alert_output = '';
 
 
 // ! Updates
-if ( $_FILES )
-{
+if ( !empty($_FILES) && isset($_FILES['new_image']) ) {
 	// Every new image gets its own folder.
 	$serial = date('YmdHis').substr(microtime(),2,6);
 	$path = '/'.DIR_COMICS_IMG.$serial;
 	$new_directory_made = mkdir('..'.$path);
+	$success1 = false;
 
 	// Move the file to its new home.
 	if ( $new_directory_made )
@@ -59,20 +59,20 @@ if ( $_FILES )
 		}
 		else {
 			// See http://php.net/manual/en/features.file-upload.errors.php
-			switch ( $_FILES[$which]['error'][$key] ) {
-				case 1:
+			switch ( $_FILES['new_image']['error'] ) {
+				case UPLOAD_ERR_INI_SIZE:
 					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
 					break;
-				case 2:
+				case UPLOAD_ERR_FORM_SIZE:
 					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
 					break;
-				case 3:
+				case UPLOAD_ERR_PARTIAL:
 					$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was nothing to receive.');
 					break;
-				case 6:
+				case UPLOAD_ERR_NO_TMP_DIR:
 					$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was no “temp” folder on the server — contact your host.');
 					break;
-				case 8:
+				case UPLOAD_ERR_EXTENSION: //This error is actually about PHP extensions, not file extensions...
 					$alert_output .= $message->alert_dialog('I couldn’t upload the image. It doesn’t look like a PNG, GIF, JPG, JPEG or SVG.');
 					break;
 			}
@@ -80,11 +80,9 @@ if ( $_FILES )
 	}
 
 	// If the image uploaded successfully, then …
-	if ( $success1 )
-	{
+	if ( $success1 ) {
 		// Update existing image records.
-		if ( $original_image_ref_id && $original_image_ref_id > 0 )
-		{
+		if ( isset($original_image_ref_id) && $original_image_ref_id > 0 ) {
 			$data = array(
 				'url' => $path.'/'.$_FILES['new_image']['name'],
 				'date_modified' => $db->now()
@@ -92,31 +90,30 @@ if ( $_FILES )
 			$db->where('id',$original_image_ref_id);
 			$success2 = $db->update('image_reference', $data);
 		}
-
 		// Create a new image record.
-		else
-		{
-		$data = array(
-			'url' => $path.'/'.$_FILES['new_image']['name'],
-			'date_created' => $db->now()
-		);
-		$success3 = $db->insert('image_reference', $data); // I used success3 to differentiate between DB events.
+		else {
+			$data = array(
+				'url' => $path.'/'.$_FILES['new_image']['name'],
+				'date_created' => $db->now()
+			);
+			$success3 = $db->insert('image_reference', $data); // I used success3 to differentiate between DB events.
 
-		$data = array(
-			'rel_id' => $marker_id,
-			'rel_type' => 'marker',
-			'image_reference_id' => $success3,
-			'date_created' => $db->now()
-		);
+			$data = array(
+				'rel_id' => $marker_id,
+				'rel_type' => 'marker',
+				'image_reference_id' => $success3,
+				'date_created' => $db->now()
+			);
 
-		$success3 = $db->insert('image_match', $data);
+			$success3 = $db->insert('image_match', $data);
 		}
 	}
 }
 
 
 // Update the marker’s title
-if ( $marker_id && $new_title ) {
+$success = false;
+if ( $marker_id && !empty($new_title) ) {
 	$success = $marker-> saveMarker ( $marker_id, $new_title, $edit_marker_type );
 	$marker = new GrlxMarker($marker_id); // reset
 }
@@ -132,7 +129,7 @@ if ( $success ) {
 
 }
 // What are the odds that we’ll need this? Seriously, I’m asking.
-elseif ( $_POST ) {
+elseif ( !empty($_POST) ) {
 
 	$link1-> url('marker.view.php?marker_id='.$marker_id);
 	$link1-> tap('Return to the page list');
@@ -173,8 +170,9 @@ if ( $marker_type_list ) {
 
 
 // ! Build the edit form
-$edit_form_output .= '	<input type="hidden" name="marker_id" value="'.$marker_id.'"/>'."\n";
-$edit_form_output .= '	<input type="hidden" name="original_image_ref_id" value="'.$marker->thumbInfo['id'].'"/>'."\n";
+$edit_form_output  = '	<input type="hidden" name="marker_id" value="'.$marker_id.'"/>'."\n";
+if($marker->thumbInfo)
+	$edit_form_output .= '	<input type="hidden" name="original_image_ref_id" value="'.$marker->thumbInfo['id'].'"/>'."\n";
 $edit_form_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 $edit_form_output .= '	<p><label for="new_title">Title</label>'."\n";
 $edit_form_output .= '	<input type="text" id="new_title" name="new_title" size="12" style="width:12rem" value="'.$marker-> markerInfo['title'].'"/></p>'."\n";
@@ -192,7 +190,7 @@ else
 	$thumbnail_image = '<p>This marker has no archive image.</p>';
 }
 
-$image_form_output .= '	<p><label for="new_image">Image</label>'."\n";
+$image_form_output  = '	<p><label for="new_image">Image</label>'."\n";
 $image_form_output .= $thumbnail_image."\n";
 $image_form_output .= '	<input type="file" id="new_image" name="new_image"/></p>'."\n";
 $image_form_output .= '	<button class="btn primary save" name="submit" type="submit" value="save"><i></i>Save</button>'."\n";
@@ -204,7 +202,7 @@ $view->page_title('Marker: '.$marker-> markerInfo['title']);
 $view->tooltype('chap');
 $view->headline('Marker <span>'.$marker-> markerInfo['title'].'</span>');
 
-$content_output .= '<form accept-charset="UTF-8" action="marker.edit.php" method="post" enctype="multipart/form-data">'."\n";
+$content_output = '<form accept-charset="UTF-8" action="marker.edit.php" method="post" enctype="multipart/form-data">'."\n";
 
 $view->group_h2('General info');
 $view->group_instruction('Change this marker’s name and type.');

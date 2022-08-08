@@ -13,7 +13,7 @@ class bulkImport{
 		return $success;
 	}
 	function importFolders(){
-		if ( is_array($this-> fileList) ) {
+		if ( !empty($this-> fileList) && is_array($this-> fileList) ) {
 			foreach ( $this-> fileList as $item ) {
 				
 			}
@@ -43,11 +43,11 @@ $sl = new GrlxSelectList;
 
 $import_path = '../import';
 
-if ( $book ) {
+if ( isset($book) ) {
 	$book-> getPages();
 }
 
-if ( $book-> pageList ) {
+if ( isset($book-> pageList) ) {
 	$last_page = end($book-> pageList);
 	$last_page = $last_page['sort_order'];
 }
@@ -60,7 +60,7 @@ $book_id = $book-> bookID;
 $marker_type_list = $db-> get ('marker_type',null,'id,title');
 $marker_type_list = rekey_array($marker_type_list,'id');
 
-
+$alert_output = '';
 
 
 
@@ -70,8 +70,8 @@ $marker_type_list = rekey_array($marker_type_list,'id');
  * Actions
  */
 
-
-if ( $_POST ) {
+$total_success = FALSE;
+if ( !empty($_POST) ) {
 
 	// What’s in the import folder?
 	$import_top_list = $fileops-> get_dir_list($import_path);
@@ -89,7 +89,7 @@ if ( $_POST ) {
 	}
 
 	// Build a list of each folder and its contents.
-	if ( $folder_list ) {
+	if ( isset($folder_list) && $folder_list ) {
 		foreach ( $folder_list as $key => $val ) {
 			$file_list = $fileops-> get_dir_list($val);
 			if ( $file_list && count($file_list) > 0 ) {
@@ -98,7 +98,7 @@ if ( $_POST ) {
 		}
 	}
 
-	if ( $master_folder_list ) {
+	if ( isset($master_folder_list) &&$master_folder_list ) {
 		//Get the starting schedule date and increment:
 		$var_list = array(
 			array('pub_day','int'),
@@ -135,77 +135,77 @@ if ( $_POST ) {
 
 		foreach ( $master_folder_list as $folder => $file_list ) {
 
-				// Create the marker. We use the folder’s name as the marker’s title.
-				// TO DO: Make the marker type dynamic.
-				$new_marker_id = $marker->createMarker($folder,1,$first_page_id);
+			// Create the marker. We use the folder’s name as the marker’s title.
+			// TO DO: Make the marker type dynamic.
+			$new_marker_id = $marker->createMarker($folder,1,$first_page_id);
 
-				// We’re on the first page of this set.
-				$first_page = true;
+			// We’re on the first page of this set.
+			$first_page = true;
 
-				// Make sure they’re in order.
-				natsort($file_list); //Is sort better? PHP natsort ignores leading zeroes entirely, which means numbers that consist only of 0 behave oddly.
+			// Make sure they’re in order.
+			natsort($file_list); //Is sort better? PHP natsort ignores leading zeroes entirely, which means numbers that consist only of 0 behave oddly.
 
-				foreach ( $file_list as $this_file ) {
+			foreach ( $file_list as $this_file ) {
 
-					$serial = $bimport-> makeSerial();
-					$permissions = fileperms($import_path.'/'.$folder);
+				$serial = $bimport-> makeSerial();
+				$permissions = fileperms($import_path.'/'.$folder);
 
-					if ( $permissions == '16895' ) {
-						$new_path = '../'.DIR_COMICS_IMG.'/'.$serial;
-						mkdir($new_path);
-						$success = rename ( $import_path.'/'.$folder.'/'.$this_file, $new_path.'/'.$this_file );
+				if ( $permissions == '16895' ) {
+					$new_path = '../'.DIR_COMICS_IMG.'/'.$serial;
+					mkdir($new_path);
+					$success = rename ( $import_path.'/'.$folder.'/'.$this_file, $new_path.'/'.$this_file );
+				}
+				else {
+					$success = false;
+					$total_success = false;
+					$alert_output = $message-> alert_dialog('I couldn’t import all of the new images. Looks like a permissions error. Please temporarily set the folders in /import to 777.');
+				}
+
+				if ( $success ) {
+
+					// Create the image DB record.
+					$new_image_id = $comic_image-> createImageRecord ( '/'.DIR_COMICS_IMG.$serial.'/'.$this_file );
+
+					// Create the page DB record.
+					$title = explode('.',$this_file);
+					array_pop($title); //clear the file extension (the last element)
+					$title = implode('.',$title); //glue the filename back together, including any .s
+					//TODO: Instead of explode and implode, use strrpos to find the last ., and if one is found, substr up to it. Should be faster.
+					if($publish_start) { //we're doing scheduling!
+						//TODO: Check if $pub_frequency is false. If it is, do the more complex day of the week logic.
+						$date_publish = date('Y-m-d H:i:s', $publish_start + $pub_frequency * $pages_processed);
+					} else $date_publish = null;
+					
+					if ( $first_page === true ) {
+						$new_page_id = $comic_image-> createPageRecord($title,$last_page + $i,$book_id,$new_marker_id,$date_publish);
+						$first_page = false;
 					}
 					else {
-						$success = false;
-						$total_success = false;
-						$alert_output = $message-> alert_dialog('I couldn’t import all of the new images. Looks like a permissions error. Please temporarily set the folders in /import to 777.');
+						$new_page_id = $comic_image-> createPageRecord($title,$last_page + $i,$book_id,null,$date_publish);
 					}
 
-					if ( $success ) {
-
-						// Create the image DB record.
-						$new_image_id = $comic_image-> createImageRecord ( '/'.DIR_COMICS_IMG.$serial.'/'.$this_file );
-
-						// Create the page DB record.
-						$title = explode('.',$this_file);
-						array_pop($title); //clear the file extension (the last element)
-						$title = implode('.',$title); //glue the filename back together, including any .s
-						//TODO: Instead of explode and implode, use strrpos to find the last ., and if one is found, substr up to it. Should be faster.
-						if($publish_start) { //we're doing scheduling!
-							//TODO: Check if $pub_frequency is false. If it is, do the more complex day of the week logic.
-							$date_publish = date('Y-m-d H:i:s', $publish_start + $pub_frequency * $pages_processed);
-						} else $date_publish = null;
-						
-						if ( $first_page === true ) {
-							$new_page_id = $comic_image-> createPageRecord($title,$last_page + $i,$book_id,$new_marker_id,$date_publish);
-							$first_page = false;
-						}
-						else {
-							$new_page_id = $comic_image-> createPageRecord($title,$last_page + $i,$book_id,null,$date_publish);
-						}
-
-						// Assign the image to the page.
-						if ( $new_image_id && $new_page_id ) {
-							$new_assignment_id = $comic_image-> assignImageToPage($new_image_id,$new_page_id);
-						}
-						$i += 0.0001;
+					// Assign the image to the page.
+					if ( $new_image_id && $new_page_id ) {
+						$new_assignment_id = $comic_image-> assignImageToPage($new_image_id,$new_page_id);
 					}
-					elseif ( $success !== false ) {
-						$total_success = false;
-						$alert_output .= $message-> alert_dialog('I couldn’t import images from '.$folder.'.');
-					}
-					$pages_processed++;
+					$i += 0.0001;
 				}
+				elseif ( $success !== false ) {
+					$total_success = false;
+					$alert_output .= $message-> alert_dialog('I couldn’t import images from '.$folder.'.');
+				}
+				$pages_processed++;
 			}
 		}
 	}
+}
 
-	reset_page_order($book_id,$db);
-	if ( $total_success === TRUE ) {
-		$link->url('book.view.php');
-		$link->tap('Check ’em out');
-		$alert_output .= $message-> success_dialog('Hooray! Images imported. '.$link-> paint().'.');
-	}
+reset_page_order($book_id,$db);
+if ( $total_success === TRUE ) {
+	$link->url('book.view.php');
+	$link->tap('Check ’em out');
+	$alert_output .= $message-> success_dialog('Hooray! Images imported. '.$link-> paint().'.');
+}
 
 
 
@@ -237,17 +237,18 @@ if ( $import_top_list ) {
 	}
 }
 
-if ( !$folder_list ) {
+if ( empty($folder_list) ) {
 	$alert_output .= $message-> info_dialog('No folders found in /import on your web server.');
 }
-if ( !$folder_list && !$file_list )
+$instructions_output = '';
+if ( empty($folder_list) && empty($file_list) )
 {
 	$instructions_output = '<p>Upload many images to the “import” folder via FTP to add them to your comic here. Each folder inside of “import” becomes its own '.$marker_type_list[1]['title'].' — for example, images in “/import/something” will become a '.$marker_type_list[1]['title'].' called “something”.</p>';
 }
 
 
-
-if ( $folder_list ) {
+$submit_output = '';
+if ( !empty($folder_list) ) {
 
 	$permissions_error_found = false;
 	$total_count = 0;
@@ -319,7 +320,7 @@ if ( $list && $list_items && count($list_items) > 0 ) {
 
 
 // Group
-
+$content_output = '';
 if ( $folder_output ) {
 	
 	// Build calendar options (month list, day list, year list)

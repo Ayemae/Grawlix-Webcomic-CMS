@@ -13,7 +13,7 @@ require_once('panl.init.php');
  */
 
 // Make an item active or inactive based on its match id
-if ( ($_SERVER['REQUEST_METHOD'] == 'GET') && $_GET['type_adbox_id'] ) {
+if ( ($_SERVER['REQUEST_METHOD'] == 'GET') && !empty($_GET['type_adbox_id']) ) {
 
 	$class = explode(' ',$_GET['class_info']);
 	$mysql_id = $class[2];
