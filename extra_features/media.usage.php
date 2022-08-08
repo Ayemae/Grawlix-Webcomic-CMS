@@ -27,13 +27,11 @@ if ( $var_list ) {
 	}
 }
 
-if ( !$image_id )
-{
+if ( empty($image_id) ) {
 	header('location:media.list.php');
 	die();
 }
-if ( $image_id && !is_numeric($image_id))
-{
+if ( $image_id && !is_numeric($image_id)) {
 	header('location:media.list.php');
 	die();
 }
@@ -44,29 +42,28 @@ if ( $image_id && !is_numeric($image_id))
 
 // ! ------ Updates
 
+$alert_output = '';
+
 // ! Add to a comic page
 
-if ($image_id && $add_to_page_id)
-{
+if ($image_id && !empty($add_to_page_id) ) {
 	// Hold it, does this image already belong to that comic page?
 	$db->where('rel_type','page');
 	$db->where('rel_id',$add_to_page_id);
 	$db->where('image_reference_id',$image_id);
 	$existing = $db->get('image_match',NULL,'id');
 
+	$success = false;
 	// As long as there was no record, create a new one.
-	if (!$existing || count($existing) == 0)
-	{
+	if (!$existing || count($existing) == 0) {
 		// What’s the last sort order for this page?
 		$db->where('rel_type', 'page');
 		$db->where('rel_id', $add_to_page_id);
 		$sort_order = $db->getOne('image_match',NULL,'MAX(sort_order) AS so');
-		if ($sort_order)
-		{
+		if ($sort_order) {
 			$sort_order = $sort_order['so'] + 1;
 		}
-		else
-		{
+		else {
 			$sort_order = 1;
 		}
 
@@ -82,22 +79,19 @@ if ($image_id && $add_to_page_id)
 	}
 	
 
-	if ($success)
-	{
+	if ($success) {
 		$alert_output .= $message->success_dialog('Image added to the page. <a href="book.page-edit.php?page_id='.$add_to_page_id.'">Check it out</a>.');
 	}
 }
 
 // ! Remove an image from a comic page
 
-if ($image_id && $remove_from_page_id)
-{
+if ( $image_id && !empty($remove_from_page_id) ) {
 	$db->where('rel_type','page');
 	$db->where('rel_id',$remove_from_page_id);
 	$db->where('image_reference_id',$image_id);
 	$success = $db->delete('image_match');
-	if ($success)
-	{
+	if ($success) {
 		$alert_output .= $message->success_dialog('Image removed from page.');
 	}
 }
@@ -121,24 +115,21 @@ $image_info = $db->getOne('image_reference','id,description,url');
 $db->where('image_reference_id',$image_id);
 
 $match_list = $db->get('image_match',NULL,'rel_id,rel_type,id,image_reference_id');
-if ($match_list && count($match_list) > 0)
-{
+if ($match_list && count($match_list) > 0) {
 	$match_list = rekey_array($match_list,'rel_id');
 }
 
 // ! Get all comic pages
-
-if ($keyword)
-{
+if ( !empty($keyword) ) {
 	$db->where('title','%'.$keyword.'%','LIKE');
 	$limit == NULL;
 	$label = '<strong>Search results:</strong>';
 	$reset_button = '<a href="media.usage.php?image_id='.$image_id.'">Reset</a>';
 }
-else
-{
+else {
 	$limit = 10;
 	$label = '10 most recent pages';
+	$keyword = null;
 }
 $db->orderBy('date_created','DESC');
 $db->orderBy('title','ASC');
@@ -147,35 +138,28 @@ $comic_page_list = $db->get('book_page',$limit,'id,title,date_created');
 
 
 // ! Static page output
-if ( $static_page_list )
-{
+/*if ( $static_page_list ) {
 	foreach ( $static_page_list as $key => $val )
 	{
 		
 	}
-}
+}*/
 
 // ! Comic page output
-if ( $comic_page_list )
-{
-	foreach ( $comic_page_list as $key => $val )
-	{
-		if ($match_list[$val['id']] && $match_list[$val['id']]['rel_type'] == 'page')
-		{
+if ( !empty($comic_page_list) ) {
+	foreach ( $comic_page_list as $key => $val ) {
+		if ($match_list[$val['id']] && $match_list[$val['id']]['rel_type'] == 'page') {
 //			$actions = '<strong>Already on '.$val['id'].'</strong>';
 			$actions = '<a href="media.usage.php?image_id='.$image_id.'&amp;remove_from_page_id='.$val['id'].'&amp;keyword='.$keyword.'"><strong>Remove</strong></a>';
 		}
-		else
-		{
+		else {
 			$actions = '<a href="media.usage.php?image_id='.$image_id.'&amp;add_to_page_id='.$val['id'].'&amp;keyword='.$keyword.'">Add</a>';
 		}
 
-		if ($val['title'] && $val['title'] != '')
-		{
+		if ($val['title'] && $val['title'] != '') {
 			$title = '<a href="book.page-edit.php?page_id='.$val['id'].'">'.$val['title'].'</a>';
 		}
-		else
-		{
+		else {
 			$title = '<a href="book.page-edit.php?page_id='.$val['id'].'">(Untitled)</a>';
 		}
 
@@ -191,10 +175,9 @@ if ( $comic_page_list )
 		);
 	}
 }
-else
-{
-	echo $comic_page_list_items;
-}
+/*else {
+	echo $comic_page_list_items; //Does nothing, unassigned
+}*/
 
 $search_form_output = <<<EOL
 <div class="row">
@@ -218,8 +201,7 @@ EOL;
 
 $comic_page_list_output = $search_form_output;
 
-if ( $comic_page_list_items ) {
-
+if ( !empty($comic_page_list_items) ) {
 	$heading_list[] = array(
 		'value' => 'Page title'
 	);
@@ -240,8 +222,7 @@ if ( $comic_page_list_items ) {
 	$comic_page_list_output .= $list->format_content();
 
 }
-else
-{
+else {
 	$comic_page_list_output .= '<p>No comic pages found.</p>'."\n";
 }
 

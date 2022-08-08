@@ -52,8 +52,9 @@ class GrlxFileOps {
 	 * @param array $list - arguments from main script
 	 */
 	protected function getArgs($list=null) {
-		$list = $list[0];
-		if ( isset($list) ) {
+		if(empty($list)) return;
+		$list = $list[0] ?? null;
+		if ( $list ) {
 			foreach ( $list as $key=>$val ) {
 				if ( property_exists($this,$key) ) {
 					$this->{$key} = $val;
@@ -96,6 +97,7 @@ class GrlxFileOps {
 	 * @return string $alert - an error dialog if something is wrong
 	 */
 	function check_or_make_dir($path=null){
+		$alert = '';
 		if ( !is_dir($path) ) {
 			@$new_dir = mkdir($path);
 			if ( !$new_dir ) {
@@ -136,7 +138,7 @@ class GrlxFileOps {
 				$item = 'image/'.$parts['extension'];
 			}
 		}
-		if ( $item && in_array($item, $this->allowed_types) ) {
+		if ( isset($item) && in_array($item, $this->allowed_types) ) {
 			$parts = pathinfo($path);
 			$ext = '.'.$parts['extension'];
 			return $ext;
@@ -184,6 +186,7 @@ class GrlxFileOps {
 		if ( $this->dir_item ) {
 			$path = $this->dir_item;
 		}
+		$list = [];
 		if ( $path && is_string($path) && is_dir($path) ) {
 			if ( $handle = opendir($path) ) {
 				while ( false !== ($entry = readdir($handle)) ) {
@@ -203,11 +206,12 @@ class GrlxFileOps {
 	 */
 	public function comics_dir_list() {
 		$dir_list = $this->get_dir_list('../'.DIR_COMICS_IMG);
-		if ( $dir_list ) {
+		$list = [];
+		if ( !empty($dir_list) ) {
 			foreach ( $dir_list as $sub_dir ) {
 				$sub_dir = DIR_COMICS_IMG . '/' . $sub_dir;
 				$this_dir = $this->get_dir_list($sub_dir);
-				if ( $this_dir ) {
+				if ( !empty($this_dir) ) {
 					foreach ( $this_dir as $filename ) {
 						$filename = substr($sub_dir,2) . '/' . $filename;
 						$list[$filename] = $filename;
@@ -225,7 +229,7 @@ class GrlxFileOps {
 	 */
 	public function new_comic_image_list() {
 		$file_list = $this->comics_dir_list();
-			if ( $file_list ) {
+		if ( !empty($file_list) ) {
 			$reference_list = get_image_reference($this->db);
 			foreach ( $file_list as $key => $val ) {
 				if ( !$reference_list[$key] ) {
@@ -361,24 +365,24 @@ class GrlxFileOps {
 		return $this-> successful_upload;
 	}
 	private function convertBytes( $value ) {
-    if ( is_numeric( $value ) ) {
-        return $value;
-    } else {
-        $value_length = strlen( $value );
-        $qty = substr( $value, 0, $value_length - 1 );
-        $unit = strtolower( substr( $value, $value_length - 1 ) );
-        switch ( $unit ) {
-            case 'k':
-                $qty *= 1024;
-                break;
-            case 'm':
-                $qty *= 1048576;
-                break;
-            case 'g':
-                $qty *= 1073741824;
-                break;
-        }
-        return $qty;
-    }
+		if ( is_numeric( $value ) ) {
+			return $value;
+		} else {
+			$value_length = strlen( $value );
+			$qty = substr( $value, 0, $value_length - 1 );
+			$unit = strtolower( substr( $value, $value_length - 1 ) );
+			switch ( $unit ) {
+				case 'k':
+					$qty *= 1024;
+					break;
+				case 'm':
+					$qty *= 1048576;
+					break;
+				case 'g':
+					$qty *= 1073741824;
+					break;
+			}
+			return $qty;
+		}
 	}
 }

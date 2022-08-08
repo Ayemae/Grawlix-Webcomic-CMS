@@ -14,7 +14,7 @@ require_once('panl.init.php');
  * Chapter
  */
 
-if ( $_GET['delete-chapter'] ) {
+if ( !empty($_GET['delete-chapter']) ) {
 
 	$id = strfunc_get_id($_GET['delete-chapter']);
 
@@ -28,7 +28,7 @@ if ( $_GET['delete-chapter'] ) {
  * Page
  */
 
-if ( $_GET['delete-page'] ) {
+if ( !empty($_GET['delete-page']) ) {
 
 	$id = strfunc_get_id($_GET['delete-page']);
 

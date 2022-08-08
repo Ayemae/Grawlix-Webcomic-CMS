@@ -14,6 +14,8 @@ $form = new GrlxForm;
 $marker_type = new GrlxMarkerType;
 $marker = new GrlxMarker;
 
+$view-> yah = 16;
+
 
 $var_list = array(
 	'delete_id'
@@ -30,8 +32,8 @@ if ( $var_list ) {
 /*****
  * Updates
  */
- 
-if ( $delete_id ) {
+$alert_output = '';
+if ( isset($delete_id) && $delete_id ) {
 	$doomed_marker = new GrlxMarker($delete_id);
 	$success = $doomed_marker-> deleteMarker($delete_id, false);
 	
@@ -57,6 +59,7 @@ function compareMarkers($a, $b) {
 
 $marker_list = $marker_type-> getMarkers();
 $markersFound = 0;
+$content_output = '';
 if( $marker_list && $marker_list['markers'] && count($marker_list['markers']) > 0) {
 	//Fetch some extra data about the markers to help sort and display them
 	foreach($marker_list['markers'] as $key => $val) {
@@ -110,7 +113,7 @@ if( $marker_list && $marker_list['markers'] && count($marker_list['markers']) > 
 		$prev_book_id = -1;
 		foreach($marker_list['markers'] as $key => $val) {
 			if($val['book_id'] != $prev_book_id) {
-				if($list_items && sizeof($list_items) > 0) {
+				if(isset($list_items) && sizeof($list_items) > 0) {
 					$list-> content($list_items);
 					$marker_output = $list->format_headings();
 					$marker_output .= $list->format_content();

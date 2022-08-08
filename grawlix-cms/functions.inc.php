@@ -35,5 +35,5 @@ function show_ad($label=null,$tag='div',$css='adspace') {
 		$css ? $class = ' class="'.$css.'"' : $class = null;
 		$output = '<'.$tag.$class.'>'.$ad.'</'.$tag.'>';
 	}
-	return $output;
+	return $output ?? null;
 }

@@ -7,8 +7,8 @@ require_once('panl.init.php');
 require_once('../_system/password.php');
 
 // Send admin to specific page
-$ref = $_GET['ref'];
-$ref ? $ref : $ref = $_POST['ref'];
+$ref = $_GET['ref'] ?? NULL;
+$ref ? $ref : $ref = $_POST['ref'] ?? NULL;
 $ref ? $ref : $ref = 'book.view.php';
 
 $view = new GrlxView_Login;
@@ -25,7 +25,7 @@ function grlx_cookie() {
 	return;
 }
 
-if ( $_POST['submit'] == 'Login' ) {
+if ( isset($_POST['submit']) && $_POST['submit'] == 'Login' ) {
 
 	$var_list = array('username','extra');
 	if ( $var_list ) {
@@ -42,12 +42,13 @@ if ( $_POST['submit'] == 'Login' ) {
 		$count = $db -> count;
 
 		// Check password hash
-		if ( password_verify($extra, $result['password']) && is_numeric($result['id']) ) {
+		if ( password_verify($extra, $result['password']) && isset($result['id']) && is_numeric($result['id']) ) {
 			// Successful login
 			$characters1 = range('a','z');
 			$characters2 = range(0,9);
 			$characters3 = array('-','!','@','#','$','%','^','&','*','(',')','_');
 			$characters = array_merge($characters1,$characters2,$characters3);
+			$new_serial = '';
 			for($i=0;$i<32;$i++)
 			{
 				$x = array_rand($characters);

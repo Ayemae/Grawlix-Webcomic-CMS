@@ -1,5 +1,5 @@
 <?php
-$info = $this->services['stats']['googleanalytics'];
+$info = isset($this->services['stats']) ? $this->services['stats']['googleanalytics'] : null;
 if ( $info ) : ?>
 <script>
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

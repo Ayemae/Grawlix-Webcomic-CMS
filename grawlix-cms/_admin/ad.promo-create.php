@@ -20,6 +20,7 @@ if ( $var_list ) {
 	}
 }
 
+$alert_output = '';
 
 // Folder in which we keep ad images.
 $image_path = $milieu_list['directory']['value'].'/assets/images/ads';
@@ -37,19 +38,20 @@ $check_these = array(
 );
 
 
-if ( $check_these ) {
+if ( $check_these && !empty($_POST)) {
 	foreach ( $check_these as $key => $val ) {
-
 		// Got a new file upload? Then upload it.
-		$upload_status[$key] = upload_specific_file($val,$image_path);
-		$upload_sizes[$key] = getimagesize('..'.$image_path.'/' . basename($_FILES[$val]['name']));
+		if(!empty($_FILES[$val])) {
+			$upload_status[$key] = upload_specific_file($val,$image_path);
+			$upload_sizes[$key] = getimagesize('..'.$image_path.'/' . basename($_FILES[$val]['name']));
+		}
 	}
 }
 
 
 
 // Prepare to update the ad’s database record.
-if ( $_POST ) {
+if ( !empty($_POST) ) {
 	$data = array (
 		'code' => $code,
 		'tap_url' => $destination
@@ -57,7 +59,7 @@ if ( $_POST ) {
 
 	if ( $check_these ) {
 		foreach ( $check_these as $key => $val ) {
-			if ( is_array($upload_sizes[$key]) ) {
+			if ( !empty($upload_sizes[$key]) && is_array($upload_sizes[$key]) ) {
 				$data[$key.'_width'] = $upload_sizes[$key][0];
 				$data[$key.'_height'] = $upload_sizes[$key][1];
 			}
@@ -69,9 +71,9 @@ if ( $_POST ) {
 	// Have we uploaded an image? Then add it to the list.
 	// I made this optional so we don’t override a previously-
 	// uploaded file’s record in the database.
-	if ( $check_these ) {
+	if ( $check_these && !empty($upload_status)) {
 		foreach ( $check_these as $key => $val ) {
-			if ( $upload_status[$key][0] == 'success' ) {
+			if ( !empty($upload_status[$key]) && $upload_status[$key][0] == 'success' ) {
 				$data[$key.'_image_url'] = $image_path.'/' . basename($_FILES[$key.'_image_url']['name']);
 			}
 		}
@@ -100,7 +102,7 @@ if ( $_POST ) {
  * Display logic
  */
 
-if ( $ad_id ) {
+if ( isset($ad_id) ) {
 	$promo_info = get_ad_info($ad_id,$db);
 }
 
@@ -117,9 +119,10 @@ if ( $check_these ) {
 */
 
 $slot_list = get_slots(null,'ad',$db);
-if ( $slot_list ) {
+if ( !empty($slot_list) ) {
 	foreach ( $slot_list as $key => $val ) {
-		$options_list[$key] = $val['min_width'].'&times'.$val['max_width'];
+		//$options_list[$key] = $val['min_width'].'&times'.$val['max_width'];
+		$options_list[$key] = $val['max_width'].'&times'.$val['max_height'];
 	}
 }
 
@@ -157,7 +160,7 @@ $code_form = '<textarea name="code" id="code" height="8" width="24" style="heigh
 $view->group_h2('Destination');
 $view->group_instruction('Where this ad will take people when they tap its graphics.');
 $view->group_contents($destination_form);
-$content_output .= $view->format_group().'<hr />';
+$content_output = $view->format_group().'<hr />';
 
 /*
 $view->group_h2('Mobile-optimized');

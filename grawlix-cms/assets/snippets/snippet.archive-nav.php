@@ -1,5 +1,5 @@
 <?php
-$info = $this->showArchiveNav; // Get info from database via page class
+$info = $this->showArchiveNav ?? null; // Get info from database via page class
 if ( $info ) : ?>
 	<nav class="archive">
 		<ul>

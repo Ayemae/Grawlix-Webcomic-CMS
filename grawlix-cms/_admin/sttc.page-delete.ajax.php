@@ -18,8 +18,8 @@ $modal->send_to('sttc.page-list.php');
  */
 
 // Delete a static page
-if ( is_numeric($_GET['id']) ) {
-	$title = urldecode($_GET['title']);
+if ( isset($_GET['id']) && is_numeric($_GET['id']) ) {
+	$title = urldecode($_GET['title'] ?? '');
 	if ( $title ) {
 		$modal->headline('Really delete <span>'.$title.' ?</span>');
 	}

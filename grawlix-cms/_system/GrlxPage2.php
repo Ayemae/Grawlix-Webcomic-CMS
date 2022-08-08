@@ -48,11 +48,6 @@ class GrlxPage2 {
 	public function __construct() {
 		global $_db;
 		$this->db = $_db;
-
-		/*if ( $this->httpHeader )
-		{
-			header($this->httpHeader);
-		}*/
 	}
 
 	/**
@@ -76,16 +71,15 @@ class GrlxPage2 {
 		}
 
 		// Check the given route data
-		if (is_object($route))
-		{
+		if (is_object($route)) {
 			// Template type
 			if (strlen($route->template) > 0)
 			{
-				$this->template = $this->templateFileList[$route->template];
+				$this->template = $this->templateFileList[$route->template] ?? NULL;
 			}
 
 			// Check for a u_id
-			if (is_numeric($route->u_id))
+			if (isset($route->u_id) && is_numeric($route->u_id))
 			{
 				$this->u_id = $route->u_id;
 			}
@@ -96,8 +90,8 @@ class GrlxPage2 {
 			}
 
 			// Set the book_id
-			is_numeric($route->book_id) ? $id = $route->book_id : $id = 1;
-			$this->getBookInfo($route->book_id);
+			(isset($route->book_id) && is_numeric($route->book_id)) ? $id = $route->book_id : $id = 1;
+			$this->getBookInfo($id);
 		}
 
 		$this->domainName = $_SERVER['HTTP_HOST'];
@@ -112,8 +106,7 @@ class GrlxPage2 {
 	 * @param		object		$grlxRequest
 	 * @vars			string		$request
 	 */
-	public function contents($request)
-	{
+	public function contents($request) {
 		$this->request = $request->path;
 	}
 
@@ -134,8 +127,7 @@ class GrlxPage2 {
 	 * Get book info with url slug and latest page's sort order
 	 *
 	 */
-	protected function getBookInfo($id = NULL)
-	{
+	protected function getBookInfo($id = NULL) {
 		$id < 1 ? $id = 1 : $id;
 
 		$cols = array(
@@ -293,6 +285,7 @@ class GrlxPage2 {
 			$this->isAdmin = true;
 		}
 		if($this->statusCode == 404) header('HTTP/1.0 404 Not Found');
+		else if ( isset($this->httpHeader) ) header($this->httpHeader);
 		$this->getThemeToneInfo();
 		$this->buildSupportFileLinks();
 		$this->buildHeaderMeta();
@@ -308,6 +301,7 @@ class GrlxPage2 {
 	 */
 	protected function formatFavicons() {
 		$apple_list = array('57','114','72','144','60','120','76','152');
+		$icon_links = '';
 		foreach ( $apple_list as $key=>$val ) {
 			$sizes = $val.'x'.$val;
 			$attributes = array(
@@ -343,14 +337,17 @@ class GrlxPage2 {
 	 * Store all the possible output a page template may request
 	 */
 	protected function buildContent() {
-		if ( !$this->pageInfo['publish_frequency'] ) {
+		if ( empty($this->pageInfo['publish_frequency']) ) {
 			$this->pageInfo['publish_frequency'] = $this->bookInfo['publish_frequency'];
-			$this->pageInfo['publish_frequency'] == '0' ? $this->pageInfo['publish_frequency'] = 'occasionally' : NULL;
+			if(empty($this->pageInfo['publish_frequency']) || $this->pageInfo['publish_frequency'] == '0')
+				$this->pageInfo['publish_frequency'] = 'occasionally';
+			else
+				$this->pageInfo['publish_frequency'] = NULL;
 		}
 		$this->content = array_merge($this->milieu,$this->pageInfo);
 		$this->content = array_merge($this->content,$this->theme['html']);
 
-		if ( $this->content['date_publish'] ) {
+		if ( !empty($this->content['date_publish']) ) {
 			$date = $this->formatDate($this->content['date_publish']);
 			$str = '<time itemprop="datePublished" datetime="'.$this->content['date_publish'].'">'.$date.'</time>';
 			$this->content['date_publish'] = $str;
@@ -392,11 +389,11 @@ class GrlxPage2 {
 	 */
 	protected function buildAdminBar() {
 		if ( $this->isAdmin ) {
-			if ( $this->pageInfo['edit_this'] ) {
-				$this->grlxbar['edit_text'] = $this->pageInfo['edit_this']['text'];
-				$this->grlxbar['edit_link'] = $this->filebase.DIR_PANEL.$this->pageInfo['edit_this']['link'];
+			if ( !empty($this->pageInfo['edit_this']) ) {
+				$this->grlxbar['edit_text'] = $this->pageInfo['edit_this']['text'] ?? null;
+				$this->grlxbar['edit_link'] = $this->filebase.DIR_PANEL.$this->pageInfo['edit_this']['link'] ?? null;
 			}
-			if ( is_numeric($_SESSION['admin']) ) {
+			if ( isset($_SESSION['admin']) && is_numeric($_SESSION['admin']) ) {
 				$this->grlxbar['panel_text'] = 'Go to your Panel';
 				$this->grlxbar['panel_link'] = $this->filebase.DIR_PANEL.'book.view.php';;
 			}
@@ -416,15 +413,12 @@ class GrlxPage2 {
 	 * @param string $type - archive, page
 	 * @return string $str - path
 	 */
-	protected function buildPermalink($val = null, $type = 'page')
-	{
-		if ($type == 'archive')
-		{
+	protected function buildPermalink($val = null, $type = 'page') {
+		if ($type == 'archive') {
 			$str = $this->milieu['directory'].$this->request.'/'.$val; // Chapter number
 		}
 
-		if ($type == 'page')
-		{
+		if ($type == 'page') {
 			$str = $this->milieu['directory'].$this->bookInfo['url'].'/'.$val;
 		}
 
@@ -440,25 +434,27 @@ class GrlxPage2 {
 		if ( $this->isHome ) {
 			$str = null;
 		}
-		elseif ( $this->canonicalLink ) {
+		elseif ( !empty($this->canonicalLink) ) {
 			$str = $this->canonicalLink;
 		}
 		else {
-			$str = $this->pageInfo['permalink'];
+			$str = $this->pageInfo['permalink'] ?? null;
 		}
 		$output = '<link rel="canonical" href="http://'.$this->domainName.$str.'" />'."\n";
 		return $output;
 	}
 
 	protected function buildHeaderMeta() {
-		$this->pageInfo['meta_description'] ?
-			$meta = $this->pageInfo['meta_description'] :
+		$meta = '';
+		if(isset($this->pageInfo['meta_description']))
+			$meta = $this->pageInfo['meta_description'];
+		else if(isset($this->milieu['meta_description']))
 			$meta = $this->milieu['meta_description'];
 		$meta = mb_substr($meta,0,160,'UTF-8');
 		$output  = '<meta name="description" content="'.$meta.'" />';
 		$output .= '<meta name="generator" content="The Grawlix CMS — the CMS for comics" />';
-		$output .= '<meta name="copyright" content="'.$this->milieu['copyright'].' by '.$this->milieu['artist_name'].'" />';
-		$output .= '<meta name="author" content="'.$this->milieu['artist_name'].'" />';
+		$output .= '<meta name="copyright" content="'.($this->milieu['copyright'] ?? '').' by '.($this->milieu['artist_name'] ?? '').'" />';
+		$output .= '<meta name="author" content="'.($this->milieu['artist_name'] ?? '').'" />';
 		$output .= $this->buildCanonicalLink();
 		$this->pageInfo['meta_head'] = $output;
 	}
@@ -467,6 +463,7 @@ class GrlxPage2 {
 	 * HTML header and footer links for theme files: css, js
 	 */
 	protected function buildSupportFileLinks() {
+		$outputHead = '';
 		if ( $this->isAdmin ) {
 			$outputHead = '<link rel="stylesheet" href="'.$this->filebase.DIR_SYSTEM_CSS.'public-admin.css" />'."\n";
 		}
@@ -484,6 +481,7 @@ class GrlxPage2 {
 			// shared css for layout patterns
 			$outputHead .= "\t\t".'<link rel="stylesheet" href="'.$this->filebase.DIR_SYSTEM_CSS.'public-shared.css" />'."\n";
 		}
+		$outputFoot = '';
 		if ( $this->theme['author'] == 'Grawlix' ) {
 			$outputHead .= "\t\t".'<script src="'.$this->filebase.DIR_SCRIPTS.'modernizr.min.js"></script>'."\n";
 			$outputFoot  = "\t\t".'<script src="'.$this->filebase.$this->theme['directory'].'script.min.js"></script>'."\n";
@@ -500,6 +498,7 @@ class GrlxPage2 {
 	protected function formatSiteMenu() {
 		$this->menu = rekey_array($this->menu,'sort_order');
 		ksort($this->menu);
+		$menu = '';
 		foreach ( $this->menu as $key=>$val ) {
 			if ( substr($val['url'],0,4) != 'http' ) {
 				$val['url'] = str_replace('//','/',$val['url']); // workaround, yeah, I know
@@ -661,10 +660,11 @@ class GrlxPage2 {
 	 * @return string $output - HTML for item
 	 */
 	public function returnShowOutput($str=null) {
+		$output = '';
 		if ( array_key_exists($str, $this->content) ) {
 			$output = $this->content[$str];
 		}
-		if ( $this->theme['slots'] && array_key_exists($str, $this->theme['slots']) ) {
+		if ( !empty($this->theme['slots']) && array_key_exists($str, $this->theme['slots']) ) {
 			$output = $this->formatSlotImage($str);
 		}
 		if ( $str == 'links' ) {
@@ -702,7 +702,7 @@ class GrlxPage2 {
 				$output = $ad['code'];
 			}
 		}
-		return $output;
+		return $output ?? null;
 	}
 
 	/**
@@ -725,7 +725,7 @@ class GrlxPage2 {
 			->get('theme_slot ts',null,$cols);
 
 		// Organize results
-		if ( $result ) {
+		if ( !empty($result) ) {
 			foreach ( $result as $ad ) {
 				if ( is_numeric($ad['ad_id']) ) {
 					$slot = $ad['label'];
@@ -740,7 +740,7 @@ class GrlxPage2 {
 				}
 			}
 		}
-		$this->ads = $list;
+		$this->ads = $list ?? null;
 	}
 
 

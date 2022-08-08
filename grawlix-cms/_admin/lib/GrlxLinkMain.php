@@ -94,7 +94,7 @@ class GrlxLinkMain {
 	}
 
 	function icon($string='') {
-		if ( ($string == '') || ($string == 'false') ) {
+		if ( empty($string) || ($string == '') || ($string == 'false') ) {
 			$this->icon = '';
 		}
 		elseif ( $string == 'true' ) {
@@ -121,14 +121,14 @@ class GrlxLinkMain {
 		else {
 			$url = $this->url;
 		}
-		$url ? $url = ' href="'.$url.'"': null;
-		$this->rel ? $rel = ' rel="'.$this->rel.'"' : null;
-		$this->title ? $title = ' title="'.$this->title.'"' : null;
-		$this->id ? $id = ' id="'.$this->id.'"' : null;
-		$this->css ? $css = ' class="'.$this->css.'"' : null;
-		$this->target ? $target = ' target="'.$this->target.'"' : null;
-		$this->data ? $data = $this->data : null;
-		$this->icon ? $icon = $this->icon : null;
+		$url = $url ? ' href="'.$url.'"': null;
+		$rel = $this->rel ? ' rel="'.$this->rel.'"' : null;
+		$title = $this->title ? ' title="'.$this->title.'"' : null;
+		$id = $this->id ? ' id="'.$this->id.'"' : null;
+		$css = $this->css ? ' class="'.$this->css.'"' : null;
+		$target = $this->target ? ' target="'.$this->target.'"' : null;
+		$data = $this->data ? $this->data : null;
+		$icon = $this->icon ? $this->icon : null;
 		$tap = $this->tap;
 		$this->transpose ? $tap_output = $tap.$icon : $tap_output = $icon.$tap;
 

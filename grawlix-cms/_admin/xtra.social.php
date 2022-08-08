@@ -14,10 +14,12 @@ $message = new GrlxAlert;
 
 $view-> yah = 8;
 
+$alert_output = '';
+
 // ! ------ Updates
 
 // Reset comment service
-if ( is_numeric($_GET['reset_comments']) ) {
+if ( isset($_GET['reset_comments']) && is_numeric($_GET['reset_comments']) ) {
 
 	$service_id = $_GET['reset_comments'];
 	$data = array('user_info' => null);
@@ -34,8 +36,8 @@ $db->delete('third_match');
 
 
 // Save edits from the info modal
-if ( $_POST['edit'] ) {
-
+if ( !empty($_POST['edit']) ) {
+	$affected_count = 0;
 	foreach ( $_POST['edit'] as $key => $val ) {
 		if ( is_numeric($key) ) {
 			$data = array('user_info' => $val);
@@ -47,7 +49,7 @@ if ( $_POST['edit'] ) {
 	}
 
 	// Newly setup info so set the service to active
-	if ( is_numeric($_POST['match_id']) ) {
+	if ( isset($_POST['match_id']) && is_numeric($_POST['match_id']) ) {
 		$match_id = $_POST['match_id'];
 		$data = array('active' => 1);
 		$db -> where('id', $match_id);
@@ -55,7 +57,7 @@ if ( $_POST['edit'] ) {
 	}
 
 	// Widget
-	if ( is_numeric($_POST['widget_id']) && $_POST['widget_value'] ) {
+	if ( isset($_POST['widget_id']) && is_numeric($_POST['widget_id']) && !empty($_POST['widget_value']) ) {
 		$widget_id = $_POST['widget_id'];
 		$data = array(
 			'active' => 1,
@@ -74,8 +76,7 @@ if ( $_POST['edit'] ) {
 }
 
 // Save comment info
-if ( $_POST['comment_info'] && is_numeric($_POST['service_id']) ) {
-
+if ( !empty($_POST['comment_info']) && isset($_POST['service_id']) && is_numeric($_POST['service_id']) ) {
 	$service_id = $_POST['service_id'];
 	$comment_info = htmlspecialchars(trim($_POST['comment_info']), ENT_COMPAT);
 
@@ -100,8 +101,7 @@ if ( $_POST['comment_info'] && is_numeric($_POST['service_id']) ) {
 
 $db->where('label','patreon');
 $result = $db->getOne('third_service','id');
-if (!$result || count($result) == 0)
-{
+if ( empty($result) || count($result) == 0 ) {
 	$data = array (
 		'title' => 'Patreon',
 		'label' => 'patreon',
@@ -111,8 +111,7 @@ if (!$result || count($result) == 0)
 	);
 	$service_id = $db->insert('third_service', $data);
 }
-if ($service_id)
-{
+if ( !empty($service_id) ) {
 	$data = array (
 		'service_id' => $service_id,
 		'function_id' => '1',
@@ -181,7 +180,6 @@ $result = $db
 
 if ( $db->count > 0 ) {
 	foreach ( $result as $item ) {
-
 		if ( $item['active'] === null ) {
 			$item['active'] = 0;
 		}
@@ -236,8 +234,8 @@ if ( $db->count > 0 ) {
 	}
 }
 
-if ( $service_list ) {
-
+$content_output = '';
+if ( !empty($service_list) ) {
 	$view->group_css('social');
 
 	$list = new GrlxList;
@@ -250,8 +248,8 @@ if ( $service_list ) {
 	$edit_link->action('edit');
 
 	foreach ( $service_list as $function_id => $section_group ) {
-		$view->group_h2($section_group['title']);
-		$view->group_instruction($section_group['description']);
+		$view->group_h2($section_group['title'] ?? null);
+		$view->group_instruction($section_group['description'] ?? null);
 
 		// ! Follow
 		//
@@ -390,7 +388,7 @@ if ( $service_list ) {
 				}
 				$comment_output .= '</div>';
 			}
-			$view->group_contents($comment_output);
+			$view->group_contents($comment_output ?? null);
 			$content_output .= $view->format_group();
 			unset($heading_list);
 		}
@@ -495,6 +493,6 @@ $js_call = <<<EOL
 EOL;
 
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 $output = $view->close_view();
 print($output);

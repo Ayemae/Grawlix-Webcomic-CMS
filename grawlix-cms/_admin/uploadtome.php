@@ -28,7 +28,7 @@ if ( is_writable('../'.DIR_COMICS_IMG)) {
 
 
 // Add it to the database.
-if ( $success && $web_file_path ) {
+if ( isset($success) && $success && !empty($web_file_path) ) {
 	$data = array (
 		'url' => $web_file_path,
 		'description' => $human_name,
@@ -39,7 +39,7 @@ if ( $success && $web_file_path ) {
 
 
 // What’s the last page sort_order?
-if ( $image_id ) {
+if ( !empty($image_id) ) {
 //	$db_new-> where ('book_id', $book_id);
 //	$db_new-> orderBy ('sort_order','DESC');
 	$sort_order = $db-> get ('book_page',null,'MAX(sort_order) AS latest');
@@ -53,7 +53,7 @@ if ( $image_id ) {
 
 
 // Create a comic page.
-if ( $sort_order ) {
+if ( !empty($sort_order) ) {
 	$data = array (
 		'title' => $human_name,
 		'sort_order' => $sort_order + 1,
@@ -67,7 +67,7 @@ if ( $sort_order ) {
 
 
 // Put ’em together.
-if ( $image_id && $page_id ) {
+if ( !empty($image_id) && !empty($page_id) ) {
 	$data = array (
 		'image_reference_id' => $image_id,
 		'rel_id' => $page_id,

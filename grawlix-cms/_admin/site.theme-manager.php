@@ -19,7 +19,7 @@ $successMsg = new GrlxAlert;
 
 // Change one or more tone_id records
 
-if ( is_numeric($_POST['new_tone_id']) && $_POST['sel'] && $_POST['submit'] ) {
+if ( isset($_POST['new_tone_id']) && is_numeric($_POST['new_tone_id']) && !empty($_POST['sel']) && isset($_POST['submit']) ) {
 	unset($_GET);
 	$new_id = $_POST['new_tone_id'];
 
@@ -33,7 +33,7 @@ if ( is_numeric($_POST['new_tone_id']) && $_POST['sel'] && $_POST['submit'] ) {
 		$db_vars[] = strfunc_split_tablerow($_POST['sel']);
 	}
 
-	if ( $db_vars ) {
+	if ( !empty($db_vars) ) {
 		foreach ( $db_vars as $i=>$row ) {
 			$row['table'] == 'milieu' ? $col = 'value' : $col = 'tone_id';
 			$data = array($col=>$new_id);
@@ -51,16 +51,18 @@ if ( is_numeric($_POST['new_tone_id']) && $_POST['sel'] && $_POST['submit'] ) {
 	}
 }
 
+$alert_output = '';
 
 // ! Install a theme
-if ( $_GET['install'] ) {
+$dir = null;
+if ( !empty($_GET['install']) ) {
 	$dir = urldecode($_GET['install']);
 	$args['action'] = 'install';
 	$args['dirName'] = $dir;
 }
 
 // ! Remove a theme
-if ( $_GET['uninstall_id'] ) {
+if ( !empty($_GET['uninstall_id']) ) {
 	$unstall_id = urldecode($_GET['uninstall_id']);
 	$args['action'] = 'uninstall';
 	$args['dirName'] = $dir;
@@ -80,14 +82,13 @@ if ( $_GET['uninstall_id'] ) {
 
 
 // Change the multi-theme setting
-if ( $_GET['toggle-multi'] ) {
+if ( isset($_GET['toggle-multi']) && $_GET['toggle-multi'] ) {
 	$args['action'] = 'toggle-multi';
 }
 
 $theme = new GrlxTheme($args);
 
 if ( $theme->successOutput ) {
-
 	$alert_output .= $successMsg->success_dialog($theme->successOutput);
 }
 
@@ -152,7 +153,7 @@ else {
 			$i++;
 			$row_select = '<input type="checkbox" name="sel[book_page-'.$marker_id.']" />';
 			$row_chapter = $info['type'].' '.$i.' <span class="title">'.$info['title'].'</span>';
-			$row_theme = $theme->toneSelectList[$info['tone_id']]['title'];
+			$row_theme = isset($theme->toneSelectList[$info['tone_id']]) ? $theme->toneSelectList[$info['tone_id']]['title'] : null;
 			$group_list[] = array($row_select,$row_chapter,$row_theme);
 		}
 	}
@@ -160,7 +161,7 @@ else {
 	if ( $book->info ) {
 		$row_select = '<input type="checkbox" name="sel[book-'.$book->info['id'].']" />';
 		$row_book = 'Archives <span class="title">'.$book->info['title'].'</span>';
-		$row_theme = $theme->toneSelectList[$book->info['tone_id']]['title'];
+		$row_theme = isset($theme->toneSelectList[$book->info['tone_id']]) ? $theme->toneSelectList[$book->info['tone_id']]['title'] : null;
 		$group_list[] = array($row_select,$row_book,$row_theme);
 	}
 	// Static pages
@@ -170,7 +171,7 @@ else {
 		foreach ( $page_list as $id=>$info) {
 			$row_select = '<input type="checkbox" name="sel[static_page-'.$id.']" />';
 			$row_page = 'Static page <span class="title">'.$info['title'].'</span>';
-			$row_theme = $theme->toneSelectList[$info['tone_id']]['title'];
+			$row_theme = isset($theme->toneSelectList[$info['tone_id']]) ? $theme->toneSelectList[$info['tone_id']]['title'] : null;
 			$group_list[] = array($row_select,$row_page,$row_theme);
 		}
 	}
@@ -196,7 +197,7 @@ if ( $theme->outputList ) {
 	$all_themes_output = '<ul id="themes" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">';
 	foreach ( $theme->outputList as $id=>$info ) {
 		if ( $info['preview'] ) {
-			if ( $info['action'] != 'install' ) {
+			if ( !isset($info['action']) || $info['action'] != 'install' ) {
 				$preview = '<a href="site.theme-options.php?theme_id='.$id.'"><img src="'.$info['preview'].'" />edit</a>';
 			}
 			else {
@@ -204,7 +205,7 @@ if ( $theme->outputList ) {
 			}
 		}
 
-		if ( $info['action'] ) {
+		if ( !empty($info['action']) ) {
 			$box_css = ' off';
 			$action = '<a class="'.$info['action'].'" href="?'.$info['action'].'='.$info['directory'].'">'.ucfirst($info['action']).' theme</a>';
 		}
@@ -213,13 +214,13 @@ if ( $theme->outputList ) {
 			$action = null;
 			$new = 0;
 			$missing = 0;
-			if ( $info['tones'] ) {
+			if ( !empty($info['tones']) ) {
 				foreach ( $info['tones'] as $label=>$tone_info ) {
-					if ( $tone_info['action'] == 'install' && $tone_info['options'] ) {
+					if ( isset($tone_info['action']) && $tone_info['action'] == 'install' && isset($tone_info['options']) && $tone_info['options'] ) {
 						$new++;
 						$new_list[] = $tone_info['options'];
 					}
-					if ( $tone_info['action'] == 'missing' ) {
+					if ( isset($tone_info['action']) && $tone_info['action'] == 'missing' ) {
 						$missing++;
 						$missing_list[] = $tone_info['options'];
 					}
@@ -258,7 +259,8 @@ $view->group_css('theme');
 $view->group_h2('Assign');
 $view->group_instruction($instruction);
 $view->group_contents($assign_output);
-$content_output .= $view->format_group().'<hr/>';
+$content_output = $view->format_group().'<hr/>';
+
 $view->group_h3('List');
 $view->group_css('theme');
 $view->group_instruction('Tap a theme to scan for new tones or edit theme info.');

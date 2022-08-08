@@ -53,8 +53,7 @@ class GrlxRoute {
 		global $_db; // TODO: Make this less hacky.
 
 		$url_info = parse_url($this->request);
-		if ($url_info && is_array($url_info))
-		{
+		if ($url_info && is_array($url_info)) {
 			// Get all URLs in the database.
 			$this->known_url_list = $_db->get('path',NULL,'rel_type,rel_id,url');
 			$url_parts = explode('/',$url_info['path']);
@@ -62,15 +61,12 @@ class GrlxRoute {
 		}
 
 		// Make it easier to find records based on their URL.
-		if ( $this->known_url_list )
-		{
-			foreach ( $this->known_url_list as $key => $val )
-			{
+		if ( !empty($this->known_url_list) ) {
+			foreach ( $this->known_url_list as $key => $val ) {
 				$this->known_url_list[$val['url']] = $val;
 
 				// Automatically add feed URLs.
-				if ($val['rel_type'] == 'book')
-				{
+				if ($val['rel_type'] == 'book') {
 					$this->known_url_list[$val['url'].'/rss'] = array(
 						'rel_type' => 'rss',
 						'rel_id' => $val['rel_id'],
@@ -86,48 +82,36 @@ class GrlxRoute {
 		}
 
 		// Got an EXACT match? Return it.
-		if ($this->known_url_list[$this->request])
-		{
+		if ( !empty($this->known_url_list[$this->request]) ) {
 			return $this->known_url_list[$this->request];
 		}
 
 		// No match, huh? Then walk along each part of the URL until you find one.
-		if ($url_parts)
-		{
-
+		if ( !empty($url_parts) ) {
 			// Do it backwards to get as granular as possible.
 			$url_parts = array_reverse($url_parts);
 
-			foreach ( $url_parts as $key => $val )
-			{
+			foreach ( $url_parts as $key => $val ) {
 				// Is there an exact match?
-				if($this->known_url_list['/'.$val])
-				{
+				if( !empty($this->known_url_list['/'.$val]) ) {
 					return $this->known_url_list['/'.$val];
 				}
-
 				// Maybe it’s a comic page.
 				$result = $this->seekComicPage($val);
-				if ($result)
-				{
+				if ( !empty($result) ) {
 					return $result;
 				}
-
  			}
  		}
 
  		// If you’ve gotten this far, then return an error.
  		return $this->known_url_list['/404'];
-
 	}
 
 
-	protected function seekComicPage($slug=NULL)
-	{
+	protected function seekComicPage($slug=NULL) {
 		global $_db;
-		if ($slug)
-		{
-
+		if ($slug) {
 			// This is an exception: comic page URLs are stored without slashes 
 			// because at first they were prefixed with their sort_order values.
 			if(substr($slug,0,1) == '/')
@@ -137,12 +121,10 @@ class GrlxRoute {
 
 			// Is the first bit a number, e.g. a sort_order?
 			$slug_parts = explode('-',$slug);
-			if (is_numeric($slug_parts[0]))
-			{
+			if ( isset($slug_parts[0]) && is_numeric($slug_parts[0]) ) {
 				$_db->where('sort_order',$slug_parts[0]);
 				$result = $_db->getOne('book_page','id');
-				if ($result)
-				{
+				if ($result) {
 					return array(
 						'rel_type' => 'comic-inside',
 						'rel_id' => $result['id']
@@ -152,8 +134,7 @@ class GrlxRoute {
 
 			$_db->where('options',$slug);
 			$result = $_db->getOne('book_page','id');
-			if ($result)
-			{
+			if ($result) {
 				return array(
 					'rel_type' => 'comic-inside',
 					'rel_id' => $result['id']

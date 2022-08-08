@@ -16,7 +16,7 @@ $modal = new GrlxForm_Modal();
  * Display logic
  */
 
-if ( is_numeric($_GET['theme_id']) && is_numeric($_GET['tone_id']) ) {
+if ( isset($_GET['theme_id']) && is_numeric($_GET['theme_id']) && isset($_GET['tone_id']) && is_numeric($_GET['tone_id']) ) {
 	$theme_id = $_GET['theme_id'];
 	$tone_id = $_GET['tone_id'];
 }

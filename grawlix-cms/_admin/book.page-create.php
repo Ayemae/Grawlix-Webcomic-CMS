@@ -16,6 +16,7 @@ $sl = new GrlxSelectList;
 $max_file_size = ini_get( 'upload_max_filesize' ).' maximum';
 
 $view-> yah = 1;
+$alert_output = '';
 
 $var_list = array(
 	array('page_id','int'),
@@ -40,7 +41,7 @@ if ( $var_list ) {
 	}
 }
 
-if ( !$book_id ) {
+if ( empty($book_id) ) {
 	$book = new GrlxComicBook;
 	$book_id = $book-> bookID;
 }
@@ -53,26 +54,26 @@ $book-> getMarkers();
 
 // register_variable strips needed whitespace from certain text blocks that we need.
 
-$transcript = $_POST['transcript'];
-$transcript ? $transcript : $transcript = $_GET['transcript'];
-$transcript ? $transcript : $transcript = $_SESSION['transcript'];
+$transcript = $_POST['transcript'] ?? NULL;
+$transcript ? $transcript : $transcript = $_GET['transcript'] ?? NULL;
+$transcript ? $transcript : $transcript = $_SESSION['transcript'] ?? NULL;
 
-$blog_post = $_POST['blog_post'];
-$blog_post ? $blog_post : $blog_post = $_GET['blog_post'];
-$blog_post ? $blog_post : $blog_post = $_SESSION['blog_post'];
+$blog_post = $_POST['blog_post'] ?? NULL;
+$blog_post ? $blog_post : $blog_post = $_GET['blog_post'] ?? NULL;
+$blog_post ? $blog_post : $blog_post = $_SESSION['blog_post'] ?? NULL;
 
 
 // ! Updates
 
 
-if ( $_POST && $_FILES['file_change']['name']['0'] != '' ) {
+if ( !empty($_POST) && isset($_FILES['file_change']) && $_FILES['file_change']['name']['0'] != '' ) {
 
 	// ! Add to a marker, if necessary.
 
 	if ( $into_marker_id && is_numeric($into_marker_id) ) {
 		$marker = new GrlxMarker($into_marker_id);
 	}
-	if ( $marker ) {
+	if ( isset($marker) ) {
 		if ( $marker-> pageList ) {
 			$start_page = reset($marker-> pageList);
 			$start_tone_id = $start_page['tone_id'];
@@ -148,11 +149,11 @@ if ( $_POST && $_FILES['file_change']['name']['0'] != '' ) {
 		reset_page_order($book_id,$db);
 	}
 }
-elseif ( $_POST ) {
+elseif ( !empty($_POST) ) {
 	$alert_output .= $message->alert_dialog('Huh, I didn’t find any images. Did you select some pics from your computer?');
 }
 
-if ( $_FILES['file_change'] && $new_page_id ) {
+if ( !empty($_FILES['file_change']) && !empty($new_page_id) ) {
 
 	$fileops-> up_set_destination_folder('../'.DIR_COMICS_IMG);
 	$success = $fileops-> up_process('file_change');
@@ -272,7 +273,7 @@ else {
 $choose_marker_output .= '</select>'."\n";
 
 
-$meta_output .= '		<label for="new_page_name">Page title</label>'."\n";
+$meta_output  = '		<label for="new_page_name">Page title</label>'."\n";
 $meta_output .= '		<input type="text" name="new_page_name" id="new_page_name" value="'.$new_page_name.'" style="max-width:20rem"/>';
 
 $meta_output .= '		<label for="custom_url">Custom URL</label>'."\n";
@@ -302,6 +303,7 @@ $transcript_output = <<<EOL
 EOL;
 
 
+$action_output = '';
 if (is_file('book.list.php'))
 {
 	$link->url('book.list.php');
@@ -325,7 +327,7 @@ $new_image = <<<EOL
 EOL;
 
 
-$content_output .= '<form accept-charset="UTF-8" action="book.page-create.php" method="post" enctype="multipart/form-data">'."\n";
+$content_output  = '<form accept-charset="UTF-8" action="book.page-create.php" method="post" enctype="multipart/form-data">'."\n";
 $content_output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 
 $view->group_css('page');
@@ -405,12 +407,12 @@ print($output);
 
 
 
-<?=$images_output ?>
+<?=$images_output ?? '' ?>
 
 <?=$content_output ?>
 
 <?php
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());
 ?>

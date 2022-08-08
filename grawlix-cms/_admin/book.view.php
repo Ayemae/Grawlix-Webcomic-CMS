@@ -18,27 +18,28 @@ $view-> yah = 3;
 $var_list = array(
 	'created','book_id','delete_page_id','start_sort_order','keyword','delete_marker_id','sel','add_marker_type','delete_all','view_marker'
 );
-if ( $var_list ) {
+if ( isset($var_list) ) {
 	foreach ( $var_list as $key => $val ) {
 		$$val = register_variable($val);
 	}
 }
 
-if ($book_id)
+if (isset($book_id) && $book_id)
 {
 	$_SESSION['book_id'] = $book_id;
 }
 
-if($created == 1)
+if(!isset($alert_output)) $alert_output = '';
+if(isset($created) && $created == 1)
 {
  $alert_output .= $message->success_dialog('Book created. <a href="book.page-create.php">Now give it a page</a>.');
 }
 
-if ( $start_sort_order && is_numeric($start_sort_order) )
+if ( isset($start_sort_order) && is_numeric($start_sort_order) )
 {
 	$_SESSION['start_sort_order'] = $start_sort_order;
 }
-elseif ( $_SESSION['start_sort_order'] && is_numeric($_SESSION['start_sort_order'] ) )
+elseif ( isset($_SESSION['start_sort_order']) && is_numeric($_SESSION['start_sort_order'] ) )
 {
 	$start_sort_order = $_SESSION['start_sort_order'];
 }
@@ -51,7 +52,7 @@ else {
 
 // ! ------ Updates
 
-if ( $book_id ) {
+if ( isset($book_id) ) {
 	$book = new GrlxComicBook($book_id);
 }
 else {
@@ -61,7 +62,7 @@ else {
 
 $moving = false;
 
-if ( $_GET['new_marker_on'] ) {
+if ( isset($_GET['new_marker_on']) ) {
 	$data = array (
 		'title' => 'New marker',
 		'marker_type_id' => 1
@@ -111,7 +112,7 @@ if ( $sel && $add_marker_type && $moving === false ) {
 	}
 }
 
-if ( $_POST && $_POST['sort_order'] ) {
+if ( !empty($_POST) && isset($_POST['sort_order']) ) {
 
 	// Look for differences in orig (hidden fields) and sorts entered by the artist.
 	foreach ( $_POST['sort_order'] as $moving_id => $maybe_new_order ) {
@@ -190,7 +191,7 @@ if ( $delete_all && 1==2 ) {
 
 // ! Get the book info
 
-if ( $book_id ) {
+if ( isset($book_id) ) {
 	$book = new GrlxComicBook($book_id);
 }
 else {
@@ -198,7 +199,7 @@ else {
 	$book_id = $book-> bookID;
 }
 
-if ( $book ) {
+if ( isset($book) ) {
 	$book-> getPages();
 	$book-> getMarkers();
 	$total_pages = ($book-> pageList)? count($book-> pageList) : 0;
@@ -257,8 +258,7 @@ if ( $book->info && !$book-> pageList && !$created ) {
 
 
 // If we're looking at a marker's pages, get the page range.
-if($view_marker)
-{
+if($view_marker) {
 	$marker-> setID($view_marker);
 	$marker-> getMarkerInfo();
 	$marker->getPageRange();
@@ -320,7 +320,7 @@ if ( $book-> pageList && count($book-> pageList) > 0 )
 
 	$total_shown = 0; // Track how many images appear on the page.
 
-
+	$orig_output = '';
 	foreach ( $book-> pageList as $key => $val ) {
 
 		$show_it = false;
@@ -481,6 +481,7 @@ if ( (!$book-> pageList || count($book-> pageList) == 0 || !$content_output) && 
 $link-> url('book.view.php');
 $link-> title('Jump around the book.');
 
+$pagination_output = '';
 if ( $total_pages > $pages_per_view && !$view_marker) {
 	for ( $i = 1; $i <= $total_pages; $i+=$pages_per_view) {
 		$last = $i+$pages_per_view-1;

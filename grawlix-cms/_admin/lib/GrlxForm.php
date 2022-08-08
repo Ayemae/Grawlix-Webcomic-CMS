@@ -64,7 +64,7 @@ class GrlxForm {
 	protected function set_security()
 	{
 		$this->input_hidden('grlx_xss_token');
-		$this->value = $_SESSION['admin'];
+		$this->value = $_SESSION['admin'] ?? NULL;
 		return $this->paint();
 	}
 
@@ -133,9 +133,9 @@ class GrlxForm {
 	}
 
 	public function open_form() {
-		$this->error_check ? $abide = ' data-abide' : null;
-		$this->multipart ? $enctype = ' enctype="multipart/form-data"' : null;
-		$this->form_id ? $id = ' id="'.$this->form_id.'"' : null;
+		$this->error_check ? $abide = ' data-abide' : $abide = '';
+		$this->multipart ? $enctype = ' enctype="multipart/form-data"' : $enctype = '';
+		$this->form_id ? $id = ' id="'.$this->form_id.'"' : $id = '';
 		$str  = '<form accept-charset="UTF-8" action="'.$this->send_to.'" method="post"'.$id.$abide.$enctype.'>';
 		$str .= $this->set_security();
 		return $str;
@@ -391,6 +391,7 @@ class GrlxForm {
 	}
 
 	protected function add_label() {
+		$note = '';
 		if ( $this->readonly ) {
 			$note = '<br/><span class="note">(This cannot be changed.)</span>';
 		}
@@ -399,6 +400,7 @@ class GrlxForm {
 	}
 
 	protected function add_error_message() {
+		$str = '';
 		if ( $this->show_error ) {
 			$str = '<small class="error">'.$this->error.'</small>';
 		}
@@ -434,18 +436,18 @@ class GrlxForm {
 	}
 
 	public function paint() {
-		$this->id ? $id = ' id="'.$this->id.'"' : null;
-		$this->name ? $name = ' name="'.$this->name.'"' : $name = ' name="'.$this->id.'"';
-		$this->size ? $size = ' size="'.$this->size.'" style="width:'.$this->size.'rem"' : null;
-		$this->value ? $value = ' value="'.$this->value.'"' : null;
-		$this->data ? $data = $this->data : null;
-		$this->required ? $required = ' required' : null;
-		$this->pattern ? $pattern = ' pattern="'.$this->pattern.'"' : null;
-		$this->autofocus ? $autofocus = ' autofocus' : null;
-		$this->disabled ? $disabled = ' disabled' : null;
-		$this->maxlength ? $maxlength = ' maxlength="'.$this->maxlength.'"' : null;
-		$this->placeholder ? $placeholder = ' placeholder="'.$this->placeholder.'"' : null;
-		$this->readonly ? $readonly = ' readonly' : null;
+		$id = $this->id ? ' id="'.$this->id.'"' : null;
+		$name = $this->name ? ' name="'.$this->name.'"' : $name = ' name="'.$this->id.'"';
+		$size = $this->size ? ' size="'.$this->size.'" style="width:'.$this->size.'rem"' : null;
+		$value = $this->value ? ' value="'.$this->value.'"' : null;
+		$data = $this->data ? $this->data : null;
+		$required = $this->required ? ' required' : null;
+		$pattern = $this->pattern ? ' pattern="'.$this->pattern.'"' : null;
+		$autofocus = $this->autofocus ?' autofocus' : null;
+		$disabled = $this->disabled ? ' disabled' : null;
+		$maxlength = $this->maxlength ? ' maxlength="'.$this->maxlength.'"' : null;
+		$placeholder = $this->placeholder ? ' placeholder="'.$this->placeholder.'"' : null;
+		$readonly = $this->readonly ? ' readonly' : null;
 		$output = '<input type="'.$this->type.'" '.$id.$name.$value.$maxlength.$autofocus.$required.$pattern.$placeholder.$readonly.$disabled.$data.$size.' />';
 		if ( $this->error ) {
 			$error = $this->add_error_message();
@@ -467,9 +469,11 @@ class GrlxForm {
 
 	public function checkbox_switch($int=1) {
 		$id = $this->id;
+		$title = '';
 		if ( $this->title ) {
 			$title = ' title="'.$this->title.'"';
 		}
+		$checked = '';
 		if ( $int == 1 ) {
 			$checked = ' checked';
 		}

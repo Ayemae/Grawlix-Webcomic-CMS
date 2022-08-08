@@ -35,29 +35,26 @@ if ( $var_list ) {
 		${$val[0]} = register_variable($val[0],$val[1]);
 	}
 }
-$mode ? $mode : $mode = 'comic';
-$start ? $start : $start = 0;
+$mode = $mode ?? 'comic';
+$start = $start ?? 0;
 $limit = 20; // Number of results to display per screen.
 
 $gd_info = gd_info();
-if ($gd_info && $gd_info['GD Version'] != '')
-{
+if ($gd_info && $gd_info['GD Version'] != '') {
 	$gd_enabled = TRUE;
 }
 
 
+$alert_output = '';
 
 // ! ------ Updates
 
 // ! Permanently delete an image.
-if ($delete_image_id && is_numeric($delete_image_id))
-{
-
+if ( isset($delete_image_id) && is_numeric($delete_image_id)) {
 	$db->where('id',$delete_image_id);
 	$image_info = $db->getOne('image_reference','url');
 
-	if ($image_info && substr($image_info['url'],0,4) != 'http' && is_file('..'.$image_info['url']))
-	{
+	if ( $image_info && substr($image_info['url'],0,4) != 'http' && is_file('..'.$image_info['url']) ) {
 		$doomed_directory = explode('/',$image_info['url']);
 		array_pop($doomed_directory);
 		$doomed_directory = implode('/',$doomed_directory);
@@ -71,19 +68,16 @@ if ($delete_image_id && is_numeric($delete_image_id))
 	$db->where('id',$delete_image_id);
 	$success = $db->delete('image_reference');
 
-	if ($success)
-	{
+	if ($success) {
 		$alert_output = $message->success_dialog('Image deleted.');
 	}
 }
 
-if ($remove_block_image_id)
-{
+if ( !empty($remove_block_image_id) ) {
 	$db->where('id',$remove_block_image_id);
 	$data = array('image'=>'');
 	$success = $db->update('static_content',$data);
-	if ($success)
-	{
+	if ($success) {
 		$alert_output = $message->success_dialog('Image deleted.');
 	}
 }
@@ -92,106 +86,82 @@ if ($remove_block_image_id)
 
 // ! ------ Display logic
 
-
+$reset_button = '';
 // ! Grab all COMIC images from the database.
-
-if ($mode == 'comic')
-{
+if ($mode == 'comic') {
 	$db->orderBy('date_created','DESC');
-	if ($keyword)
-	{
+	if ( !empty($keyword) ) {
 		$db->where('description','%'.$keyword.'%','LIKE');
 		$db->orWhere('url','%'.$keyword.'%','LIKE');
 		$comic_image_list = $db->get ('image_reference', NULL, 'description,id,url,date_created');
 		$reset_button = '<a href="media.list.php">Reset</a>';
 	}
-	else
-	{
+	else {
 		$comic_image_list = $db->get ('image_reference', array($start,$limit), 'description,id,url,date_created');
 		$reset_button = '';
 	}
 }
 
 // ! Grab all STATIC images from the database.
-
-
-if ($mode == 'static')
-{
+if ($mode == 'static') {
 	$db->orderBy('created_on','DESC');
-	if ($keyword)
-	{
+	if ( !empty($keyword) ) {
 		$db->where('image','%'.$keyword.'%','LIKE');
 		$db->where('image','NULL','!=');
 		$static_image_list = $db->get ('static_content', NULL, 'title,id,image,created_on');
 		$reset_button = '<a href="media.list.php">Reset</a>';
 	}
-	else
-	{
+	else {
 		$static_image_list = $db->get ('static_content', NULL, 'title,id,image,created_on');
 		$reset_button = '';
 	}
 }
 
 // ! Build COMIC pagination
-
-if (!$keyword && $mode == 'comic')
-{
+if ( empty($keyword) && $mode == 'comic') {
 	$result = $db->getOne('image_reference','COUNT(id) AS total');
-	if ($result)
-	{
+	if ($result) {
 		$total_comic_images = $result['total'];
 	}
-	else
-	{
+	else {
 		$total_comic_images = 0;
 	}
 
-	if ($total_comic_images > $limit)
-	{
-		for($i=0;$i<=$total_comic_images;$i+=$limit)
-		{
-			if ($start == $i)
-			{
+	if ($total_comic_images > $limit) {
+		for($i=0;$i<=$total_comic_images;$i+=$limit) {
+			if ($start == $i) {
 				$pagination_list[] = '<strong>'.($i+1).'–'.($i+$limit).'</strong>'."\n";
 			}
-			else
-			{
+			else {
 				$pagination_list[] = '<a href="?start='.$i.'">'.($i+1).'–'.($i+$limit).'</a>'."\n";
 			}
 		}
 	}
-	if ($pagination_list)
-	{
+	if ($pagination_list) {
 		$pagination_output = '<br/><p>'.implode(', ',$pagination_list).'</p>'."\n";
 	}
 }
 
 // ! Build mode options
 
-if ( $mode_list )
-{
-	foreach ( $mode_list as $key => $val )
-	{
-		if ($mode == $key)
-		{
+if ( $mode_list ) {
+	foreach ( $mode_list as $key => $val ) {
+		if ($mode == $key) {
 			$mode_output_list[] = '<strong>'.$val.'</strong>'."\n";
 		}
-		else
-		{
+		else {
 			$mode_output_list[] = '<a href="?mode='.$key.'&amp;keyword='.$keyword.'">'.$val.'</a>'."\n";
 		}
 	}
 }
-if ($mode_output_list)
-{
+$mode_output = '';
+if ( !empty($mode_output_list) ) {
 	$mode_output = '<p>'.implode(' | ',$mode_output_list).'</p>'."\n";
 }
 
 
 // ! Build the display for COMIC images
-
-if ($comic_image_list) {
-
+if ( !empty($comic_image_list) ) {
 	$edit_link = new GrlxLinkStyle;
 	$edit_link->url('media.edit.php');
 	$edit_link->title('Edit this image.');
@@ -205,32 +175,26 @@ if ($comic_image_list) {
 	$delete_link->action('delete');
 
 	foreach ( $comic_image_list as $key => $val ) {
-
 		// Where is this image used?
 		$db->where('image_reference_id',$val['id']);
 
 		$match_list = $db->get('image_match',NULL,'rel_id,rel_type,id,image_reference_id');
 
-		if ( $match_list && count($match_list) > 0 )
-		{
+		if ( $match_list && count($match_list) > 0 ) {
 			$matches = ''; // reset
-			foreach ( $match_list as $key2 => $val2 )
-			{
+			foreach ( $match_list as $key2 => $val2 ) {
 				$db->where('id',$val2['rel_id']);
 				$info = $db->getOne('book_page','title');
-				if ($info && $info['title'])
-				{
+				if ($info && $info['title']) {
 					$matches .= $info['title'];
 				}
-				else
-				{
+				else {
 					$matches .= '(Unknown page)';
 				}
 				$matches .= '<br/>'."\n";
 			}
 		}
-		else
-		{
+		else {
 			$matches = '(not used)'."\n";
 		}
 
@@ -249,49 +213,39 @@ if ($comic_image_list) {
 		$thumb_extension = array_pop($thumb_extension);
 		$thumb_filename = implode('/',$thumb_filename).'/thumb.'.$thumb_extension;
 
-		if ($thumb_filename && substr($thumb_filename,0,4) != 'http' && is_file('..'.$thumb_filename))
-		{
+		if ($thumb_filename && substr($thumb_filename,0,4) != 'http' && is_file('..'.$thumb_filename)) {
 			$thumb_element = '<img src="..'.$thumb_filename.'?reset='.date('ymdhis').'" alt="pic"/>';
 		}
-		else
-		{
+		else {
 			$thumb_element = '<img src="'.$val['url'].'" alt="pic"/>';
 		}
-		if (!$thumb_element)
-		{
+		if (!$thumb_element) {
 			$thumb_element = '(Missing file)';
 		}
 
-		if ($val['url'] && substr($val['url'],0,4) == 'http')
-		{
+		if ($val['url'] && substr($val['url'],0,4) == 'http') {
 			$thumbnail = '<a href="media.edit.php?image_id='.$val['id'].'">'.$thumb_element.'</a>'."\n";
 		}
-		elseif ($val['url'] && is_file('..'.$val['url']))
-		{
+		elseif ($val['url'] && is_file('..'.$val['url'])) {
 			$thumbnail = '<a href="media.edit.php?image_id='.$val['id'].'">'.$thumb_element.'</a>'."\n";
 		}
-		else
-		{
+		else {
 			$thumbnail = '<a href="media.edit.php?image_id='.$val['id'].'">(No file)</a>'."\n";
 		}
 
-		if ($val['description'])
-		{
+		if ($val['description']) {
 			$description = $val['description']."\n";
 		}
-		else
-		{
+		else {
 			$description = '(None)'."\n";
 		}
 
-		if ($val['date_created'] && strlen($val['date_created']) >= 10)
-		{
+		if ($val['date_created'] && strlen($val['date_created']) >= 10) {
 			$date_created = substr($val['date_created'],0,10);
 			$date_created = explode('-',$date_created);
 			$date_created = date('F j, Y',mktime(0,0,0,$date_created[1],$date_created[2],$date_created[0]));
 		}
-		else
-		{
+		else {
 			$date_created = '(Undated)';
 		}
 
@@ -309,8 +263,7 @@ if ($comic_image_list) {
 
 // ! Build the display for STATIC images.
 
-if ($static_image_list) {
-
+if ( !empty($static_image_list) ) {
 	$edit_link = new GrlxLinkStyle;
 	$edit_link->url('sttc.block-edit.php');
 	$edit_link->title('Edit this image.');
@@ -324,7 +277,6 @@ if ($static_image_list) {
 	$delete_link->action('delete');
 
 	foreach ( $static_image_list as $key => $val ) {
-
 		$edit_link->query("block_id=$val[id]");
 
 		$delete_link->query("remove_block_image_id=$val[id]&keyword=$keyword");
@@ -335,38 +287,30 @@ if ($static_image_list) {
 		$thumb_element = '<img src="..'.$val['image'].'" alt="pic"/>';
 
 		// Build the row.
-		if ($val['image'])
-		{
-			if ($val['image'] && substr($val['image'],0,4) == 'http')
-			{
+		if ($val['image']) {
+			if ($val['image'] && substr($val['image'],0,4) == 'http') {
 				$thumbnail = '<a href="sttc.block-edit.php?block_id='.$val['id'].'">'.$thumb_element.'</a>'."\n";
 			}
-			elseif ($val['image'] && is_file('..'.$val['image']))
-			{
+			elseif ($val['image'] && is_file('..'.$val['image'])) {
 				$thumbnail = '<a href="sttc.block-edit.php?block_id='.$val['id'].'">'.$thumb_element.'</a>'."\n";
 			}
-			else
-			{
+			else {
 				$thumbnail = '<a href="sttc.block-edit.php?block_id='.$val['id'].'">(No file)</a>'."\n";
 			}
 
-			if ($val['title'])
-			{
+			if ($val['title']) {
 				$description = $val['title']."\n";
 			}
-			else
-			{
+			else {
 				$description = '(None)'."\n";
 			}
 
-			if ($val['created_on'] && strlen($val['created_on']) >= 10)
-			{
+			if ($val['created_on'] && strlen($val['created_on']) >= 10) {
 				$date_created = substr($val['created_on'],0,10);
 				$date_created = explode('-',$date_created);
 				$date_created = date('F j, Y',mktime(0,0,0,$date_created[1],$date_created[2],$date_created[0]));
 			}
-			else
-			{
+			else {
 				$date_created = '(Undated)';
 			}
 
@@ -384,8 +328,7 @@ if ($static_image_list) {
 
 
 
-if ( $list_items ) {
-
+if ( !empty($list_items) ) {
 	$heading_list[] = array(
 		'value' => 'Image'
 	);
@@ -411,13 +354,11 @@ if ( $list_items ) {
 	$image_list_output  = $list->format_headings();
 	$image_list_output .= $list->format_content();
 
-}
-
-if ( !$list_items ) {
+} else {
 	$image_list_output  = '<p>No images found.</p>';
 }
 
-	$search_form_output = <<<EOL
+$search_form_output = <<<EOL
 <div class="row">
 	<div class="large-12 columns">
 		<div class="row">
@@ -435,8 +376,8 @@ if ( !$list_items ) {
 
 EOL;
 
-if ($gd_enabled === TRUE )
-{
+$utility_output = '';
+if ($gd_enabled === TRUE ) {
 	$utility_output = '<a href="media.thumbnails.php">Thumbnail generator</a>';
 	$view->group_css('page');
 	$view->group_h2('Options');
@@ -444,7 +385,6 @@ if ($gd_enabled === TRUE )
 	$view->group_instruction('Tools for images.');
 	$utility_output = '<hr/>'.$view->format_group();
 }
-
 
 
 
@@ -462,7 +402,7 @@ print ( $form->open_form() );
 print ( $search_form_output );
 print ( $mode_output );
 print ( $image_list_output );
-print ( $pagination_output );
+print ( $pagination_output ?? null );
 print ( $utility_output );
 
 print ( $form->close_form() );

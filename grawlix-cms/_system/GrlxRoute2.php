@@ -93,9 +93,8 @@ class GrlxRoute2 {
 	 * @param		object		request path and query
 	 * @return		object		controller and u_id, and possibly a statusCode
 	 */
-	public function getRoute($obj)
-	{
-		$match = $this->route[$obj->path];
+	public function getRoute($obj) {
+		$match = $this->route[$obj->path] ?? null;
 
 		// Assign anything else as 404
 		if (empty($match))

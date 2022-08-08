@@ -18,8 +18,7 @@ $modal->row_class('widelabel');
  * Display logic
  */
 
-if ( is_numeric($_GET['service_id']) ) {
-
+if ( isset($_GET['service_id']) && is_numeric($_GET['service_id']) ) {
 	$service_id = $_GET['service_id'];
 
 	$cols = array(
@@ -33,14 +32,14 @@ if ( is_numeric($_GET['service_id']) ) {
 		-> getOne('third_service', $cols);
 }
 
-if ( $result ) {
+if ( !empty($result) ) {
 	$modal->input_hidden('service_id');
 	$modal->value($service_id);
 	$modal_output = $modal->paint();
 
 	$modal->input_text('comment_info');
 	$modal->label("Enter your $result[label]");
-	$modal->value($result['user_info']);
+	$modal->value($result['user_info'] ?? null);
 	$modal->autofocus(true);
 	$modal->required(true);
 	$modal->maxlength(32);

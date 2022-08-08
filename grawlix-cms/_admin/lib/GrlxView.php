@@ -74,8 +74,10 @@ class GrlxView {
 	 * @param array $list - arguments from main script
 	 */
 	protected function getArgs($list=null) {
-		$list = $list[0];
-		if ( isset($list) ) {
+		if(!isset($list))
+			return;
+		$list = $list[0] ?? null;
+		if ( $list) {
 			foreach ( $list as $key=>$val ) {
 				if ( property_exists($this,$key) ) {
 					$this->{$key} = $val;
@@ -124,6 +126,7 @@ class GrlxView {
 	 * @return string - an alert with instructions
 	 */
 	protected function install_cleanup() {
+		$message = '';
 		if ( is_file('../firstrun.php') ) {
 			$str = '<strong>firstrun.php</strong> is present in your main Grawlix directory. You should delete this file as a safety measure.';
 			$alert = new GrlxAlert;
@@ -144,6 +147,7 @@ class GrlxView {
 		$args['action'] = 'read_file';
 		$fileops = new GrlxFileOps($args);
 		$file_data = $fileops->item_contents;
+		$obj = NULL;
 		if ( $file_data )
 		{
 			$obj = simplexml_load_string($file_data,'SimpleXMLElement',LIBXML_NOCDATA);
@@ -290,7 +294,7 @@ class GrlxView {
 		if ( $_SESSION['grawlix_version'] == 'run_check' ) {
 //			$result = $this->grlx_version_check();
 		}
-		if ( is_array($result) ) {
+		if ( isset($result) && is_array($result) ) {
 			$output .= '<div id="news-alert" data-alert>';
 			$output .= '<a class="close" href="#" id="news-close"><i></i></a>';
 			$output .= '<a class="title" href="'.$result['url'].'">'.$result['headline'].'&emsp;[&#8239;'.$result['date_posted'].'&#8239;]</a>';
@@ -340,6 +344,7 @@ class GrlxView {
 	 * @return array - headings & data for menu links
 	 */
 	private function menu_list() {
+		//The keys here are the yah values for each page, used to determine which entry to highlight in the menu.
 		$menu['Comic pages'] = array(
 			'1' => array(
 				'file' => 'book.page-create.php',
@@ -358,12 +363,12 @@ class GrlxView {
 				'name' => 'Book view',
 				'icon' => 'book'
 			),
-			'4' => array(
+			'16' => array(
 				'file' => 'marker.list.php',
 				'name' => 'Marker list',
 				'icon' => 'book'
 			),
-			'5' => array(
+			'4' => array(
 				'file' => 'book.archive.php',
 				'name' => 'Archive settings',
 				'icon' => 'arch'
@@ -535,6 +540,8 @@ class GrlxView {
 
 		$update = '_upgrade-to-1.3.php';
 		$needs_update = TRUE; // Assume it needs an update until proven otherwise.
+		
+		$alert_output = '';
 
 		if ( file_exists($update) ) {
 			global $db; // TODO: This is bad form. Why isn’t it getting called in to the object?
@@ -563,7 +570,7 @@ class GrlxView {
 			}
 		}
 
-		$this->tooltype ? $class = ' '.$this->tooltype : null;
+		$class = $this->tooltype ? ' '.$this->tooltype : null;
 		$output  = '<header class="main'.$class.'">';
 		$output .= $alert_output;
 		$output .= $this->headline;
@@ -609,7 +616,10 @@ class GrlxView {
 	 * @param string $str - complete html for button
 	 */
 	public function action($str) {
-		$this->action .= $str;
+		if(isset($this->action))
+			$this->action .= $str;
+		else
+			$this->action = $str;
 	}
 
 	/**
@@ -618,10 +628,10 @@ class GrlxView {
 	 * @return string - html for actions
 	 */
 	public function format_actions() {
-		if ( $this->action ) {
-			$output = '<div class="actions">'.$this->action.'</div>';
+		if ( isset($this->action) ) {
+			return '<div class="actions">'.$this->action.'</div>';
 		}
-		return $output;
+		return '';
 	}
 
 	/**
@@ -701,11 +711,11 @@ class GrlxView {
 	public function format_group() {
 		$output  = '<section class="'.$this->group_css.'">';
 		$output .= '<header>';
-		$output .= $this->group_headline;
-		$output .= $this->group_instruction;
+		$output .= $this->group_headline ?? '';
+		$output .= $this->group_instruction ?? '';
 		$output .= '</header>';
 		$output .= '<div>';
-		$output .= $this->group_contents;
+		$output .= $this->group_contents ?? '';
 		$output .= '</div>';
 		$output .= '</section>';
 		$this->reset_group_vars();
@@ -797,6 +807,7 @@ class GrlxView {
 	 * The following functions do the grunt work closing the document
 	 */
 	protected function html_foot() {
+		$output = '';
 		if ( $this->joyride ) {
 			$output .= $this->joyride;
 		}
@@ -820,6 +831,7 @@ class GrlxView {
 	}
 
 	protected function close_foot() {
+		$str = '';
 		if ( $this->memory ) {
 			$str = '<pre>'.$this->memory_used().'</pre>';
 		}

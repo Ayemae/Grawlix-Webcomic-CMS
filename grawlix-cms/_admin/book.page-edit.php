@@ -24,7 +24,7 @@ if ( $var_list ) {
 	}
 }
 
-if ( !$page_id )
+if ( empty($page_id) )
 {
 	header('location:book.view.php');
 	die();
@@ -83,17 +83,17 @@ for ( $i=0; $i<24; $i++ ) {
 
 
 // register_variable strips needed whitespace from text blocks
-$transcript = $_POST['transcript'];
-$transcript ? $transcript : $transcript = $_GET['transcript'];
-$transcript ? $transcript : $transcript = $_SESSION['transcript'];
-$blog_post = $_POST['blog_post'];
-$blog_post ? $blog_post : $blog_post = $_GET['blog_post'];
-$blog_post ? $blog_post : $blog_post = $_SESSION['blog_post'];
+$transcript = $_POST['transcript'] ?? null;
+$transcript ? $transcript : $transcript = $_GET['transcript'] ?? null;
+$transcript ? $transcript : $transcript = $_SESSION['transcript'] ?? null;
+$blog_post = $_POST['blog_post'] ?? null;
+$blog_post ? $blog_post : $blog_post = $_GET['blog_post'] ?? null;
+$blog_post ? $blog_post : $blog_post = $_SESSION['blog_post'] ?? null;
 
-$pub_year = $_POST['pub_year'];
-$pub_month = $_POST['pub_month'];
-$pub_day = $_POST['pub_day'];
-$pub_time = $_POST['pub_time'];
+$pub_year = $_POST['pub_year'] ?? null;
+$pub_month = $_POST['pub_month'] ?? null;
+$pub_day = $_POST['pub_day'] ?? null;
+$pub_time = $_POST['pub_time'] ?? null;
 
 if ( !$page_id ) {
 	header('location:book.view.php');
@@ -101,14 +101,14 @@ if ( !$page_id ) {
 }
 
 
-
+$alert_output = '';
 
 // ! ------ Updates
 
 // ! Create new images
 
 $which = 'new_file';
-if ( $_FILES[$which] && $_FILES[$which]['name'][0] != '' ) {
+if ( isset($_FILES[$which]) && $_FILES[$which]['name'][0] != '' ) {
 	foreach ( $_FILES[$which]['name'] as $key => $val ) {
 		$serial = date('YmdHis').substr(microtime(),2,6);
 		$path = '/'.DIR_COMICS_IMG.$serial;
@@ -117,7 +117,7 @@ if ( $_FILES[$which] && $_FILES[$which]['name'][0] != '' ) {
 		// Move the file to its new home.
 		$success1 = move_uploaded_file($_FILES[$which]['tmp_name'][$key], '..'.$path.'/'.$val);
 		if ( !$success1 ) {
-			$result = report_image_error($image_info,$_FILES[$which]['error'][$key]);
+			$result = report_image_error($path, $_FILES[$which]['error']);
 			$alert_output .= $message->alert_dialog($result);
 		}
 		else {
@@ -142,12 +142,12 @@ if ( $_FILES[$which] && $_FILES[$which]['name'][0] != '' ) {
 // ! Replace existing images
 
 $which = 'file_change';
-if ( $_FILES[$which] ) {
-
+if ( isset($_FILES[$which]) ) {
 	foreach ( $_FILES[$which]['name'] as $key => $val ) {
 		// If there’s a folder to hold the previous image, use it for this new image.
 		if (
-			$_POST['original_path'][$key]
+			isset($_POST['original_path'])
+			&& isset($_POST['original_path'][$key])
 			&& strlen($_POST['original_path'][$key]) > 0
 			&& is_dir('../'.$_POST['original_path'][$key])
 		) {
@@ -171,20 +171,20 @@ if ( $_FILES[$which] ) {
 			}
 			else {
 				// See http://php.net/manual/en/features.file-upload.errors.php
-				switch ( $_FILES[$which]['error'][$key] ) {
-					case 1:
+				switch ( $_FILES[$which]['error'] ) {
+					case UPLOAD_ERR_INI_SIZE:
 						$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
 						break;
-					case 2:
+					case UPLOAD_ERR_FORM_SIZE:
 						$alert_output .= $message->alert_dialog('I couldn’t upload the image. It exceeded the server’s '.(ini_get( 'upload_max_filesize' )).'B file size limit.');
 						break;
-					case 3:
+					case UPLOAD_ERR_PARTIAL:
 						$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was nothing to receive.');
 						break;
-					case 6:
+					case UPLOAD_ERR_NO_TMP_DIR:
 						$alert_output .= $message->alert_dialog('I couldn’t receive the image. There was no “temp” folder on the server — contact your host.');
 						break;
-					case 8:
+					case UPLOAD_ERR_EXTENSION: //This error is actually about PHP extensions, not file extensions...
 						$alert_output .= $message->alert_dialog('I couldn’t upload the image. It doesn’t look like a PNG, GIF, JPG, JPEG or SVG.');
 						break;
 				}
@@ -192,7 +192,6 @@ if ( $_FILES[$which] ) {
 		}
 		// Or add an image reference to the database.
 		else {
-
 			// Update the DB image reference to use the new file.
 			if ( $success1 ) {
 				if ($key && $key > 0 ) {
@@ -228,8 +227,9 @@ if ( $_FILES[$which] ) {
 
 // ! Metadata
 
-if ( $page_id && $_POST ) {
-
+if ( isset($page_id) && !empty($_POST) ) {
+	if(!isset($custom_url))
+		$custom_url = '';
 	$custom_url = str_replace(' ', '-', $custom_url);
 	$custom_url = str_replace('/', '-', $custom_url);
 	$custom_url = str_replace('?', '', $custom_url);
@@ -253,7 +253,7 @@ if ( $page_id && $_POST ) {
 	$db -> where('id', $page_id);
 	$success = $db -> update('book_page', $data);
 
-	if ( $_POST['image_description'] ) {
+	if ( isset($_POST['image_description']) ) {
 		foreach ( $_POST['image_description'] as $key => $val ) {
 			$data = array(
 				'description' => $val,
@@ -304,11 +304,11 @@ EOL;
 
 // ! Blog post and transcript
 
-if ( $page_id && $_POST ) {
+if ( isset($page_id) && !empty($_POST) ) {
 
-	$blog_headline = htmLawed($blog_headline);
-	$blog_post = htmLawed($blog_post);
-	$transcript = htmLawed($transcript);
+	$blog_headline = htmLawed($blog_headline ?? '');
+	$blog_post = htmLawed($blog_post ?? '');
+	$transcript = htmLawed($transcript ?? '');
 
 	$data = array(
 		'blog_title' => $blog_headline,
@@ -321,15 +321,13 @@ if ( $page_id && $_POST ) {
 	$db -> update('book_page', $data);
 }
 
-if ( $page_id && $remove_id ) {
+if ( isset($page_id) && isset($remove_id) ) {
 	$db -> where('id', $remove_id);
 	$db -> delete('image_match');
 }
 
-if ( $page_id && $sort_order && $_POST )
-{
-	foreach ( $sort_order as $key => $val )
-	{
+if ( isset($page_id) && isset($sort_order) && (is_array($sort_order) || is_object($sort_order)) && !empty($_POST) ) {
+	foreach ( $sort_order as $key => $val ) 	{
 		$data = array(
 			'sort_order' => $val
 		);
@@ -342,11 +340,11 @@ if ( $page_id && $sort_order && $_POST )
 
 // ! ------ Display logic
 
-if ( $page_id ) {
+if ( isset($page_id) ) {
 	$page = new GrlxComicPage($page_id);
 }
 
-if ( $page-> pageInfo['book_id'] ) {
+if ( isset($page-> pageInfo['book_id']) ) {
 	$book = new GrlxComicBook($page-> pageInfo['book_id']);
 	$book-> getPages();
 }
@@ -375,12 +373,11 @@ $sl-> setValueTitle('title');
 $sl-> setStyle('width:5rem');
 $day_select_output = $sl-> buildSelect();
 
-if ( $hour_list )
-{
+$hour_select_output = '';
+if ( isset($hour_list) ) {
 	$hour_select_output = '<select name="pub_time" style="width:8rem">'."\n";
 	$prevTime = '0'; //this is less than '00:00'.
-	foreach ( $hour_list as $key => $val )
-	{
+	foreach ( $hour_list as $key => $val ) {
 		if ( $key >= substr($page-> pageInfo['date_publish'],-8,8) && $prevTime < substr($page-> pageInfo['date_publish'],-8,8)) {
 			$selected = ' selected="selected"';
 		}
@@ -393,7 +390,7 @@ if ( $hour_list )
 	$hour_select_output .= '</select>'."\n";
 }
 
-$meta_output .= '		<label for="new_page_name">Page title</label>'."\n";
+$meta_output  = '		<label for="new_page_name">Page title</label>'."\n";
 $meta_output .= '		<input type="text" name="new_page_name" id="new_page_name" value="'.$page-> pageInfo['title'].'" style="max-width:40rem"/>';
 
 $meta_output .= '		<label for="custom_url">Custom URL</label>'."\n";
@@ -413,25 +410,21 @@ $meta_output .= $hour_select_output."\n";
 
 // ! Back/next
 
-if ( $book-> pageList ) {
+if ( isset($book) && !empty($book-> pageList) ) {
 
 	$last = end($book-> pageList);
-	$last_id = $last['id'];
+	$last_id = $last['id'] ?? null;
 
 	$first = reset($book-> pageList);
-	$first_id = $first['id'];
+	$first_id = $first['id'] ?? null;
 
 	$next = $page-> pageInfo['sort_order'] + 1;
-	$next = $book-> pageList[$next.'.0000'];
-	$next_id = $next['id'];
+	$next = $book-> pageList[$next.'.0000'] ?? null;
+	$next_id = $next['id'] ?? null;
 
 	$back = $page-> pageInfo['sort_order'] - 1;
-	$back = $book-> pageList[$back.'.0000'];
-	$back_id = $back['id'];
-
-	if ( $first_id == $page_id ) {
-		$next_page_id = $book->pageList[2]['id'];
-	}
+	$back = $book-> pageList[$back.'.0000'] ?? null;
+	$back_id = $back['id'] ?? null;
 
 	if ( $first_id == $page_id ) {
 		unset($first_page_id);
@@ -443,7 +436,7 @@ if ( $book-> pageList ) {
 }
 
 
-if ( $next_id ) {
+if ( isset($next_id) ) {
 	$link1-> url('book.page-edit.php?page_id='.$next_id);
 	$link1-> tap('next &rsaquo;');
 	$next_link = $link1-> paint();
@@ -451,7 +444,7 @@ if ( $next_id ) {
 else {
 	$next_link = 'next &rsaquo;';
 }
-if ( $back_id ) {
+if ( isset($back_id) ) {
 	$link1-> url('book.page-edit.php?page_id='.$back_id);
 	$link1-> tap('&lsaquo; back');
 	$back_link = $link1-> paint();
@@ -460,7 +453,7 @@ else {
 	$back_link = '&lsaquo; back';
 }
 
-if ( $first_id ) {
+if ( isset($first_id) ) {
 	$link1-> url('book.page-edit.php?page_id='.$first_id);
 	$link1-> tap('&laquo; first');
 	$first_link = $link1-> paint();
@@ -468,7 +461,7 @@ if ( $first_id ) {
 else {
 	$first_link = '&laquo; first';
 }
-if ( $last_id ) {
+if ( isset($last_id) ) {
 	$link1-> url('book.page-edit.php?page_id='.$last_id);
 	$link1-> tap('last &raquo;');
 	$last_link = $link1-> paint();
@@ -484,34 +477,27 @@ else {
 
 $gd_enabled = FALSE; // Until proven otherwise
 $gd_info = gd_info();
-if ($gd_info && $gd_info['GD Version'] != '')
-{
+if ($gd_info && $gd_info['GD Version'] != '') {
 	$gd_enabled = TRUE;
 
 	// ! How big should thumbnails be?
 	$db->where('label','thumb_max');
 	$result = $db->getOne('milieu','value');
 
-	if ($result)
-	{
+	if ($result) {
 		$thumb_max = $result['value'];
 	}
-	else
-	{
+	else {
 		$thumb_max = 200;
 	}
 }
 
 // Actually make the new files.
-
-if ( $page->imageList && $action == 'gen-thumb')
-{
-	$created_thumbs = FALSE;
+$created_thumbs = FALSE;
+if ( $page->imageList && $action == 'gen-thumb') {
 	$success = FALSE;
-	foreach ( $page->imageList as $key => $val )
-	{
-		if (substr($val['url'],0,4) != 'http')
-		{
+	foreach ( $page->imageList as $key => $val ) {
+		if (substr($val['url'],0,4) != 'http') {
 			// Get the directory.
 			$dir = explode('/',$val['url']);
 
@@ -527,19 +513,16 @@ if ( $page->imageList && $action == 'gen-thumb')
 			$thumb_filename = '..'.$milieu_list['directory']['value'].$dir.'/thumb.'.$extension;
 			$source_file = '..'.$val['url'];
 			$success = create_thumbnail( $source_file, $thumb_filename, $thumb_max);
-			if ($success === TRUE)
-			{
+			if ($success === TRUE) {
 				$created_thumbs = TRUE;
 			}
 		}
 	}
 }
-if ($created_thumbs && $created_thumbs === TRUE )
-{
+if ($created_thumbs === TRUE ) {
 	$alert_output .= $message->success_dialog('Thumbnail created.');
 }
-if ($action == 'gen-thumb' && $created_thumbs === FALSE )
-{
+if ($action == 'gen-thumb' && $created_thumbs === FALSE ) {
 	$alert_output .= $message->warning_dialog('Thumbnail not created.');
 }
 
@@ -548,16 +531,16 @@ if ($action == 'gen-thumb' && $created_thumbs === FALSE )
 
 
 // Display each image. Let the user trash ’em as needed.
-
+$path_output = '';
+$row_divider = '';
+$delete_me = '';
+$main_image_output = '';
 if ( $page-> imageList ) {
-
-
 	if ( count($page-> imageList) > 1 ) {
 		$row_divider .= '<hr/>';
 	}
 
 	foreach ( $page-> imageList as $key => $val ) {
-
 		$ref_id = $val['image_reference_id'];
 		if ( count ( $page-> imageList ) > 1 ) {
 			$link1-> url('book.page-edit.php?page_id='.$page_id.'&amp;remove_id='.$key);
@@ -685,7 +668,7 @@ EOL;
 
 
 // This exposition says “here are the images in this page.”
-if($page-> pageInfo['images']) {
+if( isset($page-> pageInfo['images']) ) {
 	if ( count($page-> pageInfo['images']) == 1 ) {
 		$image_count_output = '1 image in this page';
 	}
@@ -697,15 +680,15 @@ if($page-> pageInfo['images']) {
 }
 
 
-if ( $page-> pageInfo && $page-> pageInfo['title'] ) {
+if ( isset($page-> pageInfo) && isset($page-> pageInfo['title']) ) {
 	$heading_output = $page-> pageInfo['title'];
 }
 else {
 	$heading_output = 'Unknown page';
 }
 
-
-if ( $page-> pageInfo['blog_title'] ) {
+$headline_output = '';
+if ( isset($page-> pageInfo['blog_title']) ) {
 	$headline_output = $page-> pageInfo['blog_title'];
 }
 
@@ -725,23 +708,19 @@ EOL;
 
 
 
-if ($page->imageList)
-{
-	if ($gd_enabled === TRUE)
-	{
+if ($page->imageList) {
+	if ($gd_enabled === TRUE) {
 		$thumb_output = '<a class="btn secondary upload" href="?page_id='.$page_id.'&action=gen-thumb">Generate thumbnail</a>'."\n";
 	}
-	else
-	{
+	else {
 		$thumb_output = 'Your web host does not allow thumbnail generation.';
 	}
 }
 
 
 
-
-if ($thumb_output)
-{
+$content_output = '';
+if ( isset($thumb_output) ) {
 	$view->group_css('page');
 	$view->group_h2('Thumbnail');
 	$view->group_contents($thumb_output);
@@ -788,7 +767,7 @@ if ($created == 1)
 $view->page_title("Comic page: $heading_output");
 $view->tooltype('chap');
 $view->headline("Comic page <span>$heading_output</span>");
-$view->action($action_output);
+$view->action($action_output ?? null);
 
 $output  = $view->open_view();
 $output .= $view->view_header();
@@ -814,6 +793,6 @@ print($output);
 <?php
 
 $view->add_jquery_ui();
-$view->add_inline_script($js_call);
+$view->add_inline_script($js_call ?? null);
 print($view->close_view());
 ?>
