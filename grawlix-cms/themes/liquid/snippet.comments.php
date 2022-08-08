@@ -13,6 +13,10 @@ $close_output = '</article>';
 	var disqus_shortname = '<?=$info['disqus']?>';
 	var disqus_url = '<?=show('permalink')?>';
 	var disqus_disable_mobile = true;
+	var disqus_config = function () {
+		this.page.identifier = <?=show('page_id')?>;
+		this.page.title = '<?=show('page_title')?>';
+	};
 	/* * * DON'T EDIT BELOW THIS LINE * * */
 	(function() {
 			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

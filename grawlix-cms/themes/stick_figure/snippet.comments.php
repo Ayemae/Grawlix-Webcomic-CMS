@@ -1,4 +1,3 @@
-<!-- GRAWLIX TEMPLATE: This comes from snippet.comments -->
 <?php
 $info = $this->services['comments']; // Get info from database via page class
 $open_output = '<article id="comments"><h4>Reader comments</h4>';
@@ -12,6 +11,8 @@ $close_output = '</article>';
 	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 	var disqus_shortname = '<?=$info['disqus']?>';
 	var disqus_url = '<?=show('permalink')?>';
+    //Comment out the next line if you're updating Grawlix and you were previously using the permalink URLs instead of page identifiers, to avoid breaking existing Disqus threads
+    var disqus_identifier = '<?=show('page_id')?>';  
 	var disqus_disable_mobile = true;
 	/* * * DON'T EDIT BELOW THIS LINE * * */
 	(function() {

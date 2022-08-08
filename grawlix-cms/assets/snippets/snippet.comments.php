@@ -4,15 +4,24 @@ $open_output = '<article id="comments"><h4>Reader comments</h4>';
 $close_output = '</article>';
 ?>
 
+<<<<<<< HEAD
 <?php if ( !empty($info) && !empty($info['disqus']) ) : ?>
+=======
+<?php if ( !empty($info['disqus']) ) : ?>
+>>>>>>> ab7b285a732339fb9df9fdba1161eeee8c268d8b
 <?=$open_output?>
 <div id="disqus_thread"></div><!-- Comments load here -->
 <script type="text/javascript">
 	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 	var disqus_shortname = '<?=$info['disqus']?>';
 	var disqus_url = '<?=show('permalink')?>';
+<<<<<<< HEAD
 	//Uncomment the next line only if you're doing a fresh install or are only about to add Disqus comments. If you already have Disqus comments, this line might unlink your existing Disqus threads from the pages.
 	//var disqus_identifier = '<?=show('page_id')?>'; 
+=======
+    //Comment out the next line if you're updating Grawlix and you were previously using the permalink URLs instead of page identifiers, to avoid breaking existing Disqus threads
+    var disqus_identifier = '<?=show('page_id')?>';  
+>>>>>>> ab7b285a732339fb9df9fdba1161eeee8c268d8b
 	var disqus_disable_mobile = true;
 	/* * * DON'T EDIT BELOW THIS LINE * * */
 	(function() {
@@ -26,7 +35,11 @@ $close_output = '</article>';
 <?=$close_output?>
 <?php endif; ?>
 
+<<<<<<< HEAD
 <?php if ( !empty($info) && !empty($info['intensedebate']) ) : ?>
+=======
+<?php if ( !empty($info['intensedebate']) ) : ?>
+>>>>>>> ab7b285a732339fb9df9fdba1161eeee8c268d8b
 <?=$open_output?>
 <script>
 var idcomments_acct = '<?=$info['intensedebate']?>';
