@@ -186,12 +186,12 @@ class GrlxPage2 {
 			->join('theme_list l','t.theme_id = l.id','INNER')
 			->where('t.id',$this->theme['tone_id'])
 			->getOne('theme_tone t',$cols);
-		if ( $result['tone_id'] < 1 ) {
+		if ( $result && $result['tone_id'] < 1 ) {
 			$this->theme['tone_id']   = 'default';
 			$this->theme['theme_id']  = 'default';
 			$this->theme['directory'] = DIR_SYSTEM_TMP;
 		}
-		else {
+		else if($result) {
 			$result['directory'] = DIR_THEMES.$result['directory'].'/';
 			$this->theme = $result;
 			$this->getSlotImages();
@@ -467,12 +467,12 @@ class GrlxPage2 {
 		if ( $this->isAdmin ) {
 			$outputHead = '<link rel="stylesheet" href="'.$this->filebase.DIR_SYSTEM_CSS.'public-admin.css" />'."\n";
 		}
-
-		$outputHead .= "\t\t".'<link rel="stylesheet" href="'.$this->filebase.$this->theme['directory'].'theme.css" />'."\n";
-		if ( $this->theme['options'] ) {
+		if(!empty($this->theme['directory']))
+			$outputHead .= "\t\t".'<link rel="stylesheet" href="'.$this->filebase.$this->theme['directory'].'theme.css" />'."\n";
+		if ( !empty($this->theme['options']) ) {
 			$parts = explode('.',$this->theme['options']);
 			// tone CSS file
-			if ( $parts[0] == 'tone' && end($parts) == 'css' ) {
+			if ( $parts[0] == 'tone' && end($parts) == 'css' && !empty($this->theme['directory']) ) {
 				$outputHead .= "\t\t".'<link rel="stylesheet" href="'.$this->filebase.$this->theme['directory'].$this->theme['options'].'" />'."\n";
 			}
 		}
@@ -482,9 +482,10 @@ class GrlxPage2 {
 			$outputHead .= "\t\t".'<link rel="stylesheet" href="'.$this->filebase.DIR_SYSTEM_CSS.'public-shared.css" />'."\n";
 		}
 		$outputFoot = '';
-		if ( $this->theme['author'] == 'Grawlix' ) {
+		if ( isset($this->theme['author']) && $this->theme['author'] == 'Grawlix' ) {
 			$outputHead .= "\t\t".'<script src="'.$this->filebase.DIR_SCRIPTS.'modernizr.min.js"></script>'."\n";
-			$outputFoot  = "\t\t".'<script src="'.$this->filebase.$this->theme['directory'].'script.min.js"></script>'."\n";
+			if(isset($this->theme['directory']))
+				$outputFoot  = "\t\t".'<script src="'.$this->filebase.$this->theme['directory'].'script.min.js"></script>'."\n";
 		}
 		$this->theme['html']['support_head'] = $outputHead;
 		$this->theme['html']['support_foot'] = $outputFoot;
@@ -528,7 +529,9 @@ class GrlxPage2 {
 	 * Include the page template
 	 */
 	protected function loadPageTemplate() {
-		include_once('./'.$this->theme['directory'].$this->template);
+		if(isset($this->theme['directory']))
+			include_once('./'.$this->theme['directory'].$this->template);
+		else die('This comic has no theme selected!');
 	}
 
 	/**

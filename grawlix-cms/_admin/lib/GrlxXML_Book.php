@@ -127,8 +127,8 @@ class GrlxXML_Book extends GrlxXML {
 	protected function parseArchive() {
 		$this->behavior = $this->getValue('/archive/behavior');
 		$this->structure = $this->getValue('/archive/structure');
-		$this->layout['page'] = $this->getValue('/archive/page/layout');
-		$this->layout['chapter'] = $this->getValue('/archive/chapter/layout');
+		$this->layout['page'] = $this->getValue('/archive/page/@layout');
+		$this->layout['chapter'] = $this->getValue('/archive/chapter/@layout');
 		$this->meta['page'] = $this->getClones('/archive/page','option');
 		$this->meta['chapter'] = $this->getClones('/archive/chapter','option');
 	}
