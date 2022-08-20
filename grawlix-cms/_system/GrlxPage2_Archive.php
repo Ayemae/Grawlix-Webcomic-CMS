@@ -66,8 +66,8 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			case '1.1':
 				$this->layout['behavior'] = $this->xml->getValue('/archive/behavior');
 				$this->layout['structure'] = $this->xml->getValue('/archive/structure');
-				$this->layout['pages'] = $this->xml->getValue('/archive/page/layout');
-				$this->layout['chapters'] = $this->xml->getValue('/archive/chapter/layout');
+				$this->layout['pages'] = $this->xml->getValue('/archive/page/@layout');
+				$this->layout['chapters'] = $this->xml->getValue('/archive/chapter/@layout');
 				$this->meta['pages'] = $this->xml->getClones('/archive/page','option');
 				$this->meta['chapters'] = $this->xml->getClones('/archive/chapter','option');
 				break;
