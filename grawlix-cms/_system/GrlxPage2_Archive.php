@@ -324,12 +324,13 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	 * Format HTML for the archive info to be shown
 	 */
 	protected function formatHierarchy1() {
+		$output = '';
 		if ( $this->currentList ) {
 			foreach ( $this->currentList as $c=>$list ) {
-				unset($outputChapter);
-				unset($outputPages);
-				!$this->chapterNum ? $outputChapter = $this->formatChapterHead1($c,$list) : $outputChapter = null;
-				if ( $this->chapterNum || $this->layout['behavior'] == 'single' ) {
+				$outputChapter = '';
+				$outputPages = '';
+				empty($this->chapterNum)? $outputChapter = $this->formatChapterHead1($c,$list) : $outputChapter = '';
+				if ( !empty($this->chapterNum) || $this->layout['behavior'] == 'single' ) {
 					foreach ( $list['pages'] as $p=>$item ) {
 						$outputPages .= $this->formatPageItem1($p,$item);
 					}
@@ -343,6 +344,8 @@ class GrlxPage2_Archive extends GrlxPage2 {
 						case 'inline':
 							$cssPage = 'inline-list';
 							break;
+						default:
+							$cssPage = '';
 					}
 					$output .= $outputChapter.'<ul class="'.$cssPage.'">'.$outputPages.'</ul>';
 				}
@@ -358,6 +361,8 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			case 'grid':
 				$cssChapter = 'small-block-grid-1 medium-block-grid-2 large-block-grid-3';
 				break;
+			default:
+				$cssChapter = '';
 		}
 		$this->pageInfo['archive_content'] = '<ul class="'.$cssChapter.'">'.$output.'</ul>';
 	}
@@ -420,9 +425,9 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		if ( $this->meta['chapters'] && in_array('description', $this->meta['chapters']) ) {
 			$desc = '<p>'.$info['marker_description'].'</p>';
 		}
-		if ( $image || $text )
+		if ( !empty($image) || !empty($text) )
 		{
-			$link = '<li class="item chapter"><div class="archive-header"><h3>'.$image.$text.'</h3>'.$desc.'</li></div>';
+			$link = '<li class="item chapter"><div class="archive-header"><h3>'.($image ?? '').($text ?? '').'</h3>'.($desc ?? '').'</li></div>';
 		}
 		return $link;
 	}
@@ -526,10 +531,10 @@ class GrlxPage2_Archive extends GrlxPage2 {
 				$date = 'Undated';
 			}
 		}
-		if ( $page || $title || $date ) {
-			$text = '<a href="'.$url.'">'.$page.$title.$date.'</a>';
-		}
-		$link = '<li class="item page">'.$image.$text.'</li>';
+		if ( !empty($page) || !empty($title) || !empty($date) ) {
+			$text = '<a href="'.$url.'">'.($page ?? '').($title ?? '').($date ?? '').'</a>';
+		} else $text = '';
+		$link = '<li class="item page">'.($image ?? '').$text.'</li>';
 		return $link;
 	}
 

@@ -75,7 +75,7 @@ class GrlxXMLPublic {
 		$str = '/'.trim($str,'/');
 		$str = $this->root.$str;
 		$str = $this->simpleXML->xpath($str);
-		$str = $str[0];
+		$str = $str[0] ?? '';
 	}
 
 	/**
@@ -127,7 +127,7 @@ class GrlxXMLPublic {
 		if ( is_object($xpath) ) {
 			$val = (string)$xpath;
 		}
-		return $val;
+		return $val ?? null;
 	}
 
 	/**
