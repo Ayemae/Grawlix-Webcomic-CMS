@@ -26,3 +26,17 @@ If your new Grawlix site is giving you internal server errors, there's a line in
 Again, you may need to 'Show Hidden Files' in order to see the `.htaccess` file.
 
 \*FTP CLIENTS: Some hosts provide a web FTP client, but some free ones you can download include [Cyberduck](https://cyberduck.io/) and [Filezilla](https://filezilla-project.org/).
+
+HOW TO UPDATE
+---
+
+If you already have Grawlix installed, you should be able to just upload the new files to update. However, make sure you don't overwrite the files you've customised, these include:
+* `.htaccess`/`htaccess.txt`
+* `config.php`, if you overwrite this one, Grawlix won't be able to access the database!
+
+Either don't upload or delete `firstrun.php`, this file is only used for installing Grawlix the first time.
+If you're upgrading from version 1.2 or older, run `_admin/_upgrade-to-1.3x.php`, and then delete it when you're done. If you're upgrading from 1.3 or newer, then you don't need to run it and can delete it, or skip uploading it.
+
+If you're using Disqus comments and updating from 1.5 or earlier, you may need to change `assets/snippets/snippet.comments.php` and comment out the line that sets the disqus_identifier to avoid breaking your existing comments. Unfortunately, prior to 1.6, the disqus_identifier wasn't set, causing Disqus to use the URL instead of the page ID, which would cause comments to get misaligned if you deleted pages.
+
+If you run into issues with your archive being displayed incorrectly, go into your archive settings, change the layout to something else, save, then change it back to what you want and save.

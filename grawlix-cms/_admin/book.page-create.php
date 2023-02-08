@@ -115,9 +115,9 @@ if ( !empty($_POST) && isset($_FILES['file_change']) && $_FILES['file_change']['
 
 	// ! Add the page to MySQL.
 	$new_page_name ? $new_page_name : $new_page_name = 'Untitled';
-	$blog_headline = htmLawed($blog_headline);
-	$blog_post = htmLawed($blog_post);
-	$transcript = htmLawed($transcript);
+	$blog_headline = $blog_headline? htmLawed($blog_headline) : null;
+	$blog_post = $blog_post? htmLawed($blog_post) : null;
+	$transcript = $transcript? htmLawed($transcript) : null;
 
 	$custom_url = str_replace(' ', '-', $custom_url);
 	$custom_url = str_replace('/', '', $custom_url);
@@ -170,7 +170,7 @@ if ( !empty($_FILES['file_change']) && !empty($new_page_id) ) {
 			//Does anybody acttually WANT the filename as the alt text?
 
 			// Create the image DB record.
-			$new_image_id = $comic_image-> createImageRecord ( '/'.DIR_COMICS_IMG.$filename,$alt );
+			$new_image_id = $comic_image-> createImageRecord ( '/'.DIR_COMICS_IMG.$filename, $alt?? null );
 
 			// Assign the image to the page.
 			if ( $new_image_id && $new_page_id ) {

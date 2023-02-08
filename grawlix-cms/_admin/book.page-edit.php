@@ -306,9 +306,9 @@ EOL;
 
 if ( isset($page_id) && !empty($_POST) ) {
 
-	$blog_headline = htmLawed($blog_headline ?? '');
-	$blog_post = htmLawed($blog_post ?? '');
-	$transcript = htmLawed($transcript ?? '');
+	$blog_headline = $blog_headline? htmLawed($blog_headline) : null;
+	$blog_post = $blog_post? htmLawed($blog_post) : null;
+	$transcript = $transcript? htmLawed($transcript) : null;
 
 	$data = array(
 		'blog_title' => $blog_headline,
