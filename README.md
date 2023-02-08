@@ -27,6 +27,8 @@ Again, you may need to 'Show Hidden Files' in order to see the `.htaccess` file.
 
 \*FTP CLIENTS: Some hosts provide a web FTP client, but some free ones you can download include [Cyberduck](https://cyberduck.io/) and [Filezilla](https://filezilla-project.org/).
 
+Note: By default, Disqus comments use the URL to identify the pages, which may cause threads to appear on the wrong pages if you delete any pages. Please see `/assets/snippets/snippet.comments.php`, there is a line you can uncomment to make Disqus use the unique page ID instead, which should avoid this problem. The "wrong" behaviour is default to facilitate upgrading from older versions of Grawlix, but we will probably make the better behaviour default when we officially release Grawlix 1.6.0.
+
 HOW TO UPDATE
 ---
 
