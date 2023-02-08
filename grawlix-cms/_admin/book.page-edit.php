@@ -278,9 +278,13 @@ if ( isset($page_id) && !empty($_POST) ) {
 	$db-> orderBy('sort_order','ASC');
 	$next_id = $db-> getOne('book_page', 'id');
 
-	$link1-> url('book.page-edit.php?page_id='.$next_id['id']);
-	$link1-> tap('Go to the next page');
-	$go_next_link = $link1-> paint();
+	if($next_id) {
+		$link1-> url('book.page-edit.php?page_id='.$next_id['id']);
+		$link1-> tap('Go to the next page');
+		$go_next_link = $link1-> paint();
+	} else {
+		$go_next_link = null;
+	}
 
 	if ( $success == 1 ) {
 		$success_message = <<<EOL
@@ -288,10 +292,11 @@ Changes to <b>$new_page_name</b> were saved.
 <ul>
 	<li>Make more changes below</li>
 	<li>$go_return_link</li>
-	<li>$go_next_link</li>
-</ul>
-
 EOL;
+	if($go_next_link) {
+		$success_message .= "\t<li>".$go_next_link.'</li>';
+	}
+	$success_message .= "</ul>\n";
 
 		if ( $success || $success1 ) {
 			$alert_output .= $message->success_dialog($success_message);
@@ -306,9 +311,9 @@ EOL;
 
 if ( isset($page_id) && !empty($_POST) ) {
 
-	$blog_headline = htmLawed($blog_headline ?? '');
-	$blog_post = htmLawed($blog_post ?? '');
-	$transcript = htmLawed($transcript ?? '');
+	$blog_headline = $blog_headline? htmLawed($blog_headline) : null;
+	$blog_post = $blog_post? htmLawed($blog_post) : null;
+	$transcript = $transcript? htmLawed($transcript) : null;
 
 	$data = array(
 		'blog_title' => $blog_headline,
