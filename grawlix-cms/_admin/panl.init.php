@@ -100,6 +100,7 @@ $frequency_list_init = display_pretty_publish_frequency();
 
 // Get vital milieu data
 $milieu_list = get_site_milieu($db);
+
 //Set the timezone:
 if(isset($milieu_list['timezone']) && isset($milieu_list['timezone']['value'])) {
 	date_default_timezone_set($milieu_list['timezone']['value']);

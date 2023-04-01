@@ -1,6 +1,8 @@
-<section class="pattern-no-image" id="{id}">
-	<h3>{title}</h3>
-	<div class="content">
-		{content}
+<section class="static-block" id="{id}">
+	<div class="block-container pattern-no-image">
+		<h3><a href="{link}">{title}</a></h3>
+		<div class="block-content">
+			{content}
+		</div>
 	</div>
 </section>

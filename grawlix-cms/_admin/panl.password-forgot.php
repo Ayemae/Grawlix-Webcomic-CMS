@@ -48,7 +48,11 @@ if ( !empty($email) && empty($s) ) {
 		);
 		$db -> where('email', $email);
 		if ( $db -> update('user', $data) ) {
-			$email_message = 'Tap this to reset your Grawlix password: http://'.$_SERVER['HTTP_HOST'].'/_admin/panl.password-reset.php?s='.$new_serial;
+				$dir = '';
+			if(isset($milieu_list['directory']) && isset($milieu_list['directory']['value'])) {
+				$dir = $milieu_list['directory']['value'];
+			}
+			$email_message = 'Tap this to reset your Grawlix password: http://'.$_SERVER['HTTP_HOST'].$dir.'/_admin/panl.password-reset.php?s='.$new_serial;
 			$headers = 'X-Mailer: PHP/'.phpversion();
 			mail($email,'Grawlix password reset',$email_message,$headers);
 
