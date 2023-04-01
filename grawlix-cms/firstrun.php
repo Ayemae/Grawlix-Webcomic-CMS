@@ -706,7 +706,7 @@ VALUES
 	(1,'Site name',NULL,'site_name','My Comic',1,'title',1),
 	(2,'Artist’s name',NULL,'artist_name','$user[artist_name]',1,'text',3),
 	(3,'Copyright year(s)',NULL,'copyright','©$year',1,'text',4),
-	(4,'Timezone',NULL,'timezone','$timezone',1,NULL,6),
+	(4,'Timezone',NULL,'timezone','America/Los_Angeles',1,NULL,6),
 	(5,'Site root directory','If you wish to run the Grawlix CMS in a subdirectory, enter its name here. Otherwise leave this blank.','directory','$site_root_directory',1,'path',2),
 	(6,'Meta description',NULL,'meta_description','Enter a short blurb for your meta-description tag.',1,'text',5),
 	(7,'Date format',NULL,'date_format','F j, Y',1,NULL,7),
