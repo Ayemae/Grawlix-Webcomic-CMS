@@ -44,6 +44,8 @@ class GrlxPage2_Archive extends GrlxPage2 {
 
 		$this->theme['tone_id'] = $this->bookInfo['tone_id'];
 		$this->pageInfo['permalink'] = $this->bookInfo['archive_url'];
+		$this->pageInfo['book_id'] = $this->bookInfo['id'];
+		$this->pageInfo['book_title'] = $this->bookInfo['title'];
 
 		if ( $this->chapterNum ) {
 			$this->pageInfo['permalink'] .= '/'.$this->chapterNum;

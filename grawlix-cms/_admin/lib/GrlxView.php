@@ -20,6 +20,7 @@
 class GrlxView {
 
 	protected $charset;
+	protected $db;
 	protected $css_dir;
 	protected $css_file;
 	protected $js_dir;
@@ -455,6 +456,38 @@ class GrlxView {
 		return $menu;
 	}
 
+	// /**
+	//  * Outputs banner for multi-book
+	//  *
+	//  * @return string - html from <div class="multibook-banner"> to </div>
+	//  */
+	// protected function multibook_banner($bookID=null) {
+	// 	$output='';
+	// 	if (is_file('book.list.php') && $bookID) {
+	// 		$book=null;
+	// 		// Grab all books from the database.
+	// 		$db->orderBy('title','ASC');
+	// 		$book_list = $db->get ('book', NULL, 'title,id');
+	// 		for ($i=0;$i<count($book_list);$i++) {
+	// 			if ($book_list[$i]['ID']==$bookID) {
+	// 				$book=$book_list[$i];
+	// 			}
+	// 		}
+	// 		$output .= '<div class="multibook-banner">';
+	// 		$output .= '<h2>Book: '.$book->title.'</h2>';
+	// 		if (count($book_list)>1) {
+	// 			$output .= '<label for="book-select">Select book:</label>';
+	// 			$output .= '<select id="book-select">';
+	// 			foreach ($book_list AS $booki) {
+	// 				$output .= '<option value="'.$booki->ID.'"'.($booki->ID==$bookID ? ' selected' : null).'>'.$booki->$title.'</option>';
+	// 			}unset($booki);
+	// 			$output .= '</select>';
+	// 		}
+	// 		$output .= '</div>';
+	// 	}
+	// 	return $output;
+	// }
+
 	/**
 	 * Regular panel menu
 	 *
@@ -516,12 +549,14 @@ class GrlxView {
 	 *
 	 * @return string - html for the head of the page, opens content area
 	 */
-	public function open_view() {
+	public function open_view($bookID=1) {
 		$output  = $this->html_head();
 		$output .= $this->panel_banner();
 		$output .= '<div id="wrap">';
 		$output .= $this->panel_aside();
 		$output .= '<main>';
+		//$output .= '<br>TEST - BOOK ID?: '.$bookID.'<br>';
+		//$output .= $this->multibook_banner($bookID);
 		if ( $_SESSION['install_cleanup'] == 'run_check' ) {
 			$message = $this->install_cleanup();
 			if ( $message ) {

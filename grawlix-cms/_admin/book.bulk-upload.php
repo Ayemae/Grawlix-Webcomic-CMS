@@ -4,6 +4,7 @@
  * Setup
  */
 
+
 include('panl.init.php');
 
 $link = new GrlxLinkStyle;
@@ -62,14 +63,14 @@ if ( $marker_type_list ) {
 }
 
 
-$upload_output = <<<EOL
+$upload_output = PHP_EOL.'
 
 <form action="uploadtome.php" class="dropzone" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="grlx_xss_token" value="<?=$_SESSION['admin']?>"/>
+	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>
 	<div class="fallback">
 	  <input name="file[]" type="file" multiple />
 	</div>
-</form>
+</form>'.
 
 
 EOL;

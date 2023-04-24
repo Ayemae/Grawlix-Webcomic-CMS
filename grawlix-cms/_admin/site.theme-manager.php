@@ -146,24 +146,7 @@ else {
 	$list_output = $list->format_headings();
 	$book = new GrlxComicBook;
 	$book->getMarkerList();
-	// Chapters
-	if ( $book->markerList ) {
-		$i = 0;
-		foreach ( $book->markerList as $marker_id=>$info ) {
-			$i++;
-			$row_select = '<input type="checkbox" name="sel[book_page-'.$marker_id.']" />';
-			$row_chapter = $info['type'].' '.$i.' <span class="title">'.$info['title'].'</span>';
-			$row_theme = isset($theme->toneSelectList[$info['tone_id']]) ? $theme->toneSelectList[$info['tone_id']]['title'] : null;
-			$group_list[] = array($row_select,$row_chapter,$row_theme);
-		}
-	}
-	// Book archives
-	if ( $book->info ) {
-		$row_select = '<input type="checkbox" name="sel[book-'.$book->info['id'].']" />';
-		$row_book = 'Archives <span class="title">'.$book->info['title'].'</span>';
-		$row_theme = isset($theme->toneSelectList[$book->info['tone_id']]) ? $theme->toneSelectList[$book->info['tone_id']]['title'] : null;
-		$group_list[] = array($row_select,$row_book,$row_theme);
-	}
+
 	// Static pages
 	$static = new GrlxStaticPage;
 	$page_list = $static->getPageList();
@@ -173,6 +156,24 @@ else {
 			$row_page = 'Static page <span class="title">'.$info['title'].'</span>';
 			$row_theme = isset($theme->toneSelectList[$info['tone_id']]) ? $theme->toneSelectList[$info['tone_id']]['title'] : null;
 			$group_list[] = array($row_select,$row_page,$row_theme);
+		}
+	}
+	// Book archives
+	if ( $book->info ) {
+		$row_select = '<input type="checkbox" name="sel[book-'.$book->info['id'].']" />';
+		$row_book = 'Archives <span class="title">'.$book->info['title'].'</span>';
+		$row_theme = isset($theme->toneSelectList[$book->info['tone_id']]) ? $theme->toneSelectList[$book->info['tone_id']]['title'] : null;
+		$group_list[] = array($row_select,$row_book,$row_theme);
+	}
+	// Markers
+	if ( $book->markerList ) {
+		$i = 0;
+		foreach ( $book->markerList as $marker_id=>$info ) {
+			$i++;
+			$row_select = '<input type="checkbox" name="sel[book_page-'.$marker_id.']" />';
+			$row_chapter = $info['type'].' '.$i.' <span class="title">'.$info['title'].'</span>';
+			$row_theme = isset($theme->toneSelectList[$info['tone_id']]) ? $theme->toneSelectList[$info['tone_id']]['title'] : null;
+			$group_list[] = array($row_select,$row_chapter,$row_theme);
 		}
 	}
 

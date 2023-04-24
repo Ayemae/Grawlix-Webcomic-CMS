@@ -1,5 +1,13 @@
 <?php
 
+//test
+if (isset($_GET['book_id']) || isset($_SESSION['book_id'])) {
+	$bookID= filter_var(($_GET['book_id'] ?? $_SESSION['book_id']), FILTER_SANITIZE_NUMBER_INT);
+	if (!isset($_SESSION['book_id'])) {$_SESSION['book_id'] = $bookID;}
+  } else {
+	$bookID=1;
+  }
+
 class bulkImport{
 	var $import_top_list;
 
@@ -33,7 +41,7 @@ require_once('panl.init.php');
 $view = new GrlxView;
 $fileops = new GrlxFileOps;
 $message = new GrlxAlert;
-$book = new GrlxComicBook(1);
+$book = new GrlxComicBook($bookID);
 $comic_image = new GrlxComicImage;
 $marker = new GrlxMarker;
 $link = new GrlxLinkStyle;
@@ -427,7 +435,7 @@ if ( $folder_output ) {
 
 $view->page_title('Create pages from FTP');
 $view->tooltype('Chapter');
-$view->headline('Create pages from FTP');
+$view->headline('Create pages from FTP <span>'.$book-> info['title'].'</span>');
 
 $link->url('./book.page-create.php');
 $link->tap('Create one comic page');
