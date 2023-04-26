@@ -549,7 +549,7 @@ class GrlxView {
 	 *
 	 * @return string - html for the head of the page, opens content area
 	 */
-	public function open_view($bookID=1) {
+	public function open_view() {
 		$output  = $this->html_head();
 		$output .= $this->panel_banner();
 		$output .= '<div id="wrap">';
