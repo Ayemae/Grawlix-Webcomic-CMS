@@ -176,9 +176,9 @@ class GrlxPage2_Comic extends GrlxPage2 {
 			$cols = array(
 				'type.`rank` AS `rank`',
 				'sub_sort_order AS sort_order',
-				'marker.title AS marker_title'
-				//'type.title AS marker_type',
-				//'marker.id AS marker_id'
+				'marker.title AS marker_title',
+				'type.title AS marker_type'
+				//'marker.id AS marker_id' //If archives start including marker IDs in their outputs, this may become useful for linking to the relevant section.
 			);
 			$allMarkers = $this->db
 			->join($subquery, 'sub_marker_type_id = type.id', 'INNER')
@@ -192,6 +192,7 @@ class GrlxPage2_Comic extends GrlxPage2 {
 				foreach($allMarkers as $marker) {
 					if($marker['sort_order'] >= $parentMarker) { //valid marker
 						$result['marker_title_'.$marker['rank']] = $marker['marker_title'];
+						$result['marker_type_'.$marker['rank']] = $marker['marker_type'];
 						$parentMarker = $marker['sort_order'];
 					}
 				}
