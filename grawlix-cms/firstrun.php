@@ -177,10 +177,14 @@ class GrlxFirstRun {
 	 * Check for any existing users in db
 	 */
 	protected function checkExisting() {
-		$result = $this->db->query("SELECT level FROM grlx_user WHERE level > 1");
-		if ( $result->num_rows > 0 ) {
-			$this->error = 'The Grawlix CMS is already installed.';
-			return TRUE;
+		try {
+			$result = $this->db->query("SELECT level FROM grlx_user WHERE level > 1");
+			if ( $result->num_rows > 0 ) {
+				$this->error = 'The Grawlix CMS is already installed.';
+				return TRUE;
+			}
+		} catch (Exception $e) {
+			return FALSE;
 		}
 	}
 
