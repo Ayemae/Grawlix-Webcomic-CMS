@@ -159,45 +159,6 @@ class GrlxPage2_Comic extends GrlxPage2 {
 			}
 			$result['edit_this']['text'] = 'Edit comic page';
 			$result['edit_this']['link'] = 'book.page-edit.php?page_id='.$result['page_id'];
-			
-			//Get any markers relevant to this page:
-			//First, we create a subquery that gets the most recent page per marker type.
-			//We can't get the marker name, etc in this subquery due to MySQL limitations.
-			$cols = array(
-				'marker.marker_type_id AS sub_marker_type_id',
-				'MAX(bp.sort_order) AS sub_sort_order'
-			);
-			$subquery = $this->db->subQuery('recentMarkers');
-			$subquery->join('marker marker', 'marker.id = bp.marker_id', 'INNER') //we have to name the marker table because in truth it's actually something like grlx_marker
-			->where('bp.sort_order <= '.$result['sort_order'])
-			->groupBy('marker.marker_type_id')
-			->get('book_page bp',null,$cols);
-			//Then, using the returned pages, get the actual marker titles, ranks, etc:
-			$cols = array(
-				'type.`rank` AS `rank`',
-				'sub_sort_order AS sort_order',
-				'marker.title AS marker_title',
-				'type.title AS marker_type'
-				//'marker.id AS marker_id' //If archives start including marker IDs in their outputs, this may become useful for linking to the relevant section.
-			);
-			$allMarkers = $this->db
-			->join($subquery, 'sub_marker_type_id = type.id', 'INNER')
-			->join('book_page bp', 'bp.sort_order = sub_sort_order', 'INNER')
-			->join('marker marker', 'bp.marker_id = marker.id', 'INNER')
-			->orderBy('type.`rank`', 'ASC')
-			->get('marker_type type',null,$cols);
-			//And finally, filter out any child markers that aren't inside the current parent marker:
-			if($allMarkers) {
-				$parentMarker = 0;
-				foreach($allMarkers as $marker) {
-					if($marker['sort_order'] >= $parentMarker) { //valid marker
-						$result['marker_title_'.$marker['rank']] = $marker['marker_title'];
-						$result['marker_type_'.$marker['rank']] = $marker['marker_type'];
-						$parentMarker = $marker['sort_order'];
-					}
-				}
-			}
-			
 			$this->pageInfo = $result;
 			$this->pageInfo['book_description'] = $this->bookInfo['description'];
 			$this->buildComicNavURLs();

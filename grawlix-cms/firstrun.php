@@ -162,10 +162,14 @@ class GrlxFirstRun {
 	 */
 	protected function connectDB() {
 		$info = $this->dbInfo;
-		@$db = new mysqli($info['db_host'],$info['db_user'],$info['db_pswd'],$info['db_name']);
-		if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
-			@$db->set_charset("utf8");
-			$this->db = $db;
+		if ($info['db_name']==='') {
+			$this->db = null;
+		} else {
+			@$db = new mysqli($info['db_host'],$info['db_user'],$info['db_pswd'],$info['db_name']);
+			if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
+				@$db->set_charset("utf8");
+				$this->db = $db;
+			}
 		}
 	}
 
