@@ -169,6 +169,8 @@ class GrlxFirstRun {
 			if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
 				@$db->set_charset("utf8");
 				$this->db = $db;
+			} else {
+				$this->db = false;
 			}
 		}
 	}
