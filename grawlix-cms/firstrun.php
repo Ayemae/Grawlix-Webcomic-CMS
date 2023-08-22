@@ -162,16 +162,17 @@ class GrlxFirstRun {
 	 */
 	protected function connectDB() {
 		$info = $this->dbInfo;
-		if ($info['db_name']==='') {
-			$this->db = null;
-		} else {
+		$this->db = null;
+		try {
 			@$db = new mysqli($info['db_host'],$info['db_user'],$info['db_pswd'],$info['db_name']);
-			if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
-				@$db->set_charset("utf8");
-				$this->db = $db;
-			} else {
-				$this->db = false;
-			}
+		} catch (Exception $e) {
+			throw new Exception("Incorrect database credentials or service unavailable.");
+		} 
+		if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
+			@$db->set_charset("utf8");
+			$this->db = $db;
+		} else {
+			$this->db = false;
 		}
 	}
 
@@ -180,7 +181,7 @@ class GrlxFirstRun {
 	 */
 	protected function checkExisting() {
 		try {
-			$result = $this->db->query("SELECT level FROM grlx_user WHERE level > 1");
+			$result = $this->db->query("SELECT `level` FROM `grlx_user` WHERE `level` > 1");
 			if ( $result->num_rows > 0 ) {
 				$this->error = 'The Grawlix CMS is already installed.';
 				return TRUE;
