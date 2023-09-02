@@ -24,7 +24,7 @@ if ( isset($var_list) ) {
 	}
 }
 
-if (isset($book_id) && $book_id)
+if (isset($book_id) && !empty($book_id))
 {
 	$_SESSION['book_id'] = $book_id;
 }
@@ -52,7 +52,7 @@ else {
 
 // ! ------ Updates
 
-if ( isset($book_id) ) {
+if ( isset($book_id) && !empty($book_id) ) {
 	$book = new GrlxComicBook($book_id);
 }
 else {
@@ -163,7 +163,7 @@ if ( $delete_page_id && is_numeric($delete_page_id) ) {
 // DELETE EVERYTHING (disabled … for now)
 if ( $delete_all && 1==2 ) {
 
-	if ( $book_id ) {
+	if ( isset($book_id) && !empty($book_id) ) {
 		$book = new GrlxComicBook($book_id);
 	}
 	else {
@@ -191,7 +191,7 @@ if ( $delete_all && 1==2 ) {
 
 // ! Get the book info
 
-if ( isset($book_id) ) {
+if ( isset($book_id) && !empty($book_id) ) {
 	$book = new GrlxComicBook($book_id);
 }
 else {
