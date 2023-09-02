@@ -170,26 +170,35 @@ class GrlxPage2_RSS extends GrlxPage2 {
 		$output .= '		<description><![CDATA['.($this->bookInfo['description'] ?? '').']]></description>'."\n";
 		$output .= '		<link>http://'.($this->domainName.$this->milieu['directory'] ?? '').($this->bookInfo['url'] ?? '').'</link>'."\n";
 //		$output .= '<author>'.$this->milieu['artist_name'].'</author>'."\n";
-		$output .= '		<generator>The Grawlix CMS</generator>'."\n";
-		foreach ( $this->feedItems as $page ) {
-			$output .= '		<item>'."\n";
-			$output .= '			<pubDate>'.date('D, j M Y H:i:s O', strtotime($page['date_publish'])).'</pubDate>'."\n";
-			$output .= '			<title><![CDATA['.$page['title'].']]></title>'."\n";
-			if ( $page['options'] && $page['options'] != '' )
+		$output .= '		<generator>The Grawlix CMS</generator>'."\n";	
+		
+		$entrycount = 1;
+		$entrymax = 10;
+		
+		foreach ( $this->feedItems as $page ) {			
+			if ($entrycount <= $entrymax) 
 			{
-				$output .= '			<guid isPermaLink="true">'.$page['permalink'].'-'.$page['options'].'</guid>'."\n";
-				$output .= '			<link>'.$page['permalink'].'-'.$page['options'].'</link>'."\n";
+				$output .= '		<item>'."\n";
+				$output .= '			<pubDate>'.date('D, j M Y H:i:s O', strtotime($page['date_publish'])).'</pubDate>'."\n";
+				$output .= '			<title><![CDATA['.$page['title'].']]></title>'."\n";
+				if ( $page['options'] && $page['options'] != '' )
+				{
+					$output .= '			<guid isPermaLink="true">'.$page['permalink'].'-'.$page['options'].'</guid>'."\n";
+					$output .= '			<link>'.$page['permalink'].'-'.$page['options'].'</link>'."\n";
+				}
+				else
+				{
+					$output .= '			<guid isPermaLink="true">'.$page['permalink'].'</guid>'."\n";
+					$output .= '			<link>'.$page['permalink'].'</link>'."\n";
+				}
+				if ( $page['description'] ) {
+					$output .= '			<description><![CDATA['.$page['description'].']]></description>'."\n";
+				}
+				$output .= '		</item>'."\n";
 			}
-			else
-			{
-				$output .= '			<guid isPermaLink="true">'.$page['permalink'].'</guid>'."\n";
-				$output .= '			<link>'.$page['permalink'].'</link>'."\n";
-			}
-			if ( $page['description'] ) {
-				$output .= '			<description><![CDATA['.$page['description'].']]></description>'."\n";
-			}
-			$output .= '		</item>'."\n";
+			$entrycount++;
 		}
+		
 		$output .= '	</channel>'."\n";
 		$output .= '</rss>'."\n";
 		print($output);
