@@ -46,6 +46,7 @@ class GrlxForm {
 	protected $postfix;
 	protected $div_wrap;
 	protected $show_error;
+	public $size;
 
 	/**
 	 * Set defaults

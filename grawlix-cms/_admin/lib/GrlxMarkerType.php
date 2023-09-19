@@ -1,8 +1,8 @@
 <?php
 
 class GrlxMarkerType {
-
-	public $markerTypeID;
+	protected $db;
+	public    $markerTypeID;
 
 	function __construct($markerTypeID=null){
 		global $db;

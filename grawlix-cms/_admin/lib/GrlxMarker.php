@@ -8,6 +8,7 @@ class GrlxMarker {
 	public $pageList;
 	public $startPage;
 	public $endPage;
+	public $thumbInfo;
 
 	function __construct($markerID=null,$quick=false){
 		global $db;
