@@ -164,7 +164,12 @@ class GrlxFirstRun {
 		$info = $this->dbInfo;
 		$this->db = null;
 		if ($info['db_name']>'') {
-			@$db = new mysqli($info['db_host'],$info['db_user'],$info['db_pswd'],$info['db_name']);
+			try {
+				@$db = new mysqli($info['db_host'],$info['db_user'],$info['db_pswd'],$info['db_name']);
+			} catch (Exception $e) {
+				//throw new Exception("Incorrect database credentials or service unavailable.");
+				$db = null;
+			} 
 			if ( $db && ( !$db->connect_errno || $db->connect_errno == 0 ) ) {
 				@$db->set_charset("utf8");
 				$this->db = $db;
