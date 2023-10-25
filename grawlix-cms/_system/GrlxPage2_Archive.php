@@ -95,7 +95,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 					$this->getPages();
 				}
 				else {
-					$this->getPages($this->markerType['id']);
+					$this->getPages($this->markerType['id'] ?? null);
 //					$this->getPages();
 				}
 				break;
@@ -125,7 +125,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			->get('book_page',$limit,$cols);
 
 		$this->range['start'] = $result[0]['sort_order'];
-		$this->range['end'] = $result[1]['sort_order'];
+		$this->range['end'] = ($result[1]['sort_order'] ?? null);
 	}
 
 	/**
@@ -304,15 +304,17 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	 */
 	protected function buildHeadline() {
 		if ( $this->layout['behavior'] == 'multi' ) {
-			$str = $this->markerType['title'].' ';
+			$str = '<span class="marker-info">';
+			$str .= '<span class="marker-type">'.$this->markerType['title'].'</span> ';
 			if ( isset($this->chapterNum) && is_numeric($this->chapterNum) ) {
-				$str .= $this->chapterNum.' ';
+				$str .= '<span class="marker-number">'.$this->chapterNum.'</span>';
+				$str .= ' </span>';
 				if ( $this->currentList[1]['marker_title'] ) {
 					$str .= '<span class="title">'.$this->currentList[1]['marker_title'].'</span>';
 				}
 			}
 			else {
-				$str .= 'Archive';
+				$str .= '</span> <span class="title">Archive</span>';
 			}
 		}
 		else {
@@ -429,7 +431,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		}
 		if ( !empty($image) || !empty($text) )
 		{
-			$link = '<li class="item chapter"><div class="archive-header"><h3>'.($image ?? '').($text ?? '').'</h3>'.($desc ?? '').'</li></div>';
+			$link = '<li class="item chapter"><div class="archive-header">'.($image ?? '').'<h3 class="marker-title">'.($text ?? '').'</h3><div class="marker-description>"'.($desc ?? '').'</div></li></div>';
 		}
 		return $link;
 	}
@@ -437,21 +439,11 @@ class GrlxPage2_Archive extends GrlxPage2 {
 	protected function formatChapterHead2($x=null,$info=null) {
 		// Only multi needs links for the chapters
 		$url = null;
+		$link = null;
 		if ($this->layout['behavior'] == 'multi')
 		{
 			$url = $this->buildPermalink($x,'archive');
 		}
-/*
-		else
-		{
-			$first_page = reset($info['pages']);
-			$url = $this->buildPermalink($first_page['sort_order'],'page');
-			if ( $first_page['options'] && $first_page['options'] != '' )
-			{
-				$url .= '-'.$first_page['options'];
-			}
-		}
-*/
 
 		// Marker image (only for the main archives page)
 		if ( empty($this->chapterNum) || !is_numeric($this->chapterNum) )
@@ -473,6 +465,15 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			if ( !empty($this->meta['chapters']) && in_array('title', $this->meta['chapters']) ) {
 				$text[] = $info['marker_title'];
 			}
+			// Link
+			if (!$url && !empty($this->meta['chapters']) && in_array('link to start', $this->meta['chapters']) ) {
+				$first_page = reset($info['pages']);
+				$url = $this->buildPermalink($first_page['sort_order'],'page');
+				if ( $first_page['options'] && $first_page['options'] != '' )
+				{
+					$url .= '-'.$first_page['options'];
+			}
+			}
 			if ( !empty($text) )
 			{
 				$text = implode(' ', $text);
@@ -488,7 +489,7 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			$link = '';
 			if ( !empty($image) || !empty($text) )
 			{
-				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<div class="archive-header">'.$image."\n<h3>".$text.'</h3>'."$desc\n".'</div>'."\n";
+				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<div class="archive-header">'.$image."\n<h3 class='marker-title'>".$text.'</h3>'."<div class='marker-description'>$desc\n".'</div></div>'."\n";
 			}
 		}
 		return $link;
@@ -517,20 +518,21 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		}
 		// Page number
 		if ( in_array('number', $this->meta['pages']) && $num ) {
-			$page = 'Page '.$num.' ';
+			$page = '<span class="page-number">'.$num.'</span>';
 		}
 		// Title
 		if ( in_array('title', $this->meta['pages']) ) {
 			$info['page_title'] ? $title = $info['page_title'].' ' : $title = 'Untitled ';
+			$title = '<span class="page-title">'.$title.'</span>';
 		}
 		// Pub date
 		if ( in_array('date', $this->meta['pages']) ) {
 			if ( $info['date_publish'] ) {
 				$date = $this->formatDate($info['date_publish']);
-				$date = '<time datetime="'.$info['date_publish'].'">'.$date.'</time>';
+				$date = '<time class="page-date" datetime="'.$info['date_publish'].'">'.$date.'</time>';
 			}
 			else {
-				$date = 'Undated';
+				$date = '<time class="page-date">Undated</time>';
 			}
 		}
 		if ( !empty($page) || !empty($title) || !empty($date) ) {
@@ -564,20 +566,21 @@ class GrlxPage2_Archive extends GrlxPage2 {
 		}
 		// Page number
 		if ( in_array('number', $this->meta['pages']) && $num ) {
-			$page = 'Page '.$num.' ';
+			$page = '<span class="page-number">'.$num.'</span>';
 		}
 		// Title
 		if ( in_array('title', $this->meta['pages']) ) {
 			$info['page_title'] ? $title = $info['page_title'].' ' : $title = 'Untitled ';
+			$title = '<span class="page-title">'.$title.'</span>';
 		}
 		// Pub date
 		if ( in_array('date', $this->meta['pages']) ) {
 			if ( $info['date_publish'] ) {
 				$date = $this->formatDate($info['date_publish']);
-				$date = '<time datetime="'.$info['date_publish'].'">'.$date.'</time>';
+				$date = '<time class="page-date" datetime="'.$info['date_publish'].'">'.$date.'</time>';
 			}
 			else {
-				$date = 'Undated';
+				$date = '<time class="page-date">Undated</time>';
 			}
 		}
 		$text = '';

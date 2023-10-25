@@ -83,7 +83,7 @@ if ( !empty($_POST) && isset($block_id) && is_numeric($block_id) ) {
 	else {
 		$alert_output .= $message->warning_dialog('Changes failed to save.');
 	}
-}
+} else { $block_info = array(); }
 
 
 // ! Create
@@ -197,7 +197,7 @@ if ( empty($theme_directory) ) {
 // Scan the current theme for pattern files in case the user
 // renamed some or created new ones.
 if ( !empty($theme_directory) ) {
-	$pattern_order_list = array('(None)');
+	$pattern_order_list = array('(Inherit page default)');
 	$file_list = scandir('../themes/'.$theme_directory);
 	if($file_list) {
 		foreach($file_list as $filename) {
@@ -211,7 +211,7 @@ if ( !empty($theme_directory) ) {
 
 // Build a list to let the artist chooses a pattern for this static page.
 if ( !empty($pattern_order_list) ) {
-	$pattern_select = build_select_simple('pattern',$pattern_order_list, $block_info['pattern'],'width:200px');
+	$pattern_select = build_select_simple('pattern',$pattern_order_list, ($block_info['pattern'] ?? null),'width:200px');
 }
 else {
 	if ( empty($theme_directory) ) {
@@ -227,26 +227,30 @@ $image_output = '';
 
 if ( !empty($block_info) || !empty($page_id) ) {
 	$title_output  = '<label for="title">Title</label>'."\n";
-	$title_output .= '<input type="text" name="title" id="title" maxlength="64" value="'.$block_info['title'].'" style="max-width:20rem">'."\n";
+	$title_output .= '<input type="text" name="title" id="title" maxlength="64" value="'.($block_info['title'] ?? '').'" style="max-width:20rem">'."\n";
 
-	if ( strtolower($block_info['title']) != 'freeform' ) {
+	if (!isset($block_info['title'])) {
+		$block_info['title'] = '';
+	}
+
+	if (strtolower($block_info['title']) != 'freeform' ) {
 		$url_output  = '<label for="title">External URL</label>'."\n";
-		$url_output .= '<input type="text" name="url" id="url" value="'.$block_info['url'].'">'."\n";
+		$url_output .= '<input type="text" name="url" id="url" value="'.($block_info['url'] ?? '').'">'."\n";
 
 		$pattern_output  = '<label for="title">Pattern</label>'."\n";
 		$pattern_output .= $pattern_select."\n";
 
 		$content_output  = '<label for="title">Body</label>'."\n";
-		$content_output .= '<textarea name="content" id="content" rows="15">'.$block_info['content'].'</textarea>'."\n";
+		$content_output .= '<textarea name="content" id="content" rows="15">'.($block_info['content'] ?? null).'</textarea>'."\n";
 
-		if ( $block_info['image'] && $block_info['image'] != '' ) {
+		if ( isset($block_info['image']) && $block_info['image'] && $block_info['image'] != '' ) {
 			$image_output .= '<img src="'.$milieu_list['directory']['value'].$block_info['image'].'" alt="image" /><br/>'."\n";
 			$image_output .= '&nbsp;<p><a href="?remove_image=1&amp;block_id='.$block_id.'" class="btn secondary delete" name="submit" type="submit" value="save"/><i></i>Remove image</a></p>'."\n";
 		}
 
 		$max = ini_get( 'upload_max_filesize' ).'B maximum';
 
-		if ($block_info['image'] && $block_info['image'] != '') {
+		if ( isset($block_info['image']) && $block_info['image'] && $block_info['image'] != '') {
 			$image_output .= '<p><br/><label for="title">Upload a different image ('.$max.')</label>'."\n";
 		}
 		else {
@@ -257,7 +261,7 @@ if ( !empty($block_info) || !empty($page_id) ) {
 	}
 	else {
 		$content_output  = '<label for="title">Body</label>'."\n";
-		$content_output .= '<textarea name="content" id="content" rows="40">'.$block_info['content'].'</textarea>'."\n";
+		$content_output .= '<textarea name="content" id="content" rows="40">'.($block_info['content'] ?? null).'</textarea>'."\n";
 	}
 
 }
@@ -338,9 +342,9 @@ $output .= $alert_output;
 $output .= $form->open_form();
 $output .= $hidden_fields;
 $output .= $final_meta_output;
-$output .= $final_content_output ?? '';
-$output .= $final_image_output ?? '';
-$output .= $final_pattern_output ?? '';
+$output .= ($final_content_output ?? '');
+$output .= ($final_image_output ?? '');
+$output .= ($final_pattern_output ?? '');
 
 print($output);
 print('<button class="btn primary save right" name="submit" type="submit" value="save"/><i></i>Save</button>');

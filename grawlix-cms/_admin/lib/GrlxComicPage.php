@@ -1,6 +1,11 @@
 <?php
 
 class GrlxComicPage {
+	protected $db;
+	public $imageList;
+	public $pageID;
+	public $pageInfo;
+
 	function __construct($pageID=null){
 		$this-> pageID = $pageID;
 		global $db;

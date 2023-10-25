@@ -3,6 +3,7 @@
 class GrlxMarkerType {
 	protected $db;
 	public    $markerTypeID;
+	public    $markerTypeInfo;
 
 	function __construct($markerTypeID=null){
 		global $db;
