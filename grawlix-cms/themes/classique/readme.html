@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Overview of the Stick Figure theme</title>
+  <meta name="description" content="Learn to customize the Grawlix CMS Stick Figure theme to suit your needs" />
+  <meta name="author" content="The Grawlix CMS Team" />
+	<style type="text/css" rel="stylesheet">
+body {
+	background: #f4f4f4;
+	font-size: 16px;
+	line-height: 28px;
+	font-family: sans-serif;
+	color: #333;
+}
+main {
+	max-width: 36rem;
+	margin: 0 auto;
+	padding: 2rem;
+}
+article {
+	margin-left: 1rem;
+}
+
+h1 {
+	color: #000;
+	padding-top: 1rem;
+	font-size: 3rem;
+	line-height: 3.5rem;
+	margin-top: 0;
+}
+h1 span {
+	font-weight: normal;
+	color: #555;
+}
+h2 {
+	margin: 4rem 0 0 0;
+	color: #000;
+}
+h3,h4 {
+	margin: 3rem 0 0 0;
+	color: #555;
+}
+a {
+	color: #0c7fbd;
+	text-decoration: none;
+	border-bottom: 1px solid #66c5f7;
+}
+ul,ol {
+	padding-left: 0.25rem;
+}
+li {
+	margin-bottom: 1rem;
+}
+strong {
+	color: #000;
+}
+code {
+	background: #fff;
+	font-size: 1rem;
+	padding: 0.2rem;
+	border: 1px solid #def;
+}
+
+.path {
+	background: #fff;
+	padding: 0.15rem 0.2rem;
+	border-radius: 6px;
+	font-style: italic;
+	font-family: georgia, serif;
+	border: 1px solid #fed;
+}
+.geekspeak {
+	font-style: italic;
+}
+		</style>
+</head>
+<body>
+<main>
+<article>
+
+<h1>Stick Figure: <span>a bare-bones theme to build upon</span></h1>
+
+<p>Stick Figure is a set of files that control the look of sites based on the Grawlix CMS. We designed it to be dismantled, rearranged and customized for any comic website. </p>
+
+<p>See, we don’t want people to say “I can tell that’s a Grawlix site” at a glance. Instead, we want you to surprise the world with your creativity. Here we’ll explore how you can transform this starter theme into something uniquely yours.</p>
+
+<h2 id="toc">In this file</h2>
+
+<ul>
+<li><a href="#quick-start">A quick start</a> — common tweaks artists make</li>
+<li><a href="#themes-and-tones">Themes &amp; tones</a> — different CSS files</li>
+<li><a href="#php">Bits of PHP</a> — includes and stuff from the admin panel</li>
+<li><a href="#scripts">The theme files</a> — and their jobs</li>
+<li><a href="#html">Bits of HTML</a> — and conventions we use</li>
+<li><a href="#going-forward">Going further</a> — support links and contact details</li>
+</ul>
+
+<h2 id="quick-start">Quick start</h2>
+
+<p>Many artists want to change a few things first:</p>
+
+<ul>
+<li>The site’s banner</li>
+<li>The site’s background</li>
+<li>Link and text colors</li>
+<li>Site width</li>
+</ul>
+
+<h3>The site banner</h3>
+
+<ol>
+<li>Upload your banner image to <span class="path">/themes/stick_figure</span> (the same folder in which you found this file).</li>
+<li>Open the file <span class="path">snippet.header.php</span>.</li>
+<li>Replace the image <code>src</code> on line 26 with the path to your image. Don’t forget to use a sensible <code>alt</code> attribute.</li>
+</ol>
+
+<h3>The site’s background</h3>
+
+<p>There are two ways to change a site’s background color and image. Start by changing the parameters on lines 49–51 in <span class="path">theme.css</span>. Then open the tone files (e.g. “tone.desert.css”) to make more specific changes — see <a href="#themes-and-tones">themes and tones</a> below.</p>
+
+<h3>Link and text colors</h3>
+
+<p>They’re in <span class="path">theme.css</span>, right around lines 55–58. Tone files may override these colors, however — see <a href="#themes-and-tones">Themes and Tones</a> below.</p>
+
+<h3>Site width</h3>
+
+<p>Not everyone has the same screen as you, or views your site with their browser open as wide as possible. Comics that are, say, 1200 pixels wide must shrink to fit screens that display less than 1200 pixels across. So two factors influence your site’s layout: <strong>your comic image’s size</strong> and the <strong>reader’s browser size.</strong></p>
+
+<p>Found on lines 133–151 (for the comic image) and lines 97–114 (for the site), Stick Figure’s <em>media queries</em> control page and image widths on differently-sized browsers. In plain English they say, “if the screen is up to <em>X</em> pixels wide, then make the element no more than <em>Y</em> pixels wide.”</p>
+
+<p>Media queries are not required. If you want to blast the <span class="path">theme.css</span> file back to zero and write your own, no one will miss media queries unless your comic is wider than their browser.</p>
+
+<p>But we strongly recommend you keep the media queries in place. The web is increasingly a mobile place, and if you want to stay modern, remember that not everyone has a glorious 21&quot; full-color screen.</p>
+
+<h3>Best practice</h3>
+
+<ul>
+<li>Change the max-width of <code>#comic figure</code> on lines 134–151 of <span class="path">theme.css</span> to match the images you upload.</li>
+<li>Always make <code>.container, main</code> on lines 97–114 equal to or wider than your comic image.</li>
+</ul>
+
+
+<h2 id="themes-and-tones">Themes and tones</h2>
+
+<p>Stick Figure’s <span class="path">theme.css</span> file controls the site’s general look: its layout, typography and broad colors. Tone files, whose names begin with “tone” and end with “css”, modify that look. For example, the <span class="path">theme.css</span> file might say “make links blue,” but a tone file says, “no, make them orange.”</p>
+
+<p>The <span class="path">theme.css</span> file applies to your whole site. Tone files, though, you can apply to individual chapters or static pages. That means you could, say, make your FAQ and Cast pages greyscale, but your comic in full color. Or if your story changes from winter to summer in two chapters, each can have its own motif.</p>
+
+<p>Assign themes and tones to your site in “Themes” of your admin panel.</p>
+
+
+<h2 id="php">PHP functions</h2>
+
+<p>Don’t panic, we kept the arcane stuff to a minimum. But you’ll come to recognize a few essentials.</p>
+
+<h3>Snippet()</h3>
+
+<p>Snippets are PHP files whose names (surprise) begin with “snippet” and end with “php”. The snippet function grabs such a file and sticks it into place. For example, <code>snippet('footer')</code> adds the file <span class="path">snippet.footer.php</span>. <a href="http://www.getgrawlix.com/docs/1/snippets">Check out the docs</a> for details.</p>
+
+<h3>Show()</h3>
+
+<p>“Show” functions grab bits of data from the admin panel. For example, <code>show('artist_name')</code> inserts the name you provide in Settings of your admin panel. <a href="http://www.getgrawlix.com/docs/1/show">See the docs</a> for more info.</p>
+
+
+<h2 id="scripts">PHP scripts</h2>
+
+<p>So, what’s in the box? Every Grawlix theme comes with an assortment of PHP scripts that generate web pages that the reader ultimately sees. Each script is <em>part</em> of a whole page. </p>
+
+<h3>Page.archive</h3>
+
+<p>Displays links to your comic pages, in order. Control its appearance (what the links’ text is) in the admin panel.</p>
+
+<h3>Page.comic</h3>
+
+<p>Displays comic images — the “comic pages” themselves — as well as the blog post snippet, transcript snippet, sharing snippet, etc.</p>
+
+<h3>Page.static</h3>
+
+<p>Displays content for non-comic pages like the FAQ and “About” page.</p>
+
+<h3>Snippet.archive-nav</h3>
+
+<p>Comic navigation links that includes one to the archives page.</p>
+
+<h3>Snippet.comic-nav</h3>
+
+<p>The first/previous/next/latest links in your list of comic pages. </p>
+
+<h3>Snippet.comic-nav-random</h3>
+
+<p>More comic navigation links … with an extra link to a certain comic page. Which page? Who knows? It’s different every time, giving readers a surprise at every page load.</p>
+
+<h3>Snippet.comments</h3>
+
+<p>Contains code that enables readers to leave their thoughts on your comic pages — Disqus, etc. Tinker with this only if you get updated code from your commenting service of choice.</p>
+
+<h3>Snippet.follow</h3>
+
+<p>Contains links to other places on the ’net people can find you, like RSS, Facebook, Pinterest and Twitter. Best left alone unless you know a little PHP.</p>
+
+<h3>Snippet.footer</h3>
+
+<p>The end of every web page on your site. This snippet includes the copyright statement and publish frequency, both of which you change in the admin panel or custom-write by simply replacing all the code in line 5.</p>
+
+<h3>Snippet.header</h3>
+
+<p>Begins each web page with info about the HTML, favicons, and — by default — site banner, title and site-wide navigation menu. </p>
+
+<h3>Snippet.main-menu</h3>
+
+<p>Displays a group of links for the site-wide navigation or menu. We left this file deliberately simple in case you want to make it more complex with, for example, hard-coded links.</p>
+
+<h3>Snippet.share</h3>
+
+<p>This complicated-looking script gives readers the chance to tell other people about your comic pages via social media. You can control which appears in the site via your admin panel’s sharing options.</p>
+
+<h3>Snippet.twitterstream</h3>
+
+<p>Puts a Twitter link into your comic. Best left alone unless you know PHP or have your own Twitter link code; enter your Twitter info in the admin panel to make this snippet work.</p>
+
+<h3>Snippet.transcript</h3>
+
+<p>Shows a comic page’s written dialog, events, setting, etc to the reader.</p>
+
+<h3>Pattern.(something).php</h3>
+
+<p>Pattern files are bits of HTML that structure static pages’ content blocks. You can create your own pattern files or edit the included ones to fit your needs.</p>
+
+
+<h2 id="html">Various HTML voodoo</h2>
+
+<p>Stick Figure is based on HTML5, and includes smart (yet optional) semantics to make your site searchable and readable by a variety of devices and services.</p>
+
+<h3>Article</h3>
+
+<p>“Articles” are general containers that can stand alone. Think of them as articles of clothing: individual things that work together for a successful look.</p>
+
+<h3>Figure</h3>
+
+<p>“Figure” contains an image and related information. We use <code>&lt;figure&gt;</code> as the principle container for your comic images.</p>
+
+<h3>Item<i>x</i></h3>
+
+<p>“Itemtype” and “itemprop” help search engines (<em>coughgoogle</em>) figure out what different elements are all about. They’re helpful in SEO for search engine results pages.</p>
+
+<h3>Role</h3>
+
+<p>“Role” also helps search engines like Google and screen readers like Jaws make sense of raw HTML.</p>
+
+<p>Learn more about elements like <code>&lt;figure&gt;</code>, <code>&lt;main&gt;</code> and <code>&lt;header&gt;</code> at <a href="http://html5doctor.com">HTML5 Doctor</a> or with our <a href="https://gumroad.com/l/SACCb">ebook</a>.</p>
+
+
+<h2 id="going-forward">Going further</h2>
+
+<p>So that’s how you get started with Stick Figure, a starter theme for the Grawlix CMS. If you need more info, here you go:</p>
+
+<ul>
+	<li><strong><a href="http://www.getgrawlix.com/docs">Read the docs</a></strong>: Learn more about specific topics in the Grawlix CMS.</li>
+	<li><strong><a href="http://www.getgrawlix.com/forum">Ask questions</a></strong>: Seek solutions or share your know-how in the forum.</li>
+	<li><strong><a href="https://gumroad.com/l/SACCb">Fear no code</a></strong>: Expunge your apprehension of HTML and CSS with our guide to coding for webcomic artists.</li>
+	<li><strong><a href="http://patreon.com/grawlixcomix">Get special features and info</a></strong>: Help us make a better product, get supporter-only features, and receive regular updates.</li>
+	<li><strong><a href="http://twitter.com/grawlixcomix/">@grawlixcomix</a></strong>: Follow us on Twitter.</li>
+<li><strong><a href="mailto:grawlixcomix@gmail.com">Give feedback</a></strong>: Something else on your mind? Got a question or comment? Let us know.</li>
+</ul>
+
+<p>Happy publishing!<br/>
+— the Grawlix team</p>
+</article>
+</main>
+
+</body>
+</html>

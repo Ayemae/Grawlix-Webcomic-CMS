@@ -1,0 +1,503 @@
+/* ! ------ Principle elements */
+:root {
+  --text-color-1: #FEE6CE;
+  --text-color-2: black;
+  --text-color-3: white;
+  --font-1: "Poiret One";
+  --font-2: "Quicksand";
+  --alignment: center;
+  --bg-color-1: #FEE6CE;  
+  --bg-color-2: #D9A6BE;
+  --bg-color-3: #332140;  
+  --link-color-1: rgb(255, 226, 188);
+  --link-color-1-hover: #ffd196;
+  --link-color-2: #691aa2;
+  --link-color-2-hover: #ffd196;
+  --border-color-1: #100b12;
+  --border-color-2: slategray;
+  --content-width-all: 100%;
+  --content-width-center: 60%;
+  --footer-height: 35px;
+}
+
+body {
+  margin:0;
+  padding:0;
+  font-family:Quicksand,"Poiret One",Trebuchet MS,Verdana,Arial,sans-serif;
+  background-image: url('images/layout/repeating-wood-block-pattern-wide.jpg');
+  background-attachment: fixed;
+  background-size: cover; 
+  line-height: 1.5;
+}
+
+img {
+}
+
+a img {
+}
+
+a {
+  color: var(--link-color-2);
+}
+
+p, ul li {
+  font-family: var(--font-2);
+  font-size: 12pt;
+}
+
+li {
+  margin-left:40px;
+}
+
+h1 {
+  font-family: var(--font-1);
+  color: var(--text-color-2);
+}
+
+h2 {
+  font-family: var(--font-1);
+  color: var(--text-color-2);
+}
+
+h3 {
+  font-family: var(--font-1);
+  color: var(--text-color-2);
+}
+
+.site-nav a {
+  color: var(--link-color-1);
+  display: block;
+}
+
+.site-nav {
+} 
+
+.nav-container {
+  position: fixed;
+  height: 100%;
+  width:20%;
+  max-width: 300px;
+  top:0;
+  left:0;
+  z-index: 1; /* Stay on top */
+  overflow-y:auto;
+  padding:10px;
+  padding-top: 50px;
+  margin: auto;
+  border:1px solid #110f17;
+  background-color: var(--bg-color-3);
+  text-align: center;
+  box-sizing:border-box;
+}
+
+nav ul#menu-list {
+  margin-top: 20%;
+  display:block;
+  text-align: center;
+}
+
+#menu-list li {
+  margin: 5px;
+  background-color: #1a1a2b;
+}
+
+#menu-list li:hover {
+ background-color: #563960;
+}
+
+.content-main {
+  margin-left: 20%;
+  margin-top: 1%;
+  width: var(--content-width-center);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color-1);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 2px solid var(--bg-color-3);
+}
+#comic {
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.comic-stage {
+  margin: 10px auto;
+}
+
+.comic-nav {
+  font-family: var(--font-2);
+}
+.comic-nav a.disabled {
+  visibility: inherit;
+}
+.block-content {
+  background-color: var(--bg-color-1);
+  /* padding: 15px; */
+  margin: 25px;
+  text-align: left;
+}
+
+.container {
+}
+
+.clearfix {
+}
+footer {
+  position: relative;
+}
+
+.navimg {
+  display: inline;
+}
+
+/* ! ------ Comic pages */
+
+#comic figure {
+}
+
+#blog-post {
+  background: unset;
+}
+
+#blog-post p {
+  color: var(--text-color-2);
+  font-size: 12pt;
+}
+
+#blog-post h3 {
+}
+
+#blog-post .meta {
+}
+
+#transcript {
+}
+
+#comments {
+  padding: 25px;
+}
+
+.under-comic {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin-left: 20%;
+  width: var(--content-width-center);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebar1 {
+  background-color: var(--bg-color-1);
+  width: 100%;
+  min-height: 280px;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 2px solid var(--bg-color-3);
+}
+.sidebar2 {
+  display: none;
+}
+
+.sf-profile-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.comic-description {
+  display: block;
+  width: 100%;
+  padding: 25px
+   }
+
+.blog-socials-wrapper {
+  display: flex;
+}
+
+.social-flex-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 60px;
+  height: 100%;
+}
+
+/* ! ------ Menu and navigation */
+
+nav ul {
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 100%;
+}
+.staticpg {
+  margin-left: 30%;
+  margin-top: 1%;
+  width: var(--content-width-center);
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-2);
+  background-color: var(--bg-color-1);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 2px solid var(--bg-color-3);
+  margin-bottom: 25px;
+  padding: 10px;
+}
+
+.pattern-image-left, .pattern-image-right {
+  display: static;
+}
+
+figure {
+  width: 100%;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+
+/* Create four equal columns that sits next to each other */
+.column {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+  max-width: 25%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+  width: 100%;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .column {
+    -ms-flex: 50%;
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    -ms-flex: 100%;
+    flex: 100%;
+    max-width: 100%;
+  }
+}
+
+main {
+}
+
+
+/* ! ------ Archives */
+
+.archive-headline {
+    margin-bottom: 10px;
+}
+
+header.archive-header {
+    flex-direction: column;
+}
+
+.archive-content {
+  margin-left: 20%;
+  margin-top: 1%;
+  width: var(--content-width-center);
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color-1);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 2px solid var(--bg-color-3);
+  margin-bottom: 25px;
+  padding: 10px;
+}
+
+.archive-content ul {
+    list-style: none;
+}
+
+
+ul.archive-layout--grid {
+  justify-content: center;
+}
+
+.archive-header {
+    background-color: var(--bg-color-2);
+    padding: 8px;
+}
+li.archive-page a {
+  padding: 5px;
+}
+li.archive-marker ul li.archive-page:hover {
+    background-color: #ac6388;
+}
+li.archive-page:hover a {
+    color: white;
+}
+li.archive-page a {
+    display: flex;
+    justify-content: space-between;
+}
+li.archive-marker ul li:nth-child(even) {
+    background-color: #f4c9ca;
+}
+li.archive-marker ul li:nth-child(odd) {
+    background-color: #ffbcab;
+}
+
+
+input[type=checkbox]{
+    display: none;
+}
+
+ul.archive-layout--inline li {
+    display: inline;
+}
+
+ul.archive-layout--grid li {
+  display: none;
+  overflow: hidden;
+}
+
+input[type=checkbox]:checked ~ ul.archive-layout--grid li {
+  display: block;
+   flex: 1;
+   flex-grow: 0;
+   min-width: fit-content;
+}
+
+ul.archive-layout--grid li img {
+    max-width: unset;
+}
+ul.archive-layout--grid li.archive-marker {
+    min-width:48%;
+}
+
+
+/* Mobile Adjustments */
+
+@media only screen and (max-width: 750px) {
+.content-main {
+  margin-left: 0px;
+}
+  
+.under-comic {
+  margin-left: 0px;
+}
+
+.archive-content {
+  margin-left: 0px;
+  width: 100%;
+}
+.staticpg {
+  margin-left: 0px;
+  width: 100%;
+  min-width: 100%;
+}
+.logo-img {
+  max-height: 100px; 
+}
+
+.nav-container {
+  position: static;
+  height: auto;
+  max-width:100%;
+  width:100%;
+  z-index: 1; /* Stay on top */
+  padding:10px;
+  border:1px solid #110f17;
+  text-align: center;
+  box-sizing:border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content: space-between;
+}
+
+/* Toggle Site Menu Display */
+  nav ul#menu-list {
+    display: none;
+  }
+  /*Show menu when invisible checkbox is checked*/
+  input[type=checkbox]:checked ~ #menu-list{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0;
+  }
+  /*Make dropdown links appear inline*/
+  .site-nav a {
+    display: block;
+  }
+  #menu-list {
+    position: static;
+    display: none;
+  }
+  #menu-list li {
+    width: 100%;
+    display: block;
+    margin: 5px 0px;
+  }
+  #menu#menu-list li:nth-child(even) {
+  }
+
+  /*Display 'show menu' link*/
+  #show-menu-btn {
+    cursor: pointer;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color-3);;
+    font-family: var(--font-1);
+    font-size: 35px;
+    min-width: 50px;
+    margin: 5px;
+  }
+  #show-menu-btn:hover {
+    color: var(--link-color-2-hover);
+  }
+  /* /// End Site Menu //// */
+  
+  
+
+  .content-main {
+    width: 100vw;
+  }
+  
+  .under-comic {
+    width: 100vw;
+  }
+  
+  .sidebar1 {
+    width: 100%;
+  }
+  .sidebar2 {
+    width: 100%;
+    margin-left: unset;
+    margin-top: 15px;
+  }
+  .flex-wrapper {
+    max-width: unset;
+  }
+  .under-comic .flex-wrapper.one{
+    flex-direction: column;
+  }
+  .under-comic .flex-wrapper.two {
+    flex-direction: column-reverse;
+  }
+}
