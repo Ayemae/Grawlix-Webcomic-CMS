@@ -1534,6 +1534,15 @@ function is_image_type($str='', $allowed_image_types=array())
 function create_thumbnail( $source_file, $destination_file, $max_dimension)
 {
 	list($img_width,$img_height) = getimagesize($source_file); // Get the original dimentions
+
+	// Check divisor for zero-- DON'T divide by zero!
+	// This could happen if the image we fetch is invalid in some way
+	// Best to just skip this page for now and let the caller move
+	// on to the next image.
+	if ($img_height == 0) {
+		return FALSE;
+	}
+
 	$aspect_ratio = $img_width / $img_height;
 
 	// What should the new dimensions be?
