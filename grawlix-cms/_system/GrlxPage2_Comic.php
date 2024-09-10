@@ -227,7 +227,7 @@ class GrlxPage2_Comic extends GrlxPage2 {
 					$this->db->where('book_id', '1'); // HARDCODED for testing
 					$this->db->where('sort_order', $test_url);
 					$x = $this->db->getOne('book_page', 'options');
-					if ($x['options'] && $x['options'] != '') {
+					if (isset($x) && isset($x['options']) && $x['options'] != '') {
 						$navLinks[$key]['url'] .= '-'.$x['options'];
 					}
 				}

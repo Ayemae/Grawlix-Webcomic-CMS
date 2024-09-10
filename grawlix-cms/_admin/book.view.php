@@ -271,7 +271,7 @@ if($view_marker) {
 }
 
 // ! Display the list
-
+$content_output = '';
 if ( $book-> pageList && count($book-> pageList) > 0 )
 {
 
@@ -457,7 +457,7 @@ if ( $book-> pageList && count($book-> pageList) > 0 )
 	}
 
 	// Mix it all together.
-	if ($list_items && count($list_items) > 0)
+	if (isset($list_items) && count($list_items) > 0)
 	{
 		$list->content($list_items);
 		$content_output  = $list->format_headings();
@@ -472,7 +472,7 @@ if ( $book-> pageList && count($book-> pageList) > 0 )
 			$content_output .= '<a class="btn primary new" href="book.page-create.php"><i></i>Add page</a>';
 
 
-if ( (!$book-> pageList || count($book-> pageList) == 0 || !$content_output) && $created != 1 )
+if ( (!isset($book-> pageList) || count($book-> pageList) == 0 || !$content_output) && $created != 1 )
 {
 	$content_output = 'No pages found.';
 }
