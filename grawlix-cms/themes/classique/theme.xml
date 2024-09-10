@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme version="1.0">
 	<metadata>
-		<title>Liquid</title>
-		<description>A theme with an adjustable flexbox layout.</description>
-		<author>Alyssa Alyssa</author>
-		<url>www.getgrawlix.com</url>
-		<version>1.5.2</version>
+		<title>Classique</title>
+		<description>A responsive theme that features a sidebar menu in desktop view.</description>
+		<author>Kim Sanguine</author>
+		<url>www.witchofdezina.com</url>
+		<version>1.6.0</version>
 	</metadata>
 </theme>
