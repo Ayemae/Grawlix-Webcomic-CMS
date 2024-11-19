@@ -515,7 +515,7 @@ if ( $page->imageList && $action == 'gen-thumb') {
 			$dir = implode('/',$dir);
 
 			// Figure out the filenames with paths.
-			$thumb_filename = '..'.$milieu_list['directory']['value'].$dir.'/thumb.'.$extension;
+			$thumb_filename = '..'.$dir.'/thumb.'.$extension;
 			$source_file = '..'.$val['url'];
 			$success = create_thumbnail( $source_file, $thumb_filename, $thumb_max);
 			if ($success === TRUE) {
