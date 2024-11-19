@@ -156,6 +156,7 @@ function check_path($item) {
 
 // Check individual folders in /comics
 function fetch_comic_folders() {
+	$result = array();
 	if ($dir = opendir('../'.DIR_COMICS_IMG)) {
 
 		while (false !== ($entry = readdir($dir))) {
@@ -164,6 +165,9 @@ function fetch_comic_folders() {
 			}
 		}
 		closedir($dir);
+	}
+	if (!$result) {
+		$result=null;
 	}
 	return $result;
 }
@@ -284,7 +288,7 @@ function check_comic_seo($db) {
 }*/
 
 
-function display_module($module=array(),$link) {
+function display_module($link,$module=array()) {
 //echo '<pre>$module|';print_r($module);echo '|</pre>';
 	if ( $module['status'] == 0 ) {
 		$status = 'verified';
@@ -318,7 +322,7 @@ function image_weight_test($root_folder,$root_list,$image_status_list) {
 		}
 	}
 
-	if ( $folder_list ) {
+	if ( $folder_list ?? null ) {
 		foreach ( $folder_list as $folder => $set ) {
 			if ( $set ) {
 				foreach ( $set as $filename ) {
@@ -665,21 +669,21 @@ else {
 
 
 // Group
-$report = display_module($permissions_module,$link);
+$report = display_module($link,$permissions_module);
 $view->group_h2($report[1].' Permissions');
 $view->group_instruction('This checks the ability to add or edit files on your behalf.');
 $view->group_contents( $report[0] );
 $content_output = $view->format_group().'<hr />';
 
 // Group
-$report = display_module($panel_file_module,$link);
+$report = display_module($link,$panel_file_module);
 $view->group_h2($report[1].' Panel files');
 $view->group_instruction('The panel should only have Grawlix files. Extras could indicate a hack attempt.');
 $view->group_contents( $report[0] );
 $content_output .= $view->format_group().'<hr />';
 
 // Group
-$report = display_module($htaccess_module,$link);
+$report = display_module($link,$htaccess_module);
 $view->group_h2($report[1].' Access');
 $view->group_instruction('Grawlix needs permission to add images to certain folders.');
 $view->group_contents( $report[0] );
@@ -689,14 +693,14 @@ $content_output .= $view->format_group().'<hr />';
 $link-> url('http://www.getgrawlix.com/docs/'.DOCS_VERSION.'/seo');
 $link-> tap('search engine optimization');
 
-$report = display_module($seo_module,$link);
+$report = display_module($link,$seo_module);
 $view->group_h2($report[1].' SEO');
 $view->group_instruction('This checks '.$link-> external_link().', beginning with unique page titles.');
 $view->group_contents( $report[0] );
 $content_output .= $view->format_group().'<hr />';
 
 // Group
-$report = display_module($orphan_image_module,$link);
+$report = display_module($link,$orphan_image_module);
 $view->group_h2($report[1].' Orphaned images');
 $view->group_instruction('The database tracks every comic image. Unknown or missing JPGs, PNGs, etc are reported here.');
 $view->group_contents( $report[0] );
@@ -707,7 +711,7 @@ $content_output .= $view->format_group().'<hr />';
 $link-> url('http://www.getgrawlix.com/docs/'.DOCS_VERSION.'/image-optimization');
 $link-> tap('ratio of bytes / pixel');
 
-$report = display_module($image_weight_module,$link);
+$report = display_module($link,$image_weight_module);
 $view->group_h2($report[1].' Image weight');
 $view->group_instruction('“Image weight” is a '.$link-> external_link().'. Images with a better ratio load faster than others with similar pixel width &amp; height. Bars indicate bytes per pixel. <strong>Images with shorter bars load faster. Faster images make for happier readers.</strong>
 <ul>

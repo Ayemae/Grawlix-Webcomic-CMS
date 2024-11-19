@@ -125,7 +125,7 @@ if ( $page_id && !empty($original_sort_order) && !empty($sort_order) ) {
 
 // Update the official records.
 if ( !empty($resorted_list) && count($resorted_list) > 0 ) {
-	ksort($resorted_list);
+	ksort($resorted_list, SORT_NATURAL);
 	$i = 1;
 	foreach ( $resorted_list as $key => $val ) {
 		$data = array(

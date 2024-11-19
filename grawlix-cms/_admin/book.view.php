@@ -544,6 +544,8 @@ if ($book->pageList && count($book->pageList) > $pages_per_view)
 </div>
 
 EOL;
+} else {
+	$search_form='';
 }
 
 

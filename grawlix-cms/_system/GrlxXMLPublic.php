@@ -154,6 +154,7 @@ class GrlxXMLPublic {
 	 * @return array $list - value list
 	 */
 	public function getClones($xpath=null,$name=null) {
+		$list = array();
 		$this->setXPath($xpath);
 		if ( is_object($xpath) ) {
 			foreach ( $xpath->{$name} as $val ) {

@@ -37,6 +37,7 @@ class GrlxTheme {
 	public    $errorOutput;
 	public    $successOutput;
 	public    $toneSelectList;
+	protected $dbList;
 
 	/**
 	 * Setup

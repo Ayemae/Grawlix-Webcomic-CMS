@@ -21,6 +21,8 @@ if ( $new_image_id && $new_page_id ) {
 
 */
 class GrlxComicImage {
+	protected $db;
+	
 	function __construct(){
 		global $db;
 		$this-> db = $db;

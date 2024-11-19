@@ -36,8 +36,8 @@ $alert_output = '';
 
 if ( isset($_POST['submit']) ) {
 	$args['archiveNew'] = array(
-		'behavior' => clean_text($_POST['behavior']),
-		'structure' => clean_text($_POST['structure']),
+		'behavior' => clean_text($_POST['behavior'] ?? null),
+		'structure' => clean_text($_POST['structure'] ?? null),
 		'chapter'  => $_POST['chapter'] ?? null,
 		'page'     => $_POST['page'] ?? null
 	);
@@ -57,10 +57,10 @@ if ( isset($_POST['submit']) ) {
 	
 
 	// These can’t be empty
-	if ( !array_key_exists('option',$args['archiveNew']['chapter']) ) {
+	if (!isset($args['archiveNew']['chapter']) || !array_key_exists('option',$args['archiveNew']['chapter']) ) {
 		$args['archiveNew']['chapter']['option'] = 'number';
 	}
-	if ( !array_key_exists('option',$args['archiveNew']['page']) ) {
+	if (!isset($args['archiveNew']['page']) || !array_key_exists('option',$args['archiveNew']['page']) ) {
 		$args['archiveNew']['page']['option'] = 'number';
 	}
 }
@@ -164,6 +164,9 @@ if ( $xml->meta && $infoXML->archive['chapter']['option'] && $infoXML->archive['
 
 	// Yeeeah, let’s just sneak this one in there. Ahem.
 	$infoXML->archive['chapter']['option'][] = 'image';
+	if ($xml->behavior !== 'multi') {
+		$infoXML->archive['chapter']['option'][] = 'link to start';
+	}
 
 	foreach ( $infoXML->archive['chapter']['option'] as $key=>$info ) {
 		$title = ucfirst($info);
@@ -182,7 +185,11 @@ if ( $xml->meta && $infoXML->archive['chapter']['option'] && $infoXML->archive['
 	$meta_output .= '<h5>Pages</h5>';
 	foreach ( $infoXML->archive['page']['option'] as $info ) {
 		$title = ucfirst($info);
-		in_array($info,$xml->meta['page']) ? $check = ' checked="checked"' : $check = null;
+		if (is_array($xml->meta['page']) && in_array($info,$xml->meta['page'])) {
+			$check = ' checked="checked"';
+		} else {
+			$check = null;
+		}
 		$meta_output .= '<label><input type="checkbox" name="page[option][]"'.$check.' value="'.$info.'"/>&emsp;'.$title.'</label>';
 	}
 	$meta_output .= '</div>';

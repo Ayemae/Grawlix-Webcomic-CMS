@@ -18,6 +18,12 @@ $output = $sl-> buildSelect();
 */
 
 class GrlxSelectList {
+	public $name;
+	public $list;
+	public $valueID;
+	public $valueTitle;
+	public $current;
+	public $style;
 
 	private function buildOption($title='',$value='',$selected=false){
 		$sel = '';

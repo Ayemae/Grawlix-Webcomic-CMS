@@ -11,6 +11,8 @@ class GrlxStaticPage {
 
 	protected $db;
 	public    $pageList;
+	public    $pageID;
+	public    $info;
 
 	/**
 	 * Setup

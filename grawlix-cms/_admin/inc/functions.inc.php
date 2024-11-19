@@ -1617,6 +1617,7 @@ function create_thumbnail( $source_file, $destination_file, $max_dimension)
 }
 
 function make_all_thumbs($imageList, $thumb_max){
+	global $milieu_list;
 	// ! Create thumbnails, if they don’t exist.
 	$gd_enabled = FALSE; // Until proven otherwise
 	$gd_info = gd_info();
@@ -1656,7 +1657,7 @@ function make_all_thumbs($imageList, $thumb_max){
 				$dir = implode('/',$dir);
 
 				// Figure out the filenames with paths.
-				$thumb_filename = '..'.$milieu_list['directory']['value'].$dir.'/thumb.'.$extension;
+				$thumb_filename = '..'.($milieu_list['directory']['value'] ?? '').$dir.'/thumb.'.$extension;
 				$source_file = '..'.$val['url'];
 				$success = create_thumbnail( $source_file, $thumb_filename, $thumb_max);
 				if ($success === TRUE)

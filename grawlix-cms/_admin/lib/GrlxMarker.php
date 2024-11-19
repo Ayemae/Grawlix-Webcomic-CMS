@@ -8,6 +8,7 @@ class GrlxMarker {
 	public $pageList;
 	public $startPage;
 	public $endPage;
+	public $thumbInfo;
 
 	function __construct($markerID=null,$quick=false){
 		global $db;
@@ -89,12 +90,14 @@ class GrlxMarker {
 			if ( $start && $end ) {
 				$this->db->where('sort_order', $start, '>=');
 				$this->db->where('sort_order', $end, '<=');
-				$result2 = $this->db->delete('book_page');
+				$result = $this->db->delete('book_page');
 
 				$success = reset_page_order(1,$this-> db);
 			}
 		}
-		return $result1[0];
+		if (isset($result[0])) {
+			return $result[0];
+		}
 	}
 
 	function getMarkerInfo() {
