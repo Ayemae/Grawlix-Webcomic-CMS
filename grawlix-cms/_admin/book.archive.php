@@ -208,7 +208,7 @@ if ( $xml->saveResult == 'error' ) {
 
 // ! Make Thumbnails
 $action = register_variable('action');
-$make_thumbs_output = "<a class='btn secondary' href='/_admin/book.archive.php?action=gen-thumbs'>Generate Archive Thumbnails</a>";
+$make_thumbs_output = "<a class='btn secondary' href='?action=gen-thumbs'>Generate Archive Thumbnails</a>";
 if ($action == 'gen-thumbs') {
 	$imageList = $db->get ('image_reference',null,'url');
 	// ! How big should thumbnails be?
