@@ -15,6 +15,7 @@ $close_output = '</article>';
 	this.page.url = '<?=show('permalink')?>';  // Replace PAGE_URL with your page's canonical URL variable
 	this.page.identifier = <?=show('page_id')?>;
   	this.page.title = '<?=show('page_title')?>';
+	};
 	/* * * DON'T EDIT BELOW THIS LINE * * */
 	(function() { 
 		var d = document, s = d.createElement('script');
@@ -24,7 +25,7 @@ $close_output = '</article>';
 		})();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+<a href="http://disqus.com" class="dsq-brlink" target="_blank">comments powered by <span class="logo-disqus">Disqus</span></a>
 <?=$close_output?>
 <?php endif; ?>
 

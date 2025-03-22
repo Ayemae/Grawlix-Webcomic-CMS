@@ -315,6 +315,7 @@ class GrlxPage2_Comic extends GrlxPage2 {
 			->where('im.rel_id',$this->pageInfo['page_id'])
 			->where('im.rel_type','page')
 			->orderBy('im.sort_order','ASC')
+			->orderBy('im.image_reference_id','ASC')
 			->get('image_match im',null,$cols);
 		if ( $result ) {
 			$this->imageInfo = $result;

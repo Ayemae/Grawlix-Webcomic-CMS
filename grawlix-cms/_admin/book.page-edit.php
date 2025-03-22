@@ -544,7 +544,7 @@ if ( $page-> imageList ) {
 	if ( count($page-> imageList) > 1 ) {
 		$row_divider .= '<hr/>';
 	}
-
+	$sort_order=1;
 	foreach ( $page-> imageList as $key => $val ) {
 		$ref_id = $val['image_reference_id'];
 		if ( count ( $page-> imageList ) > 1 ) {
@@ -588,7 +588,7 @@ if ( $page-> imageList ) {
 		$this_weight = 'Weight: '.$weight.' '.$link1-> paint()."\n";
 
 		$this_sort_order = '<label for="this_sort_order['.$key.']">Order</label>'."\n";
-		$this_sort_order .= '<input type="text" size="3" style="width:3rem" name="sort_order['.$key.']" value="'.$val['sort_order'].'"/>'."\n";
+		$this_sort_order .= '<input type="text" size="3" style="width:3rem" name="sort_order['.$key.']" value="'.$sort_order.'"/>'."\n";
 
 
 		$temp_path = explode('/',$val['url']);
@@ -644,7 +644,7 @@ EOL;
 
 
 
-
+		$sort_order++;
 	}
 }
 $main_image_output .= <<<EOL
@@ -785,6 +785,7 @@ print($output);
 <form accept-charset="UTF-8" action="book.page-edit.php" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="grlx_xss_token" value="<?=$_SESSION['admin']?>"/>
 	<input type="hidden" name="page_id" value="<?=$page_id?>"/>
+	<input type="hidden" name="sort_top" value="1"/>
 
 <?=$head_output ?>
 
