@@ -44,7 +44,7 @@ elseif ( isset($_SESSION['start_sort_order']) && is_numeric($_SESSION['start_sor
 	$start_sort_order = $_SESSION['start_sort_order'];
 }
 else {
-	$start_sort_order = 1;
+	$start_sort_order = 99999; //Always start from the latest page
 }
 
 
@@ -215,7 +215,7 @@ elseif ( $total_pages <= 500 ) {
 	$pages_per_view = 50;
 }
 else {
-	$pages_per_view = 70;
+	$pages_per_view = 100; //Why 70?
 }
 
 if ( $start_sort_order > $total_pages ) {
@@ -297,6 +297,11 @@ if ( $book-> pageList && count($book-> pageList) > 0 )
 
 	$heading_list[] = array(
 		'value' => 'Title',
+		'class' => null
+	);
+	//Add time
+	$heading_list[] = array(
+		'value' => 'Time',
 		'class' => null
 	);
 	$heading_list[] = array(
@@ -389,6 +394,23 @@ if ( $book-> pageList && count($book-> pageList) > 0 )
 				$order = floor($val['sort_order']);
 			}
 
+// Build time
+if ( $val['id'] ) {
+	
+	$page = new GrlxComicPage($val['id']);
+	$stronk = '<strong>';	
+	if (substr($page-> pageInfo['date_publish'],0,4).substr($page-> pageInfo['date_publish'],5,2).substr($page-> pageInfo['date_publish'],8,2) > date('Y').date('m').date('d')){
+	$stronk = '<strong style="color: #0096df;">';
+	}
+	$time = $stronk.substr($page-> pageInfo['date_publish'],0,4).'-'.substr($page-> pageInfo['date_publish'],5,2).'-'.substr($page-> pageInfo['date_publish'],8,2).'</strong>';		
+	
+}
+else{
+	
+	$time ='<strong style="color: red;">NONE</strong>';	
+	
+}
+
 			// Build the selection checkbox.
 //			$select = '<input type="checkbox" name="sel['.$val['id'].']" value="'.$val['id'].'"/>'."\n";
 
@@ -443,8 +465,10 @@ if ( $book-> pageList && count($book-> pageList) > 0 )
 			$link-> tap($title);
 
 			// Assemble the list item.
+			// Added Time.
 			$list_items[$val['id']] = array(
 				'title'=> $link-> paint(),
+				'time' => $time,
 				'sort_order'=> $order,
 				'marker'=> $this_marker,
 				'action'=> $action_output
@@ -497,7 +521,8 @@ if ( $total_pages > $pages_per_view && !$view_marker) {
 			$pagination[] = $link-> paint();
 		}
 	}
-	$pagination_output  = '<br/><p>Jump to '.implode(', ',$pagination).'</p>'."\n";
+	// Added easier page navigation links
+	$pagination_output  = '<br/><p>Jump to <a href="book.view.php?start_sort_order='.max( $start_sort_order - $pages_per_view,0 ).'" title="Jump around the book.">&laquo;</a> '.implode(', ',$pagination).' <a href="book.view.php?start_sort_order='.( $start_sort_order + $pages_per_view ).'" title="Jump around the book.">&raquo;</a></p>'."\n";
 	$pagination_output .= '<input type="hidden" name="start_sort_order" value="'.$start_sort_order.'"/>';
 }
 
@@ -548,6 +573,40 @@ EOL;
 	$search_form='';
 }
 
+// Determine the length of the buffer
+$dateyear = date('Y');
+$datemonth = date('m');
+$dateday = date('d');
+$schedyear = 2020;
+$schedmonth = 1;
+$schedday = 31;
+
+$lastsched = end($book-> pageList);
+$lastsched_id = $lastsched['id'];
+	
+if ( $lastsched_id ) {
+	$lastschedPage = new GrlxComicPage($lastsched_id);
+$schedyear = substr($lastschedPage-> pageInfo['date_publish'],0,4);
+$schedmonth = substr($lastschedPage-> pageInfo['date_publish'],5,2);
+$schedday = substr($lastschedPage-> pageInfo['date_publish'],8,2);
+}
+$datebuffer1 = strtotime(date('Y-m-d', strtotime($dateyear.'-'.$datemonth.'-'.$dateday.' 10:00:00 GMT')));
+$datebuffer2 = strtotime(date('Y-m-d', strtotime($schedyear.'-'.$schedmonth.'-'.$schedday.' 10:00:00 GMT')));
+
+// Find how many days of buffer. 
+// I don't remember what I've coded, but if "+6" is what 
+// I think it is... 
+// TODO:
+// Make the buffer posting time length to be a variable that can be set from the Admin panel.
+$buffertime = (($datebuffer2 - $datebuffer1)/86400)+6;
+
+
+if ($buffertime > 0){
+$buffer = '<div class="row"> The buffer should be updated in: <b>'.$buffertime.' days.</b></div>';
+if ($buffertime < 2){
+	$buffer = '<div class="row"> The buffer should be updated in: <b>'.$buffertime.' day.</b></div>';
+	}
+}
 
 $output  = $view->open_view();
 $output .= $view->view_header();
@@ -555,6 +614,9 @@ $output .= $alert_output;
 $output .= '<form accept-charset="UTF-8" method="post" action="book.view.php">'."\n";
 $output .= '	<input type="hidden" name="grlx_xss_token" value="'.$_SESSION['admin'].'"/>'."\n";
 $output .= $search_form;
+// Add buffer info and page navigation above the pages list
+$output .= $buffer;
+$output .= $pagination_output;
 $output .= $content_output;
 $output .= $orig_output;
 $output .= $pagination_output;

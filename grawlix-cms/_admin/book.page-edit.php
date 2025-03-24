@@ -697,11 +697,76 @@ if ( isset($page-> pageInfo['blog_title']) ) {
 	$headline_output = $page-> pageInfo['blog_title'];
 }
 
+//Script for adding HTML tags, just as in the Create Page file.
 $blog_output = <<<EOL
 <label for="blog_headline">Headline</label>
 <input type="text" name="blog_headline" id="blog_headline" value="$headline_output"/>
 <label for="blog_post">Post</label>
-<textarea name="blog_post" id="blog_post" rows="7">{$page-> pageInfo['blog_post']}</textarea>
+<script language="javascript" type="text/javascript">
+
+function addText(Text,Message)
+{
+  var obj = document.form.blog_post;
+
+  obj.focus();
+
+  if (document.selection && document.selection.createRange)  // Internet Explorer
+  {
+sel = document.selection.createRange();
+if (sel.parentElement() == obj)  sel.text = Text;
+  }
+
+  else if (typeof(obj) != "undefined")  // Firefox
+  {
+var longueur = parseInt(obj.value.length);
+var selStart = obj.selectionStart;
+var selEnd = obj.selectionEnd;
+
+obj.value = obj.value.substring(0,selStart) + Text + obj.value.substring(selEnd,longueur);
+  }
+
+  else obj.value += Text;
+
+  obj.focus();
+}
+
+
+function addTags(Tag,fTag,Message)
+{
+  var obj = document.form.blog_post;
+
+  obj.focus();
+
+  if (document.selection && document.selection.createRange)  // Internet Explorer
+  {
+sel = document.selection.createRange();
+if (sel.parentElement() == obj)  sel.text = Tag + sel.text + fTag;
+  }
+
+  else if (typeof(obj) != "undefined")  // Firefox
+  {
+var longueur = parseInt(obj.value.length);
+var selStart = obj.selectionStart;
+var selEnd = obj.selectionEnd;
+
+obj.value = obj.value.substring(0,selStart) + Tag + obj.value.substring(selStart,selEnd) + fTag + obj.value.substring(selEnd,longueur);
+  }
+
+  else obj.value += Tag + fTag;
+
+  obj.focus();
+}
+
+</script> 
+<p style="margin-bottom: 5px;">
+<button class="btn primary" type="button" onClick="addTags('<b>','</b>')" /><b>B</b></button>
+<button class="btn primary" type="button" onClick="addTags('<i>','</i>')" /><i>I</i></button>
+<button class="btn primary" type="button" onClick="addTags('<u>','</u>')" /><u>U</u></button>
+<button class="btn primary" type="button" onClick="addTags('<s>','</s>')" /><s>S</s></button>
+<button class="btn primary" type="button" onClick="addTags('<a href=','></a>')" />URL</button>
+<button class="btn primary" type="button" onClick="addTags('<img src=','>')" />IMG</button>
+</p>
+<textarea name="blog_post" id="blog_post" rows="7">{$page-> pageInfo[blog_post]}</textarea>
 
 EOL;
 
@@ -781,8 +846,8 @@ print($output);
 
 ?>
 
-
-<form accept-charset="UTF-8" action="book.page-edit.php" method="post" enctype="multipart/form-data">
+// Add name to the form for the script to find it
+<form name="form" accept-charset="UTF-8" action="book.page-edit.php" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="grlx_xss_token" value="<?=$_SESSION['admin']?>"/>
 	<input type="hidden" name="page_id" value="<?=$page_id?>"/>
 	<input type="hidden" name="sort_top" value="1"/>
