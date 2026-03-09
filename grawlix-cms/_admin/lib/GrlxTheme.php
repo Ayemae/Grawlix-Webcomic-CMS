@@ -220,7 +220,7 @@ class GrlxTheme {
 	protected function buildToneSelectList() {
 		$this->toneSelectList[] = array(
 			'id' => 0,
-			'title' => 'None'
+			'title' => 'None [inherit Book/Site Default]'
 		);
 		if ( !empty($this->themesList) ) {
 			foreach ( $this->themesList as $id=>$array) {

@@ -127,6 +127,7 @@ if ( isset($_FILES[$which]) && $_FILES[$which]['name'][0] != '' ) {
 			);
 			$success3 = $db->insert('image_reference', $data); // I used success3 to differentiate between DB events.
 
+			// NOTE: Needs some way to save sort order!
 			$data = array(
 				'rel_id' => $page_id,
 				'rel_type' => 'page',

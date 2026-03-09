@@ -27,9 +27,9 @@ class GrlxMarker {
 	public function setup(){
 		if ( $this-> markerID ) {
 			$this-> getMarkerInfo();
+			$this-> getBookID();
 			$this-> getPageRange();
 			$this-> getPageIDs();
-			$this-> getBookID();
 			$this-> getMarkerThumbnail();
 		}
 	}
@@ -104,7 +104,7 @@ class GrlxMarker {
 		if ( $this-> markerID ) {
 			$this-> db-> join('book_page bp', 'marker_id = m.id', 'LEFT');
 			$this-> db-> where('m.id', $this-> markerID);
-			$info = $this-> db-> get ('marker m', null, 'm.title,m.description,m.marker_type_id,bp.sort_order');
+			$info = $this-> db-> get ('marker m', null, 'm.title,m.description,m.marker_type_id,bp.book_id,bp.sort_order');
 			$this-> markerInfo = $info[0] ?? '';
 		}
 	}
@@ -121,12 +121,23 @@ class GrlxMarker {
 		}
 	}
 
+	function getBookID() {
+		if ( $this-> pageList ) {
+			$page_info = reset($this-> pageList);
+			$this-> markerInfo['book_id'] = $page_info['book_id'];
+		}
+	}
+
 	function getPageRange($sort_order=null) {
 		if ( $this->markerInfo ) {
 			$sort_order ? $sort_order : $sort_order = $this->markerInfo['sort_order'];
 			if ( $sort_order ) {
 				$this-> db-> where ('sort_order', $sort_order, '>=');
 				$this-> db-> where ('book_id', $this->markerInfo['book_id'] ?? null );
+				//TODO: Get Markers to see books other than the first
+				$_SESSION['deep']=array();
+				$_SESSION['deep'][] = '<br>Observed book id: '.$this->markerInfo['book_id'].'</br>';
+				$_SESSION['deep'][] = '<br>Info: '.http_build_query($this->markerInfo,'',', ').'<br>';
 				$this-> db-> orderBy ('sort_order','ASC');
 				$result = $this-> db-> get ('book_page',null,'id,sort_order');
 
@@ -151,13 +162,6 @@ class GrlxMarker {
 					}
 				}
 			}
-		}
-	}
-
-	function getBookID() {
-		if ( $this-> pageList ) {
-			$page_info = reset($this-> pageList);
-			$this-> markerInfo['book_id'] = $page_info['book_id'];
 		}
 	}
 
