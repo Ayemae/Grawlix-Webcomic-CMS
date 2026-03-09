@@ -172,8 +172,12 @@ class GrlxPage2 {
 	 * Get info for a theme & tone
 	 */
 	protected function getThemeToneInfo() {
-		if ( $this->milieu['multi_tone'] < 1 ) {
-			$this->theme['tone_id'] = $this->milieu['tone_id'];
+		if ( $this->milieu['multi_tone'] < 1 || !$this->theme['tone_id'] ) {
+			if ($this->bookInfo['tone_id']) {
+				$this->theme['tone_id'] = $this->bookInfo['tone_id'];
+			} else {
+				$this->theme['tone_id'] = $this->milieu['tone_id'];
+			}
 		}
 		$cols = array(
 			't.theme_id',
@@ -351,6 +355,9 @@ class GrlxPage2 {
 			$date = $this->formatDate($this->content['date_publish']);
 			$str = '<time itemprop="datePublished" datetime="'.$this->content['date_publish'].'">'.$date.'</time>';
 			$this->content['date_publish'] = $str;
+		}
+		if ($this->template == 'page.comic.php' || $this->template == 'page.archive.php') {
+			$this->content['book_url'] = $this->milieu['directory'].$this->bookInfo['url'];
 		}
 		$this->content['rss'] = $this->milieu['directory'].'/comic/rss?id='.$this->bookInfo['id'];
 		$this->content['menu'] = $this->formatSiteMenu();
