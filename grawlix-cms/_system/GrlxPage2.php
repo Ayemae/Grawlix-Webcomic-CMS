@@ -173,7 +173,9 @@ class GrlxPage2 {
 	 */
 	protected function getThemeToneInfo() {
 		if ( $this->milieu['multi_tone'] < 1 || !$this->theme['tone_id'] ) {
-			if ($this->bookInfo['tone_id']) {
+			if ($this->template == 'page.static.php'){
+				$this->theme['tone_id'] = $this->milieu['tone_id'];
+			} else if ($this->bookInfo['tone_id']) {
 				$this->theme['tone_id'] = $this->bookInfo['tone_id'];
 			} else {
 				$this->theme['tone_id'] = $this->milieu['tone_id'];
