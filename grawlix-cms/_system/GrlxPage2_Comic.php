@@ -105,6 +105,7 @@ class GrlxPage2_Comic extends GrlxPage2 {
 	 * Get comic page info
 	 */
 	protected function getComicPage() {
+		$isAdmin = $this->isAdmin();
 		$cols = array(
 			'bp.id AS page_id',
 			'bp.title AS page_title',
@@ -119,7 +120,9 @@ class GrlxPage2_Comic extends GrlxPage2 {
 			'bp.date_publish',
 			'bp.options',
 		);
-		$this->db->where('date_publish <= NOW()');
+		if ( !$isAdmin ) { // Clamp pages by date if not admin
+			$this->db->where('date_publish <= NOW()');
+		}
 		$this->db->where('sort_order',$this->bookInfo['latest_page'],'<=');
 		$this->db->where('book_id',$this->bookInfo['id']);
 		if ( $this->where ) {
@@ -203,6 +206,16 @@ class GrlxPage2_Comic extends GrlxPage2 {
 			$this->getComicImages();
 			$this->getImageURL('0');
 			$this->formatComicParts();
+			
+			//Display notification if admin and page is in the future
+			if ( $isAdmin ) {
+				$pubDate = new DateTime($result['date_publish']);
+				$currentDate = new DateTime();
+				if ( $pubDate > $currentDate ) {
+					$difference = $pubDate->diff($currentDate);
+					print ('<div id="special" style="position: fixed;width: 80%;top: 80px;left: 10%;border: #a582ff dashed 3px;z-index: 999;">This page isn\'t publically accessible yet.<br>It will be published in <b>'.$difference->format('%a days, %h hours, %i minutes').'.</b><br>You can view it because you\'ve logged in as admin.</div>');
+				}
+			}
 		}
 		else {
 			// A quick page not found view for when a page outside of the published set is requested
