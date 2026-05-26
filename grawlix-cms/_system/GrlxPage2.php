@@ -101,6 +101,29 @@ class GrlxPage2 {
 	}
 
 	/**
+	 * Check if page is being accessed by admin
+	 */
+	public function isAdmin() {
+		if ( empty($_SESSION['admin']) ) {	
+			return false;
+		}		
+		$isAdmin = false;
+		$maybe_serial = $_SESSION['admin'];		
+		$ucols = array('username','serial');
+		$result = $this->db-> get('user', null,$ucols);
+		foreach ( $result as $usr ) {
+			$maybe_admin = $usr['serial'];
+			if ($maybe_admin){
+				$isAdmin = $maybe_serial == $maybe_admin;		
+				if ($isAdmin){
+					break;
+				}
+			}
+		}
+		return isset($_COOKIE['grlx_bar']) && $isAdmin;
+	}
+	
+	/**
 	 * Set some vars from $grlxRequest
 	 *
 	 * @param		object		$grlxRequest
@@ -129,6 +152,7 @@ class GrlxPage2 {
 	 */
 	protected function getBookInfo($id = NULL) {
 		$id < 1 ? $id = 1 : $id;
+		$isAdmin = $this->isAdmin();
 
 		$cols = array(
 			'b.id',
@@ -145,7 +169,9 @@ class GrlxPage2 {
 		$this->db->join('path p', 'b.id = p.rel_id', 'INNER');
 		$this->db->where('p.rel_type', 'book');
 		$this->db->where('p.url', '/', '<>');
-		$this->db->where('bp.date_publish <= NOW()');
+		if ( !$isAdmin ) { // Clamp pages by date if not admin
+			$this->db->where('bp.date_publish <= NOW()');
+		}
 		$this->db->where('b.id', $id);
 		$this->db->orderBy('bp.sort_order', 'DESC');
 
