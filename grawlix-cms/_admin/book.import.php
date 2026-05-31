@@ -1,5 +1,14 @@
 <?php
 
+/*****
+ * Setup
+ */
+
+require_once('panl.init.php');
+
+if ( empty($book_id) && isset($book) ) {
+	$book_id = $book-> bookID;
+}
 //test
 if (isset($_GET['book_id']) || isset($_SESSION['book_id'])) {
 	$bookID= filter_var(($_GET['book_id'] ?? $_SESSION['book_id']), FILTER_SANITIZE_NUMBER_INT);
@@ -31,12 +40,6 @@ class bulkImport{
 
 $bimport = new bulkImport;
 
-
-/*****
- * Setup
- */
-
-require_once('panl.init.php');
 
 $view = new GrlxView;
 $fileops = new GrlxFileOps;
