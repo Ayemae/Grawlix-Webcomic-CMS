@@ -29,7 +29,10 @@ class GrlxRequest {
 				{
 					// Make an array of query vars
 					parse_str($val, $array);
-					$this->$var = $array;
+					if(isset($this->$var)) //If there's something already there (e.g. the sort_order), don't overwrite it!
+						array_merge($this->$var, $array);
+					else
+						$this->$var = $array;
 				}
 
 				if ($var == 'path')

@@ -28,13 +28,10 @@ class GrlxPage2_Comic extends GrlxPage2 {
 	{
 		parent::contents($request);
 
-		if (is_array($request->query))
+		if (is_array($request->query) && array_key_exists('sort_order', $request->query) && $request->query['sort_order'] > 0)
 		{
 			// Get a page by its sort order
-			if (array_key_exists('sort_order', $request->query))
-			{
-				$this->where['sort_order'] = $request->query['sort_order'];
-			}
+			$this->where['sort_order'] = $request->query['sort_order'];
 			$this->getComicPage();
 		}
 		// Load comic home
